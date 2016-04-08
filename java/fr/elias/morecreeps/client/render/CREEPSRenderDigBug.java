@@ -16,7 +16,7 @@ public class CREEPSRenderDigBug extends RenderLiving
 {
     public CREEPSRenderDigBug(CREEPSModelDigBug creepsmodeldigbug, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodeldigbug, f);
+        super(creepsmodeldigbug, f);
     }
 
     protected void fattenup(CREEPSEntityDigBug creepsentitydigbug, float f)

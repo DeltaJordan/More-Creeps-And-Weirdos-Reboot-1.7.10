@@ -21,7 +21,7 @@ public class CREEPSRenderEvilCreature extends RenderLiving
 
     public CREEPSRenderEvilCreature(CREEPSModelEvilCreature creepsmodelevilcreature, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelevilcreature, f);
+        super(creepsmodelevilcreature, f);
         modelBipedMain = creepsmodelevilcreature;
         scaleAmount = creepsmodelevilcreature;
     }

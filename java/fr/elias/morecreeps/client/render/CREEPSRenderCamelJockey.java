@@ -17,7 +17,7 @@ public class CREEPSRenderCamelJockey extends RenderLiving
 
     public CREEPSRenderCamelJockey(CREEPSModelCamelJockey creepsmodelcameljockey, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelcameljockey, f);
+        super(creepsmodelcameljockey, f);
         modelBipedMain = creepsmodelcameljockey;
     }
 

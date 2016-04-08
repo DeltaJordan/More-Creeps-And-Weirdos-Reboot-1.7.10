@@ -18,7 +18,7 @@ public class CREEPSRenderHorseHead extends RenderLiving
 
     public CREEPSRenderHorseHead(CREEPSModelHorseHead creepsmodelhorsehead, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelhorsehead, f);
+        super(creepsmodelhorsehead, f);
         modelBipedMain = creepsmodelhorsehead;
     }
 

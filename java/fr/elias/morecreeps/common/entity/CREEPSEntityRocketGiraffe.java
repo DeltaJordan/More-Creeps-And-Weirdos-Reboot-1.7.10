@@ -293,7 +293,7 @@ public class CREEPSEntityRocketGiraffe extends EntityCreature
 
             if ((double)f < 2D - (2D - (double)modelsize) && entity.getBoundingBox().maxY > this.getBoundingBox().minY && entity.getBoundingBox().minY < this.getBoundingBox().maxY)
             {
-                //attackTime = 10;
+                attackTime = 10;
                 entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
             }
 

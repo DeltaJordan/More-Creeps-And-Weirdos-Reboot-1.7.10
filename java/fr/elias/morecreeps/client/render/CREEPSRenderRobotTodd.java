@@ -2,7 +2,11 @@ package fr.elias.morecreeps.client.render;
 
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import fr.elias.morecreeps.client.models.CREEPSModelRobotTodd;
+import fr.elias.morecreeps.common.entity.CREEPSEntityRobotTodd;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
@@ -10,30 +14,22 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import fr.elias.morecreeps.client.models.CREEPSModelRobotTodd;
-import fr.elias.morecreeps.client.render.layers.LayerRobotTodd;
-import fr.elias.morecreeps.common.entity.CREEPSEntityRobotTed;
-import fr.elias.morecreeps.common.entity.CREEPSEntityRobotTodd;
-
 public class CREEPSRenderRobotTodd extends RenderLiving
 {
     public static Random rand = new Random();
     private ModelBase scaleAmount;
     protected CREEPSModelRobotTodd modelBipedMain;
+    private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     public float sparkle;
 
     public CREEPSRenderRobotTodd(CREEPSModelRobotTodd creepsmodelrobottodd, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelrobottodd, f);
+        super(creepsmodelrobottodd, f);
         modelBipedMain = creepsmodelrobottodd;
         scaleAmount = creepsmodelrobottodd;
-        this.addLayer(new LayerRobotTodd(this));
     }
 
-    /*protected boolean func_179_aaaaaaaa(CREEPSEntityRobotTodd creepsentityrobottodd, int i, float f)
+    protected boolean func_179_aaaaaaaa(CREEPSEntityRobotTodd creepsentityrobottodd, int i, float f)
     {
         if (i == 0)
         {
@@ -50,16 +46,16 @@ public class CREEPSRenderRobotTodd extends RenderLiving
         }
 
         return false;
-    }*/
+    }
 
-    /*protected int func_179_a(CREEPSEntityRobotTodd creepsentityrobottodd, int i, float f)
+    protected int func_179_a(CREEPSEntityRobotTodd creepsentityrobottodd, int i, float f)
     {
         if (creepsentityrobottodd.hurtTime > 0)
         {
             if (i == 1)
             {
                 float f1 = rand.nextInt(30);
-                loadTexture("/armor/power.png");
+                bindTexture(armoredCreeperTextures);
                 GL11.glMatrixMode(GL11.GL_TEXTURE);
                 GL11.glLoadIdentity();
                 float f2 = f1 * 0.01F;
@@ -85,13 +81,13 @@ public class CREEPSRenderRobotTodd extends RenderLiving
         }
 
         return -1;
-    }*/
+    }
 
     public void doRenderTodd(CREEPSEntityRobotTodd creepsentityrobottodd, double d, double d1, double d2, float f, float f1)
     {
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_CULL_FACE);
-        mainModel.swingProgress = getSwingProgress(creepsentityrobottodd, f1);
+        //mainModel.swingProgress = getSwingProgress(creepsentityrobottodd, f1);
         mainModel.isRiding = creepsentityrobottodd.isRiding();
 
         try
@@ -138,14 +134,14 @@ public class CREEPSRenderRobotTodd extends RenderLiving
                     GL11.glColor4f(f10, f11, f12, f13);
                     //mainModel.render(creepsentityrobottodd, f8, f7, f5, f3 - f2, f4, f6);
 
-                    /*for (int k = 0; k < 4; k++)
+                    for (int k = 0; k < 4; k++)
                     {
                         if (inheritRenderPass(creepsentityrobottodd, k, f1) > 0)
                         {
                             GL11.glColor4f(f10, f11, f12, f13);
-                            renderPassModel.render(creepsentityrobottodd, f8, f7, f5, f3 - f2, f4, f6);
+                            //renderPassModel.render(creepsentityrobottodd, f8, f7, f5, f3 - f2, f4, f6);
                         }
-                    }*/
+                    }
                 }
 
                 GL11.glDepthFunc(GL11.GL_LEQUAL);
@@ -182,10 +178,10 @@ public class CREEPSRenderRobotTodd extends RenderLiving
     {
         scaleSlime((CREEPSEntityRobotTodd)entityliving, f);
     }
-    /*protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return func_179_a((CREEPSEntityRobotTodd)entityliving, i, f);
-    }*/
+    }
 
     public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {

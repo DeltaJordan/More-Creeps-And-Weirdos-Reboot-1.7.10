@@ -18,7 +18,7 @@ public class CREEPSRenderPrisoner extends RenderLiving
 
     public CREEPSRenderPrisoner(ModelBiped modelbiped, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), modelbiped, f);
+        super(modelbiped, f);
         modelBipedMain = modelbiped;
     }
 

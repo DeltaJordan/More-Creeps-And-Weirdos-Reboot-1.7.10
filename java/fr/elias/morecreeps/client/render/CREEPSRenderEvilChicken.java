@@ -22,7 +22,7 @@ public class CREEPSRenderEvilChicken extends RenderLiving
     public CREEPSRenderEvilChicken(CREEPSModelEvilChicken creepsmodelevilchicken, float f)
     {
     	
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelevilchicken, f);
+        super(creepsmodelevilchicken, f);
         modelBipedMain = creepsmodelevilchicken;
     }
 

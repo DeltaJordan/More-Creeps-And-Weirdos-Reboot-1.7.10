@@ -1,5 +1,6 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.client.config.CREEPSConfig;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
@@ -8,14 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityFloobShip extends EntityFlying
 {
@@ -174,7 +171,7 @@ public class CREEPSEntityFloobShip extends EntityFlying
                 int i = MathHelper.floor_double(posX);
                 int k = MathHelper.floor_double(getBoundingBox().minY);
                 int l = MathHelper.floor_double(posZ);
-                Block i1 = worldObj.getBlockState(new BlockPos(i, k - 1, l)).getBlock();
+                Block i1 = worldObj.getBlock(i, k - 1, l);
 
                 if (i1 == Blocks.flowing_water || i1 == Blocks.water || i1 == Blocks.leaves || i1 == Blocks.cactus)
                 {
@@ -239,7 +236,7 @@ public class CREEPSEntityFloobShip extends EntityFlying
         int j = MathHelper.floor_double(posX);
         int k = MathHelper.floor_double(getBoundingBox().minY);
         int l = MathHelper.floor_double(posZ);
-        Block i1 = worldObj.getBlockState(new BlockPos(j, k - 1, l)).getBlock();
+        Block i1 = worldObj.getBlock(j, k - 1, l);
 
         if (i1 == Blocks.flowing_water || i1 == Blocks.water || i1 == Blocks.leaves || i1 == Blocks.cactus)
         {
@@ -262,14 +259,14 @@ public class CREEPSEntityFloobShip extends EntityFlying
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
             }
         }
     }
@@ -335,13 +332,14 @@ public class CREEPSEntityFloobShip extends EntityFlying
      */
     public boolean getCanSpawnHere()
     {
+    	//Method used by Minecraft below, probably better to leave it alone?
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
         int j1 = worldObj.countEntities(CREEPSEntityFloobShip.class);
-        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && posY > 100D && rand.nextInt(100) == 0 /*&& l > 10*/ && (worldObj.getDifficulty() != EnumDifficulty.PEACEFUL || j1 >= 2);
+        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && posY > 100D && rand.nextInt(100) == 0 /*&& l > 10*/ && (worldObj.difficultySetting != EnumDifficulty.PEACEFUL || j1 >= 2);
     }
 
     /**

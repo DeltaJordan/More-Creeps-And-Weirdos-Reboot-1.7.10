@@ -1,7 +1,6 @@
 package fr.elias.morecreeps.common.entity;
 
 import fr.elias.morecreeps.common.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -12,15 +11,13 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 public class CREEPSEntityBlackSoul extends EntityMob
@@ -34,13 +31,13 @@ public class CREEPSEntityBlackSoul extends EntityMob
         super(world);
         texture = new ResourceLocation(Reference.MOD_ID, Reference.TEXTURE_PATH_ENTITES + Reference.TEXTURE_BLACK_SOUL);
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true));
     }
     public void applyEntityAttributes()
     {
@@ -91,7 +88,7 @@ public class CREEPSEntityBlackSoul extends EntityMob
         {
             float f = getBrightness(1.0F);
 
-            if (f > 0.5F && worldObj.canSeeSky(new BlockPos(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
+            if (f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {
                 setFire(20);
             }
@@ -127,15 +124,18 @@ public class CREEPSEntityBlackSoul extends EntityMob
     /**
      * Checks if the entity's current position is a valid location to spawn this entity.
      */
+    @Override
     public boolean getCanSpawnHere()
     {
-        int i = MathHelper.floor_double(posX);
+    	return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.isValidLightLevel() && super.getCanSpawnHere();
+    	//Method used by Minecraft above, probably better to use it instead?
+    	/*int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
+        int l = worldObj.getFullBlockLightValue(i, j, k);
         Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
         int j1 = worldObj.countEntities(CREEPSEntityBlackSoul.class);
-        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && rand.nextInt(15) == 0 && j1 < 10;
+        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && rand.nextInt(15) == 0 && j1 < 10;*/
     }
     
     public void knockBack(Entity entity, int i, double d, double d1)

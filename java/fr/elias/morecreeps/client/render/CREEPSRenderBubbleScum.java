@@ -15,7 +15,7 @@ public class CREEPSRenderBubbleScum extends RenderLiving
 {
     public CREEPSRenderBubbleScum(CREEPSModelBubbleScum creepsmodelbubblescum, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), new CREEPSModelBubbleScum(), 1.0F);
+        super(new CREEPSModelBubbleScum(), 1.0F);
     }
 
     /**

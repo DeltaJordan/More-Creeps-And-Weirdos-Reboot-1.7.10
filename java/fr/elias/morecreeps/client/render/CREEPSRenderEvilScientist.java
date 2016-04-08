@@ -18,7 +18,7 @@ public class CREEPSRenderEvilScientist extends RenderLiving
 
     public CREEPSRenderEvilScientist(CREEPSModelEvilScientist creepsmodelevilscientist, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelevilscientist, f);
+        super(creepsmodelevilscientist, f);
         modelBipedMain = creepsmodelevilscientist;
     }
 

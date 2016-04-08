@@ -16,7 +16,7 @@ public class CREEPSRenderInvisibleMan extends RenderLiving
 {
     public CREEPSRenderInvisibleMan(ModelBiped modelbiped, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), modelbiped, f);
+        super(modelbiped, f);
     }
 
     protected void fattenup(CREEPSEntityInvisibleMan creepsentityinvisibleman, float f)

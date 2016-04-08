@@ -2,6 +2,11 @@ package fr.elias.morecreeps.client.render;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import fr.elias.morecreeps.client.models.CREEPSModelRobotTed;
+import fr.elias.morecreeps.common.entity.CREEPSEntityRobotTed;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -10,37 +15,29 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import fr.elias.morecreeps.client.models.CREEPSModelRobotTed;
-import fr.elias.morecreeps.client.render.layers.LayerRobotTed;
-import fr.elias.morecreeps.common.entity.CREEPSEntityRatMan;
-import fr.elias.morecreeps.common.entity.CREEPSEntityRobotTed;
-
 public class CREEPSRenderRobotTed extends RenderLiving
 {
     public static Random rand = new Random();
     private ModelBase scaleAmount;
     protected CREEPSModelRobotTed modelBipedMain;
+    private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     public float sparkle;
 
     public CREEPSRenderRobotTed(CREEPSModelRobotTed creepsmodelrobotted, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelrobotted, f);
+        super(creepsmodelrobotted, f);
         modelBipedMain = creepsmodelrobotted;
         scaleAmount = creepsmodelrobotted;
-        this.addLayer(new LayerRobotTed(this));
     }
 
-    /*protected int func_179_a(CREEPSEntityRobotTed creepsentityrobotted, int i, float f)
+    protected int func_179_a(CREEPSEntityRobotTed creepsentityrobotted, int i, float f)
     {
         if (creepsentityrobotted.hurtTime > 0)
         {
             if (i == 1)
             {
                 float f1 = rand.nextInt(30);
-                loadTexture("/armor/power.png");
+                bindTexture(armoredCreeperTextures);
                 GL11.glMatrixMode(GL11.GL_TEXTURE);
                 GL11.glLoadIdentity();
                 float f2 = f1 * 0.01F;
@@ -66,7 +63,7 @@ public class CREEPSRenderRobotTed extends RenderLiving
         }
 
         return -1;
-    }*/
+    }
 
     /**
      * sets the scale for the slime based on getSlimeSize in EntitySlime
@@ -85,16 +82,16 @@ public class CREEPSRenderRobotTed extends RenderLiving
         scaleSlime((CREEPSEntityRobotTed)entityliving, f);
     }
 
-    /*protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return func_179_a((CREEPSEntityRobotTed)entityliving, i, f);
-    }*/
+    }
 
     public void doRenderTed(CREEPSEntityRobotTed creepsentityrobotted, double d, double d1, double d2, float f, float f1)
     {
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_CULL_FACE);
-        mainModel.swingProgress = getSwingProgress(creepsentityrobotted, f1);
+        //mainModel.swingProgress = getSwingProgress(creepsentityrobotted, f1);
         mainModel.isRiding = creepsentityrobotted.isRiding();
 
         try
@@ -118,17 +115,17 @@ public class CREEPSRenderRobotTed extends RenderLiving
                 f7 = 1.0F;
             }
 
-            //loadDownloadableImageTexture(creepsentityrobotted.skinUrl, creepsentityrobotted.getTexture());
+            //loadDownloadableImageTexture(creepsentityrobotted.skinUrl, creepsentityrobotted.getTexture());*/
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            mainModel.setLivingAnimations(creepsentityrobotted, f8, f7, f1);
-            mainModel.render(creepsentityrobotted, f8, f7, f5, f3 - f2, f4, f6);*/
+            //mainModel.setLivingAnimations(creepsentityrobotted, f8, f7, f1);
+            //mainModel.render(creepsentityrobotted, f8, f7, f5, f3 - f2, f4, f6);*/
 
-            /*for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-            	renderPassModel.render(creepsentityrobotted, f8, f7, f5, f3 - f2, f4, f6);
+            	//renderPassModel.render(creepsentityrobotted, f8, f7, f5, f3 - f2, f4, f6);
             	GL11.glDisable(GL11.GL_BLEND);
             	GL11.glEnable(GL11.GL_ALPHA_TEST);
-            }*/
+            }
 
             float f9 = creepsentityrobotted.getBrightness(f1);
             int j = getColorMultiplier(creepsentityrobotted, f9, f1);

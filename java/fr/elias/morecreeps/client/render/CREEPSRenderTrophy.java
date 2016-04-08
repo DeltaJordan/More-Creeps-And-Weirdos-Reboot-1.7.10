@@ -13,7 +13,7 @@ public class CREEPSRenderTrophy extends RenderLiving
 
     public CREEPSRenderTrophy(CREEPSModelTrophy creepsmodeltrophy, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodeltrophy, f);
+        super(creepsmodeltrophy, f);
         modelBipedMain = creepsmodeltrophy;
     }
 

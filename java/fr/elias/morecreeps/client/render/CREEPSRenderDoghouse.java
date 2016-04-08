@@ -18,7 +18,7 @@ public class CREEPSRenderDoghouse extends RenderLiving
 
     public CREEPSRenderDoghouse(CREEPSModelDoghouse creepsmodeldoghouse, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodeldoghouse, f);
+        super(creepsmodeldoghouse, f);
         modelBipedMain = creepsmodeldoghouse;
     }
 

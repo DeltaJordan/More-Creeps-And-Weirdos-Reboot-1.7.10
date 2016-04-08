@@ -18,7 +18,7 @@ public class CREEPSRenderThief extends RenderLiving
 
     public CREEPSRenderThief(ModelBiped modelbiped, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), modelbiped, f);
+        super(modelbiped, f);
         modelBipedMain = modelbiped;
     }
 

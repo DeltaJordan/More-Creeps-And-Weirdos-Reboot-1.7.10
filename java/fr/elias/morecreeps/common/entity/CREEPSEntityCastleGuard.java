@@ -74,7 +74,7 @@ public class CREEPSEntityCastleGuard extends EntityMob
     {
     	AxisAlignedBB x = this.getBoundingBox();
     	
-        return worldObj.getDifficulty().getDifficultyId() > 0 && worldObj.checkNoEntityCollision(getBoundingBox()) && worldObj.getCollidingBoundingBoxes(this,  x).size() == 0;
+        return worldObj.difficultySetting.getDifficultyId() > 0 && worldObj.checkNoEntityCollision(getBoundingBox()) && worldObj.getCollidingBoundingBoxes(this,  x).size() == 0;
     }
 
     /**

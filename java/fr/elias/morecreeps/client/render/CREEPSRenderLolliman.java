@@ -18,7 +18,7 @@ public class CREEPSRenderLolliman extends RenderLiving
 
     public CREEPSRenderLolliman(CREEPSModelLolliman creepsmodellolliman, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodellolliman, f);
+        super(creepsmodellolliman, f);
         modelLollimanMain = creepsmodellolliman;
     }
 

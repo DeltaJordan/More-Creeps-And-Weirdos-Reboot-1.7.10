@@ -6,12 +6,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -48,15 +46,15 @@ public class CREEPSEntityCastleCritter extends EntityMob
      * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
      * Args: x, y, z
      */
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.double_stone_slab || worldObj.getBlockState(bp.down()) == Blocks.stone_slab)
+        if (worldObj.getBlock(x, y, z) == Blocks.double_stone_slab || worldObj.getBlock(x, y, z) == Blocks.stone_slab)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
     /**
@@ -73,7 +71,7 @@ public class CREEPSEntityCastleCritter extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+            if (entity != this && worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
             {
                 this.setRevengeTarget((EntityLivingBase) entity);
             }
@@ -114,7 +112,7 @@ public class CREEPSEntityCastleCritter extends EntityMob
     {
         public AIAttackEntity()
         {
-            super(CREEPSEntityCastleCritter.this, EntityPlayer.class, true);
+            super(CREEPSEntityCastleCritter.this, EntityPlayer.class, 2, true);
         }
         
         public boolean shouldExecute()
@@ -144,7 +142,7 @@ public class CREEPSEntityCastleCritter extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        Block i1 = worldObj.getBlock(i, j - 1, k);
         return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0;
     }
 

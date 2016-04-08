@@ -1,8 +1,10 @@
 package fr.elias.morecreeps.common.entity;
 
-import java.util.List;
-
+import fr.elias.morecreeps.client.config.CREEPSConfig;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,15 +16,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.Reference;
 
 public class CREEPSEntityBum extends EntityMob
 {
@@ -114,14 +112,14 @@ public class CREEPSEntityBum extends EntityMob
                             continue;
                         }
 
-                        Block k1 = worldObj.getBlockState(new BlockPos(j + j1, k - 1, l - i1)).getBlock();
-                        Block l1 = worldObj.getBlockState(new BlockPos(j + j1, k, l - i1)).getBlock();
+                        Block k1 = worldObj.getBlock(j + j1, k - 1, l - i1);
+                        Block l1 = worldObj.getBlock(j + j1, k, l - i1);
 
                         if (rand.nextInt(2) == 0)
                         {
                             if ((k1 == Blocks.grass || k1 == Blocks.dirt) && l1 == Blocks.air)
                             {
-                                worldObj.setBlockState(new BlockPos(j + j1, k, l - i1), Blocks.yellow_flower.getDefaultState());
+                                worldObj.setBlock(j + j1, k, l - i1, Blocks.yellow_flower);
                             }
 
                             continue;
@@ -129,7 +127,7 @@ public class CREEPSEntityBum extends EntityMob
 
                         if ((k1 == Blocks.grass || k1 == Blocks.dirt) && l1 == Blocks.air)
                         {
-                        	worldObj.setBlockState(new BlockPos(j + j1, k, l - i1), Blocks.red_flower.getDefaultState());
+                        	worldObj.setBlock(j + j1, k, l - i1, Blocks.red_flower);
                         }
                     }
                 }
@@ -191,14 +189,17 @@ public class CREEPSEntityBum extends EntityMob
     /**
      * Checks if the entity's current position is a valid location to spawn this entity.
      */
+    
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(getPosition());
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.stone_slab && i1 != Blocks.double_stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(10) == 0 && l > 8;
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && l > 8 && super.getCanSpawnHere();
+        //Method used by Minecraft above, probably better to use it instead?
+        //Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        //return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.stone_slab && i1 != Blocks.double_stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(10) == 0 && l > 8;
     }
 
     /**
@@ -210,7 +211,9 @@ public class CREEPSEntityBum extends EntityMob
     }
 
 
-    /**TEMPORARILY REMOVED TO FIND AN ALTERNATIVE TO THESE FUNCTIONS**/
+    /**TEMPORARILY REMOVED TO FIND AN ALTERNATIVE TO THESE FUNCTIONS
+     * Above null for now, testing to see if it works in 1.7.10
+    **/
     /*protected Entity findPlayerToAttack()
     {
         if (angerLevel == 0)
@@ -306,14 +309,14 @@ public class CREEPSEntityBum extends EntityMob
                         double d1 = rand.nextGaussian() * 0.02D;
                         double d3 = rand.nextGaussian() * 0.02D;
                         double d6 = rand.nextGaussian() * 0.02D;
-                        worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d6);
+                        worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d6);
                     }
                 }
 
                 texture = new ResourceLocation(Reference.MOD_ID, Reference.TEXTURE_PATH_ENTITES +
                 		Reference.TEXTURE_BUM_DRESSED);
                 angerLevel = 0;
-                //findPlayerToAttack();
+                findPlayerToAttack();
 
                 if (rand.nextInt(5) == 0)
                 {
@@ -330,7 +333,7 @@ public class CREEPSEntityBum extends EntityMob
                         double d = rand.nextGaussian() * 0.02D;
                         double d2 = rand.nextGaussian() * 0.02D;
                         double d5 = rand.nextGaussian() * 0.02D;
-                        worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d5);
+                        worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d5);
                     }
 
                     for (int k = 0; k < value; k++)
@@ -350,15 +353,17 @@ public class CREEPSEntityBum extends EntityMob
                 }
                 else if (itemstack != null && (itemstack.getItem() == Item.getItemFromBlock(Blocks.yellow_flower) || itemstack.getItem() == Item.getItemFromBlock(Blocks.red_flower)))
                 {
-                	if(!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumflower))
-                	{
-                    	worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
-                    	entityplayer.addStat(MoreCreepsAndWeirdos.achievebumflower, 1);
-                    	confetti(entityplayer);
-                	}
-
-                    worldObj.playSoundAtEntity(this, "morecreeps:bumthanks", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-                    timetopee = rand.nextInt(1900) + 1500;
+                		//func_147099_x() is the stat file, could of named it better :P
+                		if(!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumflower))
+                		{
+                			worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
+                			entityplayer.addStat(MoreCreepsAndWeirdos.achievebumflower, 1);
+                			confetti(entityplayer);
+                		}
+                	
+                		worldObj.playSoundAtEntity(this, "morecreeps:bumthanks", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                		timetopee = rand.nextInt(1900) + 1500;
+                	
 
                     if (itemstack.stackSize - 1 == 0)
                     {
@@ -371,7 +376,7 @@ public class CREEPSEntityBum extends EntityMob
                 }
                 else if (itemstack != null && itemstack.getItem() == Items.bucket)
                 {
-                    if (!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumpot) && ((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumflower))
+                    if (!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumpot) && ((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumflower))
                     {
                         worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
                         entityplayer.addStat(MoreCreepsAndWeirdos.achievebumpot, 1);
@@ -392,7 +397,7 @@ public class CREEPSEntityBum extends EntityMob
                 }
                 else if (itemstack != null && itemstack.getItem() == Items.lava_bucket)
                 {
-                    if (!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumlava) && ((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumpot))
+                    if (!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumlava) && ((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievebumpot))
                     {
                         worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
                         entityplayer.addStat(MoreCreepsAndWeirdos.achievebumlava, 1);
@@ -420,7 +425,7 @@ public class CREEPSEntityBum extends EntityMob
                     {
                         for (int l1 = 0; l1 < rand.nextInt(3) + 1; l1++)
                         {
-                            Blocks.obsidian.dropBlockAsItem(worldObj, new BlockPos(l, j1, k1), worldObj.getBlockState(new BlockPos(l, j1, k1)), 0);
+                            Blocks.obsidian.dropBlockAsItem(worldObj, l, j1, k1, worldObj.getBlockMetadata(l, j1, k1), 0);
                         }
                     }
 
@@ -441,8 +446,8 @@ public class CREEPSEntityBum extends EntityMob
                         d9 *= d13;
                         d10 *= d13;
                         d11 *= d13;
-                        worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (d4 + posX * 1.0D) / 2D, (d7 + posY * 1.0D) / 2D + 2D, (d8 + posZ * 1.0D) / 2D, d9, d10, d11);
-                        worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d4, d7, d8, d9, d10, d11);
+                        worldObj.spawnParticle("SMOKE".toLowerCase(), (d4 + posX * 1.0D) / 2D, (d7 + posY * 1.0D) / 2D + 2D, (d8 + posZ * 1.0D) / 2D, d9, d10, d11);
+                        worldObj.spawnParticle("SMOKE".toLowerCase(), d4, d7, d8, d9, d10, d11);
                     }
 
                     if (rand.nextInt(4) == 0)

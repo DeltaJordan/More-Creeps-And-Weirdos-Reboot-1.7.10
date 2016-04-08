@@ -18,7 +18,7 @@ public class CREEPSRenderHippo extends RenderLiving
 
     public CREEPSRenderHippo(CREEPSModelHippo creepsmodelhippo, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelhippo, f);
+        super(creepsmodelhippo, f);
         modelBipedMain = creepsmodelhippo;
     }
 

@@ -3,7 +3,7 @@ package fr.elias.morecreeps.common.entity;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityFlying;
@@ -11,15 +11,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.particles.CREEPSFxAtoms;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityAtom extends EntityFlying
 {
@@ -124,7 +119,7 @@ public class CREEPSEntityAtom extends EntityFlying
             d3 *= d7;
             d4 *= d7;
             d5 *= d7;
-            worldObj.spawnParticle(EnumParticleTypes.PORTAL, (d + posX * 1.0D) / 2D, (d1 + posY * 1.0D) / 2D + (double)(int)(atomsize / 4F), (d2 + posZ * 1.0D) / 2D, d3, d4, d5);
+            worldObj.spawnParticle("portal", (d + posX * 1.0D) / 2D, (d1 + posY * 1.0D) / 2D + (double)(int)(atomsize / 4F), (d2 + posZ * 1.0D) / 2D, d3, d4, d5);
         }
 
         if (rand.nextInt(6) == 0)
@@ -142,7 +137,7 @@ public class CREEPSEntityAtom extends EntityFlying
             setDead();
         }
 
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(atomsize * 2.0F, atomsize * 2.0F, atomsize * 2.0F));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().expand(atomsize * 2.0F, atomsize * 2.0F, atomsize * 2.0F));
 
         for (int j1 = 0; j1 < list.size(); j1++)
         {

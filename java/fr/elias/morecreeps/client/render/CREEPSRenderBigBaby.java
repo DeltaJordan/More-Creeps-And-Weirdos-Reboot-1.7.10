@@ -16,7 +16,7 @@ public class CREEPSRenderBigBaby extends RenderLiving
 
     public CREEPSRenderBigBaby(CREEPSModelBigBaby creepsmodelbigbaby, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelbigbaby, f);
+        super(creepsmodelbigbaby, f);
         modelbigbabymain = creepsmodelbigbaby;
     }
 

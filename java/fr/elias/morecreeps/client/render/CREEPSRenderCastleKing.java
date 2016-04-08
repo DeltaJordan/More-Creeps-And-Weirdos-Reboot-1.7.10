@@ -18,7 +18,7 @@ public class CREEPSRenderCastleKing extends RenderLiving
 
     public CREEPSRenderCastleKing(CREEPSModelCastleKing creepsmodelcastleking, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelcastleking, f);
+        super(creepsmodelcastleking, f);
         modelcastlekingmain = creepsmodelcastleking;
     }
 

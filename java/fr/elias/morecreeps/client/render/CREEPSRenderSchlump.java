@@ -19,13 +19,16 @@ import fr.elias.morecreeps.common.entity.CREEPSEntitySchlump;
 public class CREEPSRenderSchlump extends RenderLiving
 {
     protected CREEPSModelSchlump modelBipedMain;
+    public static ResourceLocation layer_texture = new ResourceLocation("morecreeps:textures/entity/schlumpnight.png");
 
     public CREEPSRenderSchlump(CREEPSModelSchlump creepsmodelschlump, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelschlump, f);
+        super(creepsmodelschlump, f);
         modelBipedMain = creepsmodelschlump;
     }
 
+    
+    
     protected void fattenup(CREEPSEntitySchlump creepsentityschlump, float f)
     {
         GL11.glScalef(creepsentityschlump.modelsize, creepsentityschlump.modelsize, creepsentityschlump.modelsize);
@@ -42,12 +45,12 @@ public class CREEPSRenderSchlump extends RenderLiving
         fattenup((CREEPSEntitySchlump)entityliving, f);
     }
     
-    /*protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return eyeGlow((CREEPSEntitySchlump)entityliving, i, f);
-    }*/
+    }
 
-    /*protected int eyeGlow(CREEPSEntitySchlump creepsentityschlump, int i, float f)
+    protected int eyeGlow(CREEPSEntitySchlump creepsentityschlump, int i, float f)
     {
         if (i != 0)
         {
@@ -60,7 +63,7 @@ public class CREEPSRenderSchlump extends RenderLiving
         }
         else
         {
-            loadTexture("/mob/creeps/schlumpnight.png");
+            bindTexture(layer_texture);
             float f1 = (1.0F - creepsentityschlump.getBrightness(1.0F)) * 0.5F;
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -68,7 +71,7 @@ public class CREEPSRenderSchlump extends RenderLiving
             GL11.glColor4f(1.0F, 1.0F, 1.0F, f1);
             return 1;
         }
-    }*/
+    }
 
     protected ResourceLocation getEntityTexture(CREEPSEntitySchlump entity)
     {

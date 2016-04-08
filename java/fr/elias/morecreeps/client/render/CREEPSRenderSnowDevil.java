@@ -1,21 +1,17 @@
 package fr.elias.morecreeps.client.render;
 
-import net.minecraft.client.Minecraft;
+import org.lwjgl.opengl.GL11;
+
+import fr.elias.morecreeps.common.entity.CREEPSEntitySnowDevil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import fr.elias.morecreeps.common.entity.CREEPSEntitySnowDevil;
-import fr.elias.morecreeps.common.entity.CREEPSEntitySquimp;
 
 public class CREEPSRenderSnowDevil extends RenderLiving
 {
@@ -23,7 +19,7 @@ public class CREEPSRenderSnowDevil extends RenderLiving
 
     public CREEPSRenderSnowDevil(ModelBase modelbase, ModelBase modelbase1, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), modelbase, f);
+        super(modelbase, f);
     }
 
     protected void fattenup(CREEPSEntitySnowDevil creepsentitysnowdevil, float f)
@@ -67,18 +63,17 @@ public class CREEPSRenderSnowDevil extends RenderLiving
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+            Tessellator tessellator = Tessellator.instance;
             float f5 = (1.0F - ((CREEPSEntitySnowDevil)entityliving).modelsize) * 55F;
             int i = 0 + (int)f5;
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            worldRenderer.startDrawingQuads();
+            tessellator.startDrawingQuads();
             int j = fontrenderer.getStringWidth(s) / 2;
-            worldRenderer.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-            worldRenderer.addVertex(-j - 1, -1 + i, 0.0D);
-            worldRenderer.addVertex(-j - 1, 8 + i, 0.0D);
-            worldRenderer.addVertex(j + 1, 8 + i, 0.0D);
-            worldRenderer.addVertex(j + 1, -1 + i, 0.0D);
+            tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
+            tessellator.addVertex(-j - 1, -1 + i, 0.0D);
+            tessellator.addVertex(-j - 1, 8 + i, 0.0D);
+            tessellator.addVertex(j + 1, 8 + i, 0.0D);
+            tessellator.addVertex(j + 1, -1 + i, 0.0D);
             tessellator.draw();
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             fontrenderer.drawString((new StringBuilder()).append("\2476").append(s).toString(), -fontrenderer.getStringWidth(s) / 2, i, 0x20ffffff);

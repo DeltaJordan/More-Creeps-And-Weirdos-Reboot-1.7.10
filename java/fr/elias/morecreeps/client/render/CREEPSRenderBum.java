@@ -18,7 +18,7 @@ public class CREEPSRenderBum extends RenderLiving
 
     public CREEPSRenderBum(CREEPSModelBum creepsmodelbum, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelbum, f);
+        super(creepsmodelbum, f);
         modelBipedMain = creepsmodelbum;
     }
     public void preRenderCallback(EntityLivingBase entityliving, float f)

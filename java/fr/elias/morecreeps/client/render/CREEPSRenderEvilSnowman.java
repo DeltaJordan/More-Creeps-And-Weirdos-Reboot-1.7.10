@@ -20,7 +20,7 @@ public class CREEPSRenderEvilSnowman extends RenderLiving
 
     public CREEPSRenderEvilSnowman(CREEPSModelEvilSnowman creepsmodelevilsnowman, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelevilsnowman, f);
+        super(creepsmodelevilsnowman, f);
         modelBipedMain = creepsmodelevilsnowman;
     }
 

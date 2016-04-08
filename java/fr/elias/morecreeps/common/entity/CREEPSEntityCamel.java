@@ -1,8 +1,9 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.client.particles.CREEPSFxSpit;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,17 +13,13 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.particles.CREEPSFxSpit;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityCamel extends EntityMob
 {
@@ -98,15 +95,15 @@ public class CREEPSEntityCamel extends EntityMob
      * Args: x, y, z
      */
     //getBlockPathHeight in 1.8
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathHeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.sand || worldObj.getBlockState(bp.down()).getBlock() == Blocks.gravel)
+        if (worldObj.getBlock(x, y, z) == Blocks.sand || worldObj.getBlock(x, y, z) == Blocks.gravel)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -247,7 +244,7 @@ public class CREEPSEntityCamel extends EntityMob
      */
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.getDifficulty().getDifficultyId() > 0 && (riddenByEntity instanceof CREEPSEntityCamelJockey))
+        if (worldObj.difficultySetting.getDifficultyId() > 0 && (riddenByEntity instanceof CREEPSEntityCamelJockey))
         {
             EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, attackrange);
 
@@ -306,7 +303,7 @@ public class CREEPSEntityCamel extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty().getDifficultyId() > 0)
+            if (entity != this && worldObj.difficultySetting.getDifficultyId() > 0)
             {
                 this.attackEntity(entity, 1);
             }
@@ -498,7 +495,7 @@ public class CREEPSEntityCamel extends EntityMob
             double d = rand.nextGaussian() * 0.02D;
             double d2 = rand.nextGaussian() * 0.02D;
             double d4 = rand.nextGaussian() * 0.02D;
-            worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
+            worldObj.spawnParticle("HEART".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
         }
 
         for (int j = 0; j < 4; j++)
@@ -508,7 +505,7 @@ public class CREEPSEntityCamel extends EntityMob
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d3 = rand.nextGaussian() * 0.02D;
                 double d5 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
             }
         }
     }
@@ -518,10 +515,16 @@ public class CREEPSEntityCamel extends EntityMob
      */
     public boolean getCanSpawnHere()
     {
-        int l = worldObj.getLight(getPosition());
+    	int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(getBoundingBox().minY);
+        int k = MathHelper.floor_double(posZ);
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && l > 6 && super.getCanSpawnHere();
+    	//Don't know what's going on below...
+        /*int l = worldObj.getLight(getPosition());
         int j1 = worldObj.countEntities(CREEPSEntityCamel.class);
         Block i1 = worldObj.getBlockState(new BlockPos(getPosition())).getBlock();
-        return (i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.carpet && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 &&worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(getPosition()) && l > 6 && rand.nextInt(40) == 0 && j1 < 25;
+        return (i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.carpet && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 &&worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(getPosition()) && l > 6 && rand.nextInt(40) == 0 && j1 < 25;*/
     }
 
     /**

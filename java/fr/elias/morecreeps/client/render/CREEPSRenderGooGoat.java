@@ -1,18 +1,16 @@
 package fr.elias.morecreeps.client.render;
 
+import org.lwjgl.opengl.GL11;
+
+import fr.elias.morecreeps.client.models.CREEPSModelGooGoat;
+import fr.elias.morecreeps.common.entity.CREEPSEntityGooGoat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import fr.elias.morecreeps.client.models.CREEPSModelGooGoat;
-import fr.elias.morecreeps.client.render.layers.LayerGooGoat;
-import fr.elias.morecreeps.common.entity.CREEPSEntityG;
-import fr.elias.morecreeps.common.entity.CREEPSEntityGooGoat;
 
 public class CREEPSRenderGooGoat extends RenderLiving
 {
@@ -21,13 +19,12 @@ public class CREEPSRenderGooGoat extends RenderLiving
 
     public CREEPSRenderGooGoat(CREEPSModelGooGoat creepsmodelgoogoat, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelgoogoat, f);
+        super(creepsmodelgoogoat, f);
         modelBipedMain = creepsmodelgoogoat;
         scaleAmount = creepsmodelgoogoat;
-        this.addLayer(new LayerGooGoat(this));
     }
 
-    /*protected int func_179_a(CREEPSEntityGooGoat creepsentitygoogoat, int i, float f)
+    protected int func_179_a(CREEPSEntityGooGoat creepsentitygoogoat, int i, float f)
     {
         if (i == 0)
         {
@@ -44,7 +41,7 @@ public class CREEPSRenderGooGoat extends RenderLiving
         }
 
         return -1;
-    }*/
+    }
 
     /**
      * sets the scale for the slime based on getSlimeSize in EntitySlime
@@ -66,10 +63,10 @@ public class CREEPSRenderGooGoat extends RenderLiving
         scaleSlime((CREEPSEntityGooGoat)entityliving, f);
     }
 
-    /*protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return func_179_a((CREEPSEntityGooGoat)entityliving, i, f);
-    }*/
+    }
 
     protected ResourceLocation getEntityTexture(CREEPSEntityGooGoat entity)
     {

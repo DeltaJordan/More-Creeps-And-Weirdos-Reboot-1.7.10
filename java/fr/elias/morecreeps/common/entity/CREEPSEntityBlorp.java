@@ -14,9 +14,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -53,13 +51,13 @@ public class CREEPSEntityBlorp extends EntityAnimal
         hungrytime = rand.nextInt(20) + 20;
         blorplevel = 1;
         angry = false;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityBlorpAI(this));
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true));
     }
 
     public void applyEntityAttributes()
@@ -98,7 +96,7 @@ public class CREEPSEntityBlorp extends EntityAnimal
                 int j = ai[1];
                 int k = ai[2];
                 worldObj.playSoundAtEntity(this, "morecreeps:blorpeat", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-                worldObj.setBlockToAir(new BlockPos(i, j, k));
+                worldObj.setBlockToAir(i, j, k);
                 hungrytime = hungrytime + rand.nextInt(100) + 25;
 
                 if (hungrytime > 1000)
@@ -159,15 +157,15 @@ public class CREEPSEntityBlorp extends EntityAnimal
     }
 
     //previously called : getBlockpathWeight
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int iPosX, int iPosY, int iPosZ)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.leaves || worldObj.getBlockState(bp.down()).getBlock() == Blocks.log)
+        if (worldObj.getBlock(iPosX, iPosY, iPosZ) == Blocks.leaves || worldObj.getBlock(iPosX, iPosY, iPosZ) == Blocks.log)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)iPosY;
         }
     }
     public void faceTreeTop(int i, int j, int k, float f)
@@ -257,7 +255,7 @@ public class CREEPSEntityBlorp extends EntityAnimal
             {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
-                    Block j2 = worldObj.getBlockState(new BlockPos(k1, l1, i2)).getBlock();
+                    Block j2 = worldObj.getBlock(k1, l1, i2);
 
                     if (j2 != Blocks.air && j2 == Blocks.leaves)
                     {
@@ -294,17 +292,17 @@ public class CREEPSEntityBlorp extends EntityAnimal
 
     /**
      * Checks if the entity's current position is a valid location to spawn this entity.
-     * Disabled to test.
      */
-    /*public boolean getCanSpawnHere()
+    public boolean getCanSpawnHere()
     {
+    	//Method used by Minecraft below, probably better to leave it?
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(25) == 0; //&& l > 10;
-    }*/
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(25) == 0 && l > 10;
+    }
 
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.

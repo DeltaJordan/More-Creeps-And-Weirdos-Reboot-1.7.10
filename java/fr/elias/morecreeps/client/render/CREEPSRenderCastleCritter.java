@@ -1,29 +1,32 @@
 package fr.elias.morecreeps.client.render;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
 import fr.elias.morecreeps.client.models.CREEPSModelCastleCritter;
-import fr.elias.morecreeps.client.render.layers.LayerCastleCritterEyes;
 import fr.elias.morecreeps.common.entity.CREEPSEntityCastleCritter;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
+
+
 
 public class CREEPSRenderCastleCritter extends RenderLiving
 {
+	
+	public static ResourceLocation eye_glow = new ResourceLocation("morecreeps:textures/entity/castlecritterglow.png");
+	public CREEPSRenderCastleCritter castleCritterRender;
+	
     protected CREEPSModelCastleCritter modelBipedMain;
 
     public CREEPSRenderCastleCritter(CREEPSModelCastleCritter creepsmodelcastlecritter, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelcastlecritter, f);
-        this.addLayer(new LayerCastleCritterEyes(this));
+        super(creepsmodelcastlecritter, f);
         modelBipedMain = creepsmodelcastlecritter;
     }
 
-    /*protected int eyeGlow(CREEPSEntityCastleCritter creepsentitycastlecritter, int i, float f)
+    protected int eyeGlow(CREEPSEntityCastleCritter creepsentitycastlecritter, int i, float f)
     {
         if (i != 0)
         {
@@ -36,7 +39,7 @@ public class CREEPSRenderCastleCritter extends RenderLiving
         }
         else
         {
-            this.bindTexture("/mob/creeps/castlecritterglow.png");
+            this.bindTexture(this.eye_glow);
             float f1 = (1.0F - creepsentitycastlecritter.getBrightness(1.0F)) * 0.5F;
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -44,7 +47,7 @@ public class CREEPSRenderCastleCritter extends RenderLiving
             GL11.glColor4f(1.0F, 1.0F, 1.0F, f1);
             return 1;
         }
-    }*/
+    }
 
     protected void fattenup(CREEPSEntityCastleCritter creepsentitycastlecritter, float f)
     {
@@ -54,10 +57,10 @@ public class CREEPSRenderCastleCritter extends RenderLiving
     {
         fattenup((CREEPSEntityCastleCritter)entityliving, f);
     }
-    /*protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return eyeGlow((CREEPSEntityCastleCritter)entityliving, i, f);
-    }*/
+    }
 
     protected ResourceLocation getEntityTexture(CREEPSEntityCastleCritter entity)
     {

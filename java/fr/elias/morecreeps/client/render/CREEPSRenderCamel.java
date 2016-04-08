@@ -3,7 +3,6 @@ package fr.elias.morecreeps.client.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -21,7 +20,7 @@ public class CREEPSRenderCamel extends RenderLiving
 
     public CREEPSRenderCamel(CREEPSModelCamel creepsmodelcamel, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelcamel, f);
+        super(creepsmodelcamel, f);
         modelBipedMain = creepsmodelcamel;
         shadowSize = f;
     }
@@ -66,8 +65,8 @@ public class CREEPSRenderCamel extends RenderLiving
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             
             
-            Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+            Tessellator tessellator = Tessellator.instance;
+            
             
             
             float f5 = (2.0F - ((CREEPSEntityCamel)entityliving).modelsize) * 80F;
@@ -75,13 +74,13 @@ public class CREEPSRenderCamel extends RenderLiving
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             
             
-            worldRenderer.startDrawingQuads();
+            tessellator.startDrawingQuads();
             int j = fontrenderer.getStringWidth(s) / 2;
-            worldRenderer.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-            worldRenderer.addVertex(-j - 1, -1 + i, 0.0D);
-            worldRenderer.addVertex(-j - 1, 8 + i, 0.0D);
-            worldRenderer.addVertex(j + 1, 8 + i, 0.0D);
-            worldRenderer.addVertex(j + 1, -1 + i, 0.0D);
+            tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
+            tessellator.addVertex(-j - 1, -1 + i, 0.0D);
+            tessellator.addVertex(-j - 1, 8 + i, 0.0D);
+            tessellator.addVertex(j + 1, 8 + i, 0.0D);
+            tessellator.addVertex(j + 1, -1 + i, 0.0D);
             tessellator.draw();
             
             

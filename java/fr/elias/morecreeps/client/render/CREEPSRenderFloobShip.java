@@ -16,7 +16,7 @@ public class CREEPSRenderFloobShip extends RenderLiving
 {
     public CREEPSRenderFloobShip(CREEPSModelFloobShip creepsmodelfloobship, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelfloobship, f);
+        super(creepsmodelfloobship, f);
     }
 
     /**

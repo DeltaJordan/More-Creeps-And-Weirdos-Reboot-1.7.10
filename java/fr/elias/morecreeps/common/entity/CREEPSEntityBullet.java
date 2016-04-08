@@ -2,6 +2,8 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.client.config.CREEPSConfig;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -10,18 +12,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.client.particles.CREEPSFxBlood;
-import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityBullet extends Entity
 {
@@ -206,7 +202,7 @@ public class CREEPSEntityBullet extends Entity
 
         if (aoLightValueZPos)
         {
-            Block i = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)).getBlock();
+            Block i = worldObj.getBlock(hitX, hitY, hitZ);
 
             if (i != blockHit)
             {
@@ -234,19 +230,19 @@ public class CREEPSEntityBullet extends Entity
             aoLightValueScratchXYNN++;
         }
 
-        Vec3 vec3d = new Vec3(posX, posY, posZ);
-        Vec3 vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        Vec3 vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        Vec3 vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
-        vec3d = new Vec3(posX, posY, posZ);
-        vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
         if (movingobjectposition != null)
         {
-            vec3d1 = new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec3d1 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
 
         Entity entity = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
         double d = 0.0D;
 
         for (int j = 0; j < list.size(); j++)
@@ -265,7 +261,7 @@ public class CREEPSEntityBullet extends Entity
             }
 
             float f4 = 0.3F;
-            AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f4, f4, f4);
+            AxisAlignedBB axisalignedbb = entity1.getBoundingBox().expand(f4, f4, f4);
             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
 
             if (movingobjectposition1 == null)
@@ -295,17 +291,17 @@ public class CREEPSEntityBullet extends Entity
                 {
                     int k = damage;
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL)
+                    if (worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
                     {
                         k = 0;
                     }
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.EASY)
+                    if (worldObj.difficultySetting == EnumDifficulty.EASY)
                     {
                         k = k / 3 + 1;
                     }
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.HARD)
+                    if (worldObj.difficultySetting == EnumDifficulty.HARD)
                     {
                         k = (k * 3) / 2;
                     }
@@ -329,10 +325,10 @@ public class CREEPSEntityBullet extends Entity
             }
             else
             {
-                hitX = movingobjectposition.getBlockPos().getX();
-                hitY = movingobjectposition.getBlockPos().getY();
-                hitZ = movingobjectposition.getBlockPos().getZ();
-                blockHit = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)).getBlock();
+                hitX = movingobjectposition.blockX;
+                hitY = movingobjectposition.blockY;
+                hitZ = movingobjectposition.blockZ;
+                blockHit = worldObj.getBlock(hitX, hitY, hitZ);
                 motionX = (float)(movingobjectposition.hitVec.xCoord - posX);
                 motionY = (float)(movingobjectposition.hitVec.yCoord - posY);
                 motionZ = (float)(movingobjectposition.hitVec.zCoord - posZ);
@@ -345,13 +341,13 @@ public class CREEPSEntityBullet extends Entity
 
                 if (blockHit == Blocks.ice)
                 {
-                    worldObj.setBlockState(new BlockPos(hitX, hitY, hitZ), Blocks.water.getDefaultState());
+                    worldObj.setBlock(hitX, hitY, hitZ, Blocks.water);
                 }
 
                 if (CREEPSConfig.rayGunFire && blockHit == Blocks.glass)
                 {
-                    worldObj.setBlockToAir(new BlockPos(hitX, hitY, hitZ));
-                    Blocks.glass.onBlockDestroyedByPlayer(worldObj, new BlockPos(hitX, hitY, hitZ), worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)));
+                    worldObj.setBlockToAir(hitX, hitY, hitZ);
+                    Blocks.glass.onBlockDestroyedByPlayer(worldObj,hitX, hitY, hitZ, worldObj.getBlockMetadata(hitX, hitY, hitZ));
                 }
 
                 setDead();
@@ -385,7 +381,7 @@ public class CREEPSEntityBullet extends Entity
             for (int l = 0; l < 4; l++)
             {
                 float f7 = 0.25F;
-                worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ);
+                worldObj.spawnParticle("BUBBLE".toLowerCase(), posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ);
             }
 
             f3 = 0.8F;

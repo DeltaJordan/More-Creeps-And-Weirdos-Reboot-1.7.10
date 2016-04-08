@@ -23,7 +23,7 @@ public class CREEPSRenderBlorp extends RenderLiving
 
     public CREEPSRenderBlorp(CREEPSModelBlorp creepsmodelblorp, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelblorp, f);
+        super(creepsmodelblorp, f);
         modelBipedMain = creepsmodelblorp;
     }
 

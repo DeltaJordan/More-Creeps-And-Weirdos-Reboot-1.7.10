@@ -13,7 +13,7 @@ public class CREEPSRenderTowel extends RenderLiving
 
     public CREEPSRenderTowel(CREEPSModelTowel creepsmodeltowel, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodeltowel, f);
+        super(creepsmodeltowel, f);
         modelBipedMain = creepsmodeltowel;
     }
 

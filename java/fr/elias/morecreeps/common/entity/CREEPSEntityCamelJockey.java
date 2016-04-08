@@ -1,15 +1,14 @@
 package fr.elias.morecreeps.common.entity;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 public class CREEPSEntityCamelJockey extends EntityMob
@@ -148,15 +147,15 @@ public class CREEPSEntityCamelJockey extends EntityMob
      * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
      * Args: x, y, z
      */
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.sand || worldObj.getBlockState(bp.down()).getBlock() == Blocks.gravel)
+        if (worldObj.getBlock(x, y, z) == Blocks.sand || worldObj.getBlock(x, y, z) == Blocks.gravel)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -175,7 +174,7 @@ public class CREEPSEntityCamelJockey extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty().getDifficultyId() > 0)
+            if (entity != this && worldObj.difficultySetting.getDifficultyId() > 0)
             {
                 this.attackEntityAsMob(entity);
             }
@@ -219,16 +218,17 @@ public class CREEPSEntityCamelJockey extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(getPosition());
-        Block i1 = worldObj.getBlockState(new BlockPos(getPosition())).getBlock();
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        //Block i1 = worldObj.getBlockState(new BlockPos(getPosition())).getBlock();
 
         if (j < 50)
         {
-            return true;
+            return super.getCanSpawnHere();
         }
         else
         {
-            return (i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(getPosition()) && l > 6;
+            return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && l > 6 && super.getCanSpawnHere();
+        	//return (i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(getPosition()) && l > 6;
         }
     }
 

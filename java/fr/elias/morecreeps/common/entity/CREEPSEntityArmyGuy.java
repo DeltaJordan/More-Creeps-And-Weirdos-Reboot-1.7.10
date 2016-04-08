@@ -1,7 +1,13 @@
 package fr.elias.morecreeps.common.entity;
 
+import com.google.common.base.Predicate;
+
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.Reference;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,19 +29,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-
-import com.google.common.base.Predicate;
-
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.Reference;
 
 public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, IEntityAdditionalSpawnData
 {
@@ -72,14 +70,14 @@ public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, 
         loyal = false;
         attack = 1;
         attackTime = 20;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityCreature.class, 1.0D, false));
         this.tasks.addTask(2, new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F));
         this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(5, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         this.targetTasks.addTask(2, new CREEPSEntityArmyGuy.AINearestAttackableTarget(this, EntityCreature.class, 3, false, false, IMob.mobSelector));
     }
 
@@ -326,7 +324,7 @@ public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, 
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("explode", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
     }
@@ -336,13 +334,15 @@ public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, 
      */
     public boolean getCanSpawnHere()
     {
+    	
         int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
+        int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //fixed light position getter
-        int l = worldObj.getBlockLightOpacity(getPosition());
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).size() == 0 && rand.nextInt(10) == 0 && l > 8;
+        int l = worldObj.getBlockLightOpacity(i, j ,k);
+        //Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && l > 8 && super.getCanSpawnHere();
+        //Method used by Minecraft above, probably better to use it instead?
+        //return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && rand.nextInt(10) == 0 && l > 8;
     }
 
     /**
@@ -447,7 +447,7 @@ public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, 
 	public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)
 	{
         double d2 = targetedEntity.posX - posX;
-        double d3 = (targetedEntity.getEntityBoundingBox().minY + (double)(targetedEntity.height / 2.0F)) - (posY + (double)(height / 2.0F));
+        double d3 = (targetedEntity.getBoundingBox().minY + (double)(targetedEntity.height / 2.0F)) - (posY + (double)(height / 2.0F));
         double d4 = targetedEntity.posZ - posZ;
         renderYawOffset = rotationYaw = (-(float)Math.atan2(d2, d4) * 180F) / (float)Math.PI;
         worldObj.playSoundAtEntity(this, "morecreeps:bullet", 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
@@ -458,9 +458,9 @@ public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, 
     static class AINearestAttackableTarget extends EntityAINearestAttackableTarget
     {
     	public CREEPSEntityArmyGuy armyGuy;
-        public AINearestAttackableTarget(final CREEPSEntityArmyGuy p_i45858_1_, Class p_i45858_2_, int p_i45858_3_, boolean p_i45858_4_, boolean p_i45858_5_, final Predicate p_i45858_6_)
+        public AINearestAttackableTarget(final CREEPSEntityArmyGuy p_i45858_1_, Class p_i45858_2_, int p_i45858_3_, boolean p_i45858_4_, boolean p_i45858_5_, final IEntitySelector mobselector)
         {
-            super(p_i45858_1_, p_i45858_2_, p_i45858_3_, p_i45858_4_, p_i45858_5_, p_i45858_6_);
+            super(p_i45858_1_, p_i45858_2_, p_i45858_3_, p_i45858_4_, p_i45858_5_, mobselector);
             armyGuy = p_i45858_1_;
         }
         public boolean shouldExecute()

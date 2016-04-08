@@ -17,7 +17,7 @@ public class CREEPSRenderArmyGuyArm extends RenderLiving
     public CREEPSRenderArmyGuyArm(CREEPSModelArmyGuyArm creepsmodelarmyguyarm, float f)
     {
         super(creepsmodelarmyguyarm, f);
-       // setRenderPassModel(new CREEPSModelArmyGuyArm());
+        setRenderPassModel(new CREEPSModelArmyGuyArm());
         modelBipedMain = creepsmodelarmyguyarm;
     }
 

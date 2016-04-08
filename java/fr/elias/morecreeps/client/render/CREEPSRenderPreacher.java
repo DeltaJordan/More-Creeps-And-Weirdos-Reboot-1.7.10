@@ -13,7 +13,7 @@ public class CREEPSRenderPreacher extends RenderLiving
 
     public CREEPSRenderPreacher(CREEPSModelPreacher creepsmodelpreacher, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelpreacher, f);
+        super(creepsmodelpreacher, f);
         modelBipedMain = creepsmodelpreacher;
     }
 

@@ -2,6 +2,8 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.client.particles.CREEPSFxBubbles;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -16,14 +18,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.particles.CREEPSFxBubbles;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.entity.ai.EntityBlorpAI;
 
 public class CREEPSEntityBubbleScum extends EntityCreature
 {
@@ -80,12 +77,12 @@ public class CREEPSEntityBubbleScum extends EntityCreature
         fallDistance = -5F;
         tossed = false;
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.targetTasks.addTask(5, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(5, new EntityAIHurtByTarget(this, true));
     }
     public void applyEntityAttributes()
     {
@@ -93,8 +90,9 @@ public class CREEPSEntityBubbleScum extends EntityCreature
     	this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20D);
     	this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.6D);
     }
-    //Don't need this anymore...
-    /*protected void attackEntity(Entity entity, float f)
+    //TODO The below was here for 1.8, does it apply for 1.7.10?
+    //"Don't need this anymore..." 
+    protected void attackEntity(Entity entity, float f)
     {
         double d = entity.posX - posX;
         double d1 = entity.posZ - posZ;
@@ -107,7 +105,7 @@ public class CREEPSEntityBubbleScum extends EntityCreature
             attackTime = 20;
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 1);
         }
-    }*/
+    }
 
     /**
      * Called when the entity is attacked.
@@ -221,7 +219,7 @@ public class CREEPSEntityBubbleScum extends EntityCreature
             double d = rand.nextGaussian() * 0.02D;
             double d2 = rand.nextGaussian() * 0.02D;
             double d4 = rand.nextGaussian() * 0.02D;
-            worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
+            worldObj.spawnParticle("HEART".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
         }
 
         for (int j = 0; j < 4; j++)
@@ -231,7 +229,7 @@ public class CREEPSEntityBubbleScum extends EntityCreature
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d3 = rand.nextGaussian() * 0.02D;
                 double d5 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
             }
         }
     }
@@ -245,7 +243,7 @@ public class CREEPSEntityBubbleScum extends EntityCreature
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLOSION".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
     }
@@ -255,6 +253,7 @@ public class CREEPSEntityBubbleScum extends EntityCreature
      */
     public boolean getCanSpawnHere()
     {
+    	//Method used by Minecraft below, probably better to leave it?
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);

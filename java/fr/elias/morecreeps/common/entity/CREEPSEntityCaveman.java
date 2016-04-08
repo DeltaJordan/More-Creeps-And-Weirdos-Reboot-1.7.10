@@ -1,17 +1,14 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -19,13 +16,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityCaveman extends EntityMob
 {
@@ -77,7 +71,7 @@ public class CREEPSEntityCaveman extends EntityMob
         setSize(width * 0.8F + fat, height * 1.3F + fat);
         setCaveTexture();
         this.targetTasks.addTask(0, new CREEPSEntityCaveman.AIFindPlayerToAttack());
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
     }
 
     public void applyEntityAttributes()
@@ -95,7 +89,7 @@ public class CREEPSEntityCaveman extends EntityMob
     {
         super.onUpdate();
 
-        if (frozen > 0 && worldObj.getBlockState(new BlockPos(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))).getBlock() == Blocks.air)
+        if (frozen > 0 && worldObj.getBlock(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) == Blocks.air)
         {
             posY--;
         }
@@ -104,8 +98,8 @@ public class CREEPSEntityCaveman extends EntityMob
         {
             frozen = 0;
         }
-        /*double moveSpeed = this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).getAttributeValue();
-        moveSpeed = frozen >= 1 ? 0.0F : 0.45F;*/
+        double moveSpeed = this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.movementSpeed).getAttributeValue();
+        moveSpeed = frozen >= 1 ? 0.0F : 0.45F;
 
         if (wanderstate == 0 && frozen < 1 && !evil && !MoreCreepsAndWeirdos.cavemanbuilding && rand.nextInt(100) == 0)
         {

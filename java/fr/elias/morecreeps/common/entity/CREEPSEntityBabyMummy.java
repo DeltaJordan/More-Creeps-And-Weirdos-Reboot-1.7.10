@@ -1,5 +1,7 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.Reference;
+import fr.elias.morecreeps.common.entity.ai.EntityBabyMummyAI;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,14 +16,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.Reference;
-import fr.elias.morecreeps.common.entity.ai.EntityBabyMummyAI;
 
 public class CREEPSEntityBabyMummy extends EntityMob
 {
@@ -43,14 +42,14 @@ public class CREEPSEntityBabyMummy extends EntityMob
         babysize = rand.nextFloat() * 0.45F + 0.25F;
         setSize(0.6F, 0.6F);
         attackTime = 20;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityBabyMummyAI(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true));
     }
     public void applyEntityAttributes()
     {
@@ -96,13 +95,13 @@ public class CREEPSEntityBabyMummy extends EntityMob
      */
     public boolean getCanSpawnHere()
     {
-        int i = MathHelper.floor_double(posX);
+    	int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
-        int k = MathHelper.floor_double(posZ);
-        //Fixed the light checker!
-        int l = worldObj.getBlockLightOpacity(getPosition());
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.sand || i1 == Blocks.bedrock) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && rand.nextInt(15) == 0 && l > 10;
+        int k = MathHelper.floor_double(posZ);Block i1 = worldObj.getBlock(i, j - 1, k);
+    	int l = worldObj.getFullBlockLightValue(i, j, k);
+    	return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && l > 10 && super.getCanSpawnHere();
+    	//Method used by Minecraft above, probably better to use it instead?
+        //return (i1 == Blocks.sand || i1 == Blocks.bedrock) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && rand.nextInt(15) == 0 && l > 10;
     }
 
     /**
@@ -134,6 +133,7 @@ public class CREEPSEntityBabyMummy extends EntityMob
      */
     public void attackEntity(Entity entity, float f)
     {
+    	
         float f1 = getBrightness(1.0F);
 
         if (f1 < 0.5F && rand.nextInt(100) == 0)
@@ -150,22 +150,22 @@ public class CREEPSEntityBabyMummy extends EntityMob
                 int j = MathHelper.floor_double(entity.posY);
                 int k = MathHelper.floor_double(entity.posZ);
 
-                if (worldObj.getBlockState(new BlockPos(i, j - 2, k)).getBlock() == Blocks.sand)
+                if (worldObj.getBlock(i, j - 2, k) == Blocks.sand)
                 {
                     if (rand.nextInt(5) == 0)
                     {
                         for (int l = 0; l < rand.nextInt(4) + 1; l++)
                         {
-                            worldObj.setBlockToAir(new BlockPos(i, j - (l + 2), k));
+                            worldObj.setBlockToAir(i, j - (l + 2), k);
 
                             if (rand.nextInt(5) == 0)
                             {
-                                worldObj.setBlockToAir(new BlockPos(i + l, j - 2, k));
+                                worldObj.setBlockToAir(i + l, j - 2, k);
                             }
 
                             if (rand.nextInt(5) == 0)
                             {
-                                worldObj.setBlockToAir(new BlockPos(i, j - 2, k + l));
+                                worldObj.setBlockToAir(i, j - 2, k + l);
                             }
                         }
                     }
@@ -178,8 +178,8 @@ public class CREEPSEntityBabyMummy extends EntityMob
 
                             for (int k1 = -3; k1 < 3; k1++)
                             {
-                                worldObj.setBlockState(new BlockPos(i + k1, j + i1, k + 2), Blocks.sand.getDefaultState());
-                                worldObj.setBlockState(new BlockPos(i + k1, j + i1, k - 2), Blocks.sand.getDefaultState());
+                                worldObj.setBlock(i + k1, j + i1, k + 2, Blocks.sand);
+                                worldObj.setBlock(i + k1, j + i1, k - 2, Blocks.sand);
                             }
                         }
 
@@ -189,8 +189,8 @@ public class CREEPSEntityBabyMummy extends EntityMob
 
                             for (int l1 = -3; l1 < 3; l1++)
                             {
-                                worldObj.setBlockState(new BlockPos(i + 2, j + j1, k + l1), Blocks.sand.getDefaultState());
-                                worldObj.setBlockState(new BlockPos(i - 2, j + j1, k + l1), Blocks.sand.getDefaultState());
+                                worldObj.setBlock(i + 2, j + j1, k + l1, Blocks.sand);
+                                worldObj.setBlock(i - 2, j + j1, k + l1, Blocks.sand);
                             }
                         }
                     }

@@ -21,7 +21,7 @@ public class CREEPSRenderPyramidGuardian extends RenderLiving
 
     public CREEPSRenderPyramidGuardian(CREEPSModelPyramidGuardian creepsmodelpyramidguardian, float f)
     {
-        super(Minecraft.getMinecraft().getRenderManager(), creepsmodelpyramidguardian, f);
+        super(creepsmodelpyramidguardian, f);
         modelBipedMain = creepsmodelpyramidguardian;
         scaleAmount = creepsmodelpyramidguardian;
     }
