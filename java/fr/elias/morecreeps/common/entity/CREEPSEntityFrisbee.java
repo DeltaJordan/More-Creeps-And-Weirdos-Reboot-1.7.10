@@ -41,7 +41,7 @@ public class CREEPSEntityFrisbee extends EntityThrowable implements IProjectile
      */
     public boolean isInRangeToRenderDist(double d)
     {
-        double d1 = getEntityBoundingBox().getAverageEdgeLength() * 4D;
+        double d1 = getBoundingBox().getAverageEdgeLength() * 4D;
         d1 *= 64D;
         return d < d1 * d1;
     }

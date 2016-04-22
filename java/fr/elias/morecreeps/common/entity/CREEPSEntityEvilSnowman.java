@@ -1,5 +1,6 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,14 +19,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityEvilSnowman extends EntityMob
 {
@@ -39,15 +36,15 @@ public class CREEPSEntityEvilSnowman extends EntityMob
         setSize(0.7F, 1.5F);
         snowsize = 1.0F;
         isImmuneToFire = true;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(4, new CREEPSEntityEvilSnowman.AIAttackTarget());
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
     }
 
     public void applyEntityAttributes()
@@ -74,8 +71,8 @@ public class CREEPSEntityEvilSnowman extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        Block l = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j, k)).getBlock();
+        Block l = worldObj.getBlock(i, j - 1, k);
+        Block i1 = worldObj.getBlock(i, j, k);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(snowsize + 1);
 
         if (/*l > 77 && l < 81 || */i1 == Blocks.snow)
@@ -120,7 +117,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
             for (int i = 0; i < 8; i++)
             {
                 worldObj.playSoundAtEntity(this, "morecreeps:snowmanbounce", 1.0F, 2.0F - snowsize);
-                worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle("SNOWBALL".toLowerCase(), posX, posY, posZ, 0.0D, 0.0D, 0.0D);
             }
 
             double d = entity.posX - posX;
@@ -212,7 +209,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
     {
         for (int j = 0; j < 8 + (int)(snowsize * 20F); j++)
         {
-            worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY + (double)snowsize, posZ, 0.0D, 0.0D, 0.0D);
+            worldObj.spawnParticle("SNOWBALL".toLowerCase(), posX, posY + (double)snowsize, posZ, 0.0D, 0.0D, 0.0D);
         }
 
         i *= i;
@@ -242,7 +239,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+            if (entity != this && worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
             {
                 setRevengeTarget((EntityLivingBase) entity);
             }
@@ -294,7 +291,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
         EntityPlayer entityplayer = (EntityPlayer) damagesource.getEntity();
         boolean flag = false;
 
-        if (!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnowtiny) && snowsize < 0.1F)
+        if (!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnowtiny) && snowsize < 0.1F)
         {
             worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
             entityplayer.addStat(MoreCreepsAndWeirdos.achievesnowtiny, 1);
@@ -302,7 +299,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
             flag = true;
         }
 
-        if (!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnowtall) && snowsize > 5F)
+        if (!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnowtall) && snowsize > 5F)
         {
             worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
             entityplayer.addStat(MoreCreepsAndWeirdos.achievesnowtall, 1);
@@ -310,7 +307,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
             flag = true;
         }
 
-        if (!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnow) && !flag)
+        if (!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnow) && !flag)
         {
             worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
             entityplayer.addStat(MoreCreepsAndWeirdos.achievesnow, 1);

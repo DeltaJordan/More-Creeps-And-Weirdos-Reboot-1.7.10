@@ -2,8 +2,10 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.client.config.CREEPSConfig;
+import fr.elias.morecreeps.client.particles.CREEPSFxBlood;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -21,16 +23,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.client.particles.CREEPSFxBlood;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityGuineaPig extends EntityMob
 {
@@ -137,7 +133,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
         skillspeed = 0;
         firepower = 0;
         criticalHitCooldown = 5;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
@@ -452,7 +448,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("HEART".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
 
@@ -587,7 +583,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
             double d = rand.nextGaussian() * 0.02D;
             double d2 = rand.nextGaussian() * 0.02D;
             double d4 = rand.nextGaussian() * 0.02D;
-            worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
+            worldObj.spawnParticle("heart", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
         }
 
         for (int j = 0; j < 4; j++)
@@ -597,7 +593,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d3 = rand.nextGaussian() * 0.02D;
                 double d5 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
+                worldObj.spawnParticle("EXPLODE".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
             }
         }
     }
@@ -611,7 +607,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLODE".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
     }
@@ -624,9 +620,9 @@ public class CREEPSEntityGuineaPig extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(getPosition());
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return i1 != Blocks.cobblestone && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(getPosition()) && rand.nextInt(5) == 0 && l > 8;
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return i1 != Blocks.cobblestone && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(5) == 0 && l > 8;
     }
 
     /**
@@ -827,7 +823,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
                     double d2 = rand.nextGaussian() * 0.02D;
                     double d3 = rand.nextGaussian() * 0.02D;
                     double d4 = rand.nextGaussian() * 0.02D;
-                    worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d2, d3, d4);
+                    worldObj.spawnParticle("EXPLODE".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d2, d3, d4);
                 }
 
                 worldObj.createExplosion(null, posX, posY, posZ, 1.1F, true);
@@ -1041,7 +1037,7 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 for (int i5 = -2; i5 < byte2 + 2; i5++)
                 {
                 	
-                    if (worldObj.getBlockState(new BlockPos(i + k3, j + i1, k + i5)).getBlock() != Blocks.air)
+                    if (worldObj.getBlock(i + k3, j + i1, k + i5) != Blocks.air)
                     {
                         l++;
                     }
@@ -1062,14 +1058,9 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 {
                     for (int j5 = -2; j5 < byte2 + 2; j5++)
                     {
-                    	//Minecraft fucking changing things so much... 
-                    	//It went from one line to four!!!!!
-                        //old code (for reference)
-                    	//worldObj.setBlockWithNotify(i + l3, j + j1, k + j5, 0);
-                    	Block blk = Blocks.air;
-                    	BlockPos pos0 = new BlockPos(i + l3, j + j1, k + j5);
-                    	IBlockState state0 = blk.getDefaultState();
-                    	world.setBlockState(pos0, state0);
+                    	
+                    	worldObj.setBlock(i + l3, j + j1, k + j5, Blocks.air);
+                    	
                     }
                 }
             }
@@ -1082,152 +1073,61 @@ public class CREEPSEntityGuineaPig extends EntityMob
 
                     for (int k5 = 0; k5 < byte0; k5++)
                     {
-                        //worldObj.setBlockWithNotify(i + i4, j + k1, k + 0, 35);
-                    	Block blk = Blocks.wool;
-                    	BlockPos pos0 = new BlockPos(i + i4, j + k1, k + 0);
-                    	IBlockState state0 = blk.getDefaultState();
-                    	world.setBlockState(pos0, state0);
-                        //worldObj.setBlockWithNotify(i + i4, j + k1, (k + byte0) - 1, 35);
-                    	BlockPos pos1 = new BlockPos(i + i4, j + k1, (k + byte0) - 1);
-                    	IBlockState state1 = blk.getDefaultState();
-                    	world.setBlockState(pos1, state1);
-                        //worldObj.setBlockAndMetadataWithNotify(i + 0, j + k1, k + k5, Block.cloth.blockID, 1);
-                    	ItemStack orngwool = new ItemStack(Blocks.wool, 1, 1);
-                    	Item itemowool = orngwool.getItem();
-                    	Block blkowool = Block.getBlockFromItem(itemowool);
-                    	BlockPos pos2 = new BlockPos(i + i4, j + k1, (k + byte0) - 1);
-                    	IBlockState state2 = blkowool.getDefaultState();
-                    	world.setBlockState(pos2, state2);
-                        //worldObj.setBlockAndMetadataWithNotify(i + byte2, j + k1, k + k5, Block.cloth.blockID, 1);
-                    	BlockPos pos3 = new BlockPos(i + byte2, j + k1, k + k5);
-                    	world.setBlockState(pos3, state2);
+                        worldObj.setBlock(i + i4, j + k1, k + 0, Blocks.wool);
+                        worldObj.setBlock(i + i4, j + k1, (k + byte0) - 1, Block.getBlockById(35));
+                        worldObj.setBlockMetadataWithNotify(i + 0, j + k1, k + k5, Block.getIdFromBlock(Blocks.wool), 1);
+                        worldObj.setBlockMetadataWithNotify(i + byte2, j + k1, k + k5, Block.getIdFromBlock(Blocks.wool), 1);
+                    	
                     	
                         alt *= -1;
 
                         if (alt > 0)
                         {
-                            //worldObj.setBlockAndMetadataWithNotify(i + i4, j, k + k5, Block.cloth.blockID, 10);
-                        	ItemStack prplwool = new ItemStack(Blocks.wool, 1, 10);
-                        	Item itempwool = prplwool.getItem();
-                        	Block blkpwool = Block.getBlockFromItem(itempwool);
-                        	BlockPos pos4 = new BlockPos(i + i4, j, k + k5);
-                        	IBlockState state3 = blkpwool.getDefaultState();
-                        	world.setBlockState(pos4, state3);
+                            worldObj.setBlockMetadataWithNotify(i + i4, j, k + k5, Block.getIdFromBlock(Blocks.wool), 10);
                         	
                         }
                         else
                         {
-                            //worldObj.setBlockAndMetadataWithNotify(i + i4, j, k + k5, Block.cloth.blockID, 11);
-                        	ItemStack wooltype = new ItemStack(Blocks.wool, 1, 11);
-                        	Item itemwool = wooltype.getItem();
-                        	Block blkwool = Block.getBlockFromItem(itemwool);
-                        	BlockPos pos4 = new BlockPos(i + i4, j, k + k5);
-                        	IBlockState state3 = blkwool.getDefaultState();
-                        	world.setBlockState(pos4, state3);
+                            worldObj.setBlockMetadataWithNotify(i + i4, j, k + k5, Block.getIdFromBlock(Blocks.wool), 11);
                         }
 
-                        //worldObj.setBlockWithNotify(i + i4, j + byte1, k + k5, Block.glass.blockID);
-                    	Block blk1 = Blocks.glass;
-                    	BlockPos pos4 = new BlockPos(i + i4, j + byte1, k + k5);
-                    	IBlockState state3 = blk1.getDefaultState();
-                    	world.setBlockState(pos4, state3);
+                        worldObj.setBlock(i + i4, j + byte1, k + k5, Blocks.glass);
+                    	
                     }
                 }
             }
 
-            //worldObj.setBlockWithNotify(i + 7, j, k - 1, 43);
-            Block blk = Blocks.double_stone_slab;
-        	BlockPos pos0 = new BlockPos(i + 7, j, k - 1);
-        	IBlockState state0 = blk.getDefaultState();
-        	world.setBlockState(pos0, state0);
-            //worldObj.setBlockWithNotify(i + 10, j, k - 1, 43);
-        	BlockPos pos1 = new BlockPos(i + 10, j, k - 1);
-        	world.setBlockState(pos1, state0);
-            //worldObj.setBlock(i + 7, j + 2, k - 1, Block.torchWood.blockID);
-        	Block blk2 = Blocks.torch;
-        	BlockPos pos2 = new BlockPos(i + 7, j + 2, k - 1);
-        	IBlockState state1 = blk2.getDefaultState();
-        	world.setBlockState(pos2, state1);
-            //worldObj.setBlock(i + 10, j + 2, k - 1, Block.torchWood.blockID);
-        	BlockPos pos3 = new BlockPos(i + 10, j + 2, k - 1);
-        	world.setBlockState(pos3, state1);
-            //worldObj.setBlockWithNotify(i + 8, j, k - 1, 44);
-        	Block blk3 = Blocks.stone_slab;
-        	BlockPos pos4 = new BlockPos(i + 7, j, k - 1);
-        	IBlockState state2 = blk3.getDefaultState();
-        	world.setBlockState(pos4, state2);
-            //worldObj.setBlockWithNotify(i + 9, j, k - 1, 44);
-        	BlockPos pos5 = new BlockPos(i + 9, j, k - 1);
-        	world.setBlockState(pos5, state2);
-            //worldObj.setBlockWithNotify(i + 8, j + 1, k, Block.doorWood.blockID);
-        	
-        	Block doorgetter[] = {
-        			Blocks.acacia_door, Blocks.birch_door, Blocks.dark_oak_door, Blocks.jungle_door, Blocks.oak_door, Blocks.spruce_door
-        	};
-        	Block blk4 = doorgetter[rand.nextInt(doorgetter.length)];
-        	BlockPos pos6 = new BlockPos(i + 7, j, k - 1);
-        	IBlockState state3 = blk4.getDefaultState();
-        	world.setBlockState(pos6, state3);
-            //worldObj.setBlockMetadataWithNotify(i + 8, j + 1, k, 0);
-        	Block blk1 = Blocks.air;
-        	BlockPos pos7 = new BlockPos(i + 8, j + 1, k);
-        	IBlockState state4 = blk1.getDefaultState();
-        	world.setBlockState(pos7, state4);
-            //worldObj.setBlockWithNotify(i + 8, j + 2, k, Block.doorWood.blockID);
-        	Block blk5 = doorgetter[rand.nextInt(doorgetter.length)];
-        	BlockPos pos8 = new BlockPos(i + 8, j + 2, k);
-        	IBlockState state5 = blk5.getDefaultState();
-        	world.setBlockState(pos8, state5);
-            //worldObj.setBlockMetadataWithNotify(i + 8, j + 2, k, 8);
-        	Block blk6 = Blocks.flowing_water;
-        	BlockPos pos9 = new BlockPos(i + 8, j + 1, k);
-        	IBlockState state6 = blk6.getDefaultState();
-        	world.setBlockState(pos9, state6);
-            //worldObj.setBlockWithNotify(i + 9, j + 1, k, Block.doorWood.blockID);
-        	BlockPos pos10 = new BlockPos(i + 9, j + 1, k);
-        	world.setBlockState(pos10, state5);
-            //worldObj.setBlockMetadataWithNotify(i + 9, j + 1, k, 1);
-        	Block blk7 = Blocks.stone;
-        	BlockPos pos11 = new BlockPos(i + 9, j + 1, k);
-        	IBlockState state7 = blk7.getDefaultState();
-        	world.setBlockState(pos11, state7);
-            //worldObj.setBlockWithNotify(i + 9, j + 2, k, Block.doorWood.blockID);
-        	BlockPos pos12 = new BlockPos(i + 9, j + 2, k);
-        	world.setBlockState(pos12, state5);
-            //worldObj.setBlockMetadataWithNotify(i + 9, j + 2, k, 9);
-        	Block blk8 = Blocks.water;
-        	BlockPos pos13 = new BlockPos(i + 9, j + 2, k);
-        	IBlockState state8 = blk8.getDefaultState();
-        	world.setBlockState(pos13, state8);
-            //worldObj.setBlockWithNotify(i + 8, j + 1, k + 5, Block.sandStone.blockID);
-        	Block blk9 = Blocks.sandstone;
-        	BlockPos pos14 = new BlockPos(i + 9, j + 2, k);
-        	IBlockState state9 = blk9.getDefaultState();
-        	world.setBlockState(pos14, state9);
-            //worldObj.setBlockWithNotify(i + 9, j + 1, k + 5, Block.sandStone.blockID);
-        	//Wow found out there is an easier way :(
-        	world.setBlockState(new BlockPos(i + 9, j + 1, k + 5), Blocks.double_stone_slab.getDefaultState());
-            //worldObj.setBlock(i + 8, j + 2, k + 5, Block.torchWood.blockID);
-        	world.setBlockState(new BlockPos(i + 8, j + 2, k + 5), Blocks.torch.getDefaultState());
-            //worldObj.setBlock(i + 9, j + 2, k + 5, Block.torchWood.blockID);
-        	world.setBlockState(new BlockPos(i + 9, j + 2, k + 5), Blocks.torch.getDefaultState());
+            worldObj.setBlock(i + 7, j, k - 1, Block.getBlockById(43));
+            worldObj.setBlock(i + 10, j, k - 1, Block.getBlockById(43));
+            worldObj.setBlock(i + 7, j + 2, k - 1, Blocks.torch);
+            worldObj.setBlock(i + 10, j + 2, k - 1, Blocks.torch);
+            worldObj.setBlock(i + 8, j, k - 1, Block.getBlockById(44));
+            worldObj.setBlock(i + 9, j, k - 1, Block.getBlockById(44));
+            worldObj.setBlock(i + 8, j + 1, k, Blocks.wooden_door);
+            worldObj.setBlock(i + 8, j + 1, k, Blocks.air);
+            worldObj.setBlock(i + 8, j + 2, k, Blocks.wooden_door);
+            worldObj.setBlock(i + 8, j + 2, k, Block.getBlockById(8));
+            worldObj.setBlock(i + 9, j + 1, k, Blocks.wooden_door);
+            worldObj.setBlock(i + 9, j + 1, k, Block.getBlockById(1));
+            worldObj.setBlock(i + 9, j + 2, k, Blocks.wooden_door);
+            worldObj.setBlock(i + 9, j + 2, k, Block.getBlockById(9));
+            worldObj.setBlock(i + 8, j + 1, k + 5, Blocks.sandstone);
+            worldObj.setBlock(i + 9, j + 1, k + 5, Blocks.sandstone);
+            worldObj.setBlock(i + 8, j + 2, k + 5, Blocks.torch);
+            worldObj.setBlock(i + 9, j + 2, k + 5, Blocks.torch);
 
             for (int l1 = 4; l1 < byte2 - 4; l1 += 3)
             {
-                //worldObj.setBlock(i + 1, j + 4, k + l1, Block.torchWood.blockID);
-            	world.setBlockState(new BlockPos(i + 1, j + 4, k + l1), Blocks.torch.getDefaultState());
-                //worldObj.setBlock((i + byte2) - 1, j + 4, k + l1, Block.torchWood.blockID);
-            	world.setBlockState(new BlockPos((i + byte2) - 1, j + 4, k + l1), Blocks.torch.getDefaultState());
-                //worldObj.setBlock(i + l1 + 2, j + 4, (k + byte0) - 2, Block.torchWood.blockID);
-            	world.setBlockState(new BlockPos(i + l1 + 2, j + 4, (k + byte0) - 2), Blocks.torch.getDefaultState());
+                worldObj.setBlock(i + 1, j + 4, k + l1, Blocks.torch);
+                worldObj.setBlock((i + byte2) - 1, j + 4, k + l1, Blocks.torch);
+                worldObj.setBlock(i + l1 + 2, j + 4, (k + byte0) - 2, Blocks.torch);
             }
 
             for (int i2 = 0; i2 < 9; i2++)
             {
                 for (int j4 = 1; j4 < byte2; j4++)
                 {
-                    //worldObj.setBlockWithNotify(i + j4, j + 1, k + i2 + 6, Block.dirt.blockID);
-                	world.setBlockState(new BlockPos(i + j4, j + 1, k + i2 + 6), Blocks.dirt.getDefaultState());
+                    worldObj.setBlock(i + j4, j + 1, k + i2 + 6, Blocks.dirt);
                 }
             }
 

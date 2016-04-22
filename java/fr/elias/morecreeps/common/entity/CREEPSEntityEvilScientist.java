@@ -19,11 +19,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -66,17 +63,17 @@ public class CREEPSEntityEvilScientist extends EntityMob
         numexperiments = rand.nextInt(3) + 1;
         isImmuneToFire = true;
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(4, new CREEPSEntityEvilScientist.AITargetingSystem());
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         if(trulyevil)
         {
-            this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+            this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 1, true));
         }
     }
     
@@ -181,8 +178,8 @@ public class CREEPSEntityEvilScientist extends EntityMob
                 {
                     for (int l3 = 0; l3 < 3; l3++)
                     {
-                        area += worldObj.getBlockState(new BlockPos(towerX + l3, towerY + i, towerZ + i2 + 1)).getBlock();
-                        area += worldObj.getBlockState(new BlockPos(towerX + i2 + 1, towerY + i, towerZ + l3)).getBlock();
+                        area += worldObj.getBlock(towerX + l3, towerY + i, towerZ + i2 + 1);
+                        area += worldObj.getBlock(towerX + i2 + 1, towerY + i, towerZ + l3);
                     }
                 }
             }*/
@@ -193,13 +190,13 @@ public class CREEPSEntityEvilScientist extends EntityMob
                 {
                     for (int l3 = 0; l3 < 3; l3++)
                     {
-                        area = worldObj.getBlockState(new BlockPos(towerX + l3, towerY + i, towerZ + i2 + 1)).getBlock();
-                        area = worldObj.getBlockState(new BlockPos(towerX + i2 + 1, towerY + i, towerZ + l3)).getBlock();
+                        area = worldObj.getBlock(towerX + l3, towerY + i, towerZ + i2 + 1);
+                        area = worldObj.getBlock(towerX + i2 + 1, towerY + i, towerZ + l3);
                     }
                 }
             }
             
-            if (posY > 63D && area == Blocks.air && worldObj.getBlockState(new BlockPos(towerX + 2, towerY - 1, towerZ + 2)).getBlock() != Blocks.air && worldObj.getBlockState(new BlockPos(towerX + 2, towerY - 1, towerZ + 2)).getBlock() != Blocks.water && worldObj.getBlockState(new BlockPos(towerX + 2, towerY - 1, towerZ + 2)).getBlock() != Blocks.flowing_water)
+            if (posY > 63D && area == Blocks.air && worldObj.getBlock(towerX + 2, towerY - 1, towerZ + 2) != Blocks.air && worldObj.getBlock(towerX + 2, towerY - 1, towerZ + 2) != Blocks.water && worldObj.getBlock(towerX + 2, towerY - 1, towerZ + 2) != Blocks.flowing_water)
             {
                 towerBuilt = true;
 
@@ -217,7 +214,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
                                 byte0 = Blocks.mossy_cobblestone;
                             }
 
-                            worldObj.setBlockState(new BlockPos(towerX + i4, towerY + j, towerZ + j2 + 1), byte0.getDefaultState());
+                            worldObj.setBlock(towerX + i4, towerY + j, towerZ + j2 + 1, byte0);
                             byte0 = Blocks.cobblestone;
 
                             if (rand.nextInt(5) == 0)
@@ -225,20 +222,20 @@ public class CREEPSEntityEvilScientist extends EntityMob
                                 byte0 = Blocks.mossy_cobblestone;
                             }
 
-                            worldObj.setBlockState(new BlockPos(towerX + j2 + 1, towerY + j, towerZ + i4), byte0.getDefaultState());
+                            worldObj.setBlock(towerX + j2 + 1, towerY + j, towerZ + i4, byte0);
                         }
                     }
                 }
 
-                worldObj.setBlockState(new BlockPos(towerX + 2, towerY + towerHeight, towerZ + 2), Blocks.crafting_table.getDefaultState());
+                worldObj.setBlock(towerX + 2, towerY + towerHeight, towerZ + 2, Blocks.crafting_table);
 
                 for (int k = 0; k < towerHeight; k++)
                 {
-                    worldObj.setBlockState(new BlockPos(towerX, towerY + k, towerZ), Blocks.ladder.getDefaultState());
+                    worldObj.setBlock(towerX, towerY + k, towerZ, Blocks.ladder);
                     //TODO : Fix this !
                     /*Blocks.ladder.onBlockPlaced(worldObj, new BlockPos(towerX, towerY + k, towerZ), 65);
                     onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer)*/
-                    Blocks.ladder.onBlockPlaced(worldObj, new BlockPos(towerX, towerY + k, towerZ), EnumFacing.EAST, 0, 0, 0, 0, this);
+                    Blocks.ladder.onBlockPlaced(worldObj, towerX, towerY + k, towerZ, 0, (float)0, (float)0, (float)0, 0);
 
                 }
 
@@ -272,7 +269,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
                 int l = MathHelper.floor_double(posX);
                 int k2 = MathHelper.floor_double(getBoundingBox().minY);
                 int j4 = MathHelper.floor_double(posZ);
-                worldObj.setBlockToAir(new BlockPos(l, k2 + 2, j4));
+                worldObj.setBlockToAir(l, k2 + 2, j4);
 
                 if (posY > (double)(towerY + towerHeight))
                 {
@@ -312,10 +309,10 @@ public class CREEPSEntityEvilScientist extends EntityMob
 
             if (rand.nextInt(150) == 0 && !water)
             {
-                worldObj.setBlockState(new BlockPos(towerX + 2, towerY + towerHeight, towerZ + 1), Blocks.flowing_water.getDefaultState());
-                worldObj.setBlockState(new BlockPos(towerX + 3, towerY + towerHeight, towerZ + 2), Blocks.flowing_water.getDefaultState());
-                worldObj.setBlockState(new BlockPos(towerX + 1, towerY + towerHeight, towerZ + 2), Blocks.flowing_water.getDefaultState());
-                worldObj.setBlockState(new BlockPos(towerX + 2, towerY + towerHeight, towerZ + 3), Blocks.flowing_water.getDefaultState());
+                worldObj.setBlock(towerX + 2, towerY + towerHeight, towerZ + 1, Blocks.flowing_water);
+                worldObj.setBlock(towerX + 3, towerY + towerHeight, towerZ + 2, Blocks.flowing_water);
+                worldObj.setBlock(towerX + 1, towerY + towerHeight, towerZ + 2, Blocks.flowing_water);
+                worldObj.setBlock(towerX + 2, towerY + towerHeight, towerZ + 3, Blocks.flowing_water);
                 water = true;
             }
 
@@ -338,7 +335,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
                         double d = rand.nextGaussian() * 0.02D;
                         double d2 = rand.nextGaussian() * 0.02D;
                         double d4 = rand.nextGaussian() * 0.02D;
-                        worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)towerHeight) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, d, d2, d4);
+                        worldObj.spawnParticle("largesmoke", ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)towerHeight) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, d, d2, d4);
                     }
                 }
             }
@@ -352,7 +349,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
                         double d1 = rand.nextGaussian() * 0.02D;
                         double d3 = rand.nextGaussian() * 0.02D;
                         double d5 = rand.nextGaussian() * 0.02D;
-                        worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double)towerX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(towerY + towerHeight) + (double)(rand.nextFloat() * height) + 2D, ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
+                        worldObj.spawnParticle("largesmoke", ((double)towerX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(towerY + towerHeight) + (double)(rand.nextFloat() * height) + 2D, ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
                     }
                 }
 
@@ -407,11 +404,11 @@ public class CREEPSEntityEvilScientist extends EntityMob
 
                 if (k5 == 1)
                 {
-                    CREEPSEntityEvilCreature creepsentityevilcreature = new CREEPSEntityEvilCreature(worldObj);
-                    creepsentityevilcreature.setLocationAndAngles(towerX, towerY + towerHeight + 1, towerZ, rotationYaw, 0.0F);
-                    creepsentityevilcreature.fallDistance = -35F;
+                    CREEPSEntityEvilScientist creepsentityevilscientist = new CREEPSEntityEvilScientist(worldObj);
+                    creepsentityevilscientist.setLocationAndAngles(towerX, towerY + towerHeight + 1, towerZ, rotationYaw, 0.0F);
+                    creepsentityevilscientist.fallDistance = -35F;
                     if(!worldObj.isRemote)
-                    worldObj.spawnEntityInWorld(creepsentityevilcreature);
+                    worldObj.spawnEntityInWorld(creepsentityevilscientist);
                 }
 
                 if (k5 == 2)
@@ -500,7 +497,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
         {
             for (int i = 0; i < towerHeight + 1; i++)
             {
-                worldObj.setBlockToAir(new BlockPos(towerX, towerY + i, towerZ));
+                worldObj.setBlockToAir(towerX, towerY + i, towerZ);
 
                 for (int j = 0; j < 3; j++)
                 {
@@ -513,12 +510,12 @@ public class CREEPSEntityEvilScientist extends EntityMob
                                 double d = rand.nextGaussian() * 0.02D;
                                 double d1 = rand.nextGaussian() * 0.02D;
                                 double d2 = rand.nextGaussian() * 0.02D;
-                                worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)i) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, d, d1, d2);
+                                worldObj.spawnParticle("largesmoke", ((double)(2.0F + (float)towerX) + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, (double)(1.0F + (float)towerY + (float)i) + (double)(rand.nextFloat() * height) + 2D, (2D + ((double)towerZ + (double)(rand.nextFloat() * width * 2.0F))) - (double)width, d, d1, d2);
                             }
                         }
 
-                        worldObj.setBlockToAir(new BlockPos(towerX + k, towerY + i, towerZ + j + 1));
-                        worldObj.setBlockToAir(new BlockPos(towerX + j + 1, towerY + i, towerZ + k));
+                        worldObj.setBlockToAir(towerX + k, towerY + i, towerZ + j + 1);
+                        worldObj.setBlockToAir(towerX + j + 1, towerY + i, towerZ + k);
                     }
                 }
             }
@@ -543,11 +540,11 @@ public class CREEPSEntityEvilScientist extends EntityMob
                 motionY = 0.44000000196046446D;
             }
 
-            /*if ((double)f < 2D - (1.0D - (double)modelsize) && entity.getBoundingBox().maxY > getBoundingBox().minY && entity.getBoundingBox().minY < getBoundingBox().maxY)
+            if ((double)f < 2D - (1.0D - (double)modelsize) && entity.getBoundingBox().maxY > getBoundingBox().minY && entity.getBoundingBox().minY < getBoundingBox().maxY)
             {
                 attackTime = 10;
-                entity.attackEntityFrom(DamageSource.causeMobDamage(this), attackStrength);
-            }*/
+                entity.attackEntityFrom(DamageSource.causeMobDamage(this), 1.0F);
+            }
         }
     }
 
@@ -573,7 +570,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+            if (entity != this && worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
             {
                 setRevengeTarget((EntityLivingBase) entity);
             }
@@ -629,26 +626,26 @@ public class CREEPSEntityEvilScientist extends EntityMob
             EntityLivingBase entitylivingbase = this.evilscientist.getAttackTarget();
             double d0 = this.evilscientist.getDistanceSqToEntity(entitylivingbase);
             evilscientist.attackEntity(entitylivingbase, (float)d0);
-            /*if (d0 < 4.0D)
+            if (d0 < 4.0D)
             {
                 if (this.attackTime <= 0)
                 {
                     this.attackTime = 20;
-                    this.evilcreature.attackEntityAsMob(entitylivingbase);
+                    this.evilscientist.attackEntityAsMob(entitylivingbase);
                 }
                 
-                this.evilcreature.getMoveHelper().setMoveTo(entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ, 1.0D);
+                this.evilscientist.getMoveHelper().setMoveTo(entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ, 1.0D);
             }
             else if (d0 < 256.0D)
             {
                 // ATTACK ENTITY GOES HERE
-                this.evilcreature.getLookHelper().setLookPositionWithEntity(entitylivingbase, 10.0F, 10.0F);
+                this.evilscientist.getLookHelper().setLookPositionWithEntity(entitylivingbase, 10.0F, 10.0F);
             }
-            else*/
-            //{
+            else
+            {
                 this.evilscientist.getNavigator().clearPathEntity();
                 this.evilscientist.getMoveHelper().setMoveTo(entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ, 0.5D);
-            //}
+            }
         	}
         	catch (NullPointerException ex)
 			{
@@ -665,10 +662,10 @@ public class CREEPSEntityEvilScientist extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
         int j1 = worldObj.countEntities(CREEPSEntityEvilScientist.class);
-        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.stone_slab && i1 != Blocks.double_stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(45) == 0 && /*l > 10 &&*/ j1 < 3;
+        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.stone_slab && i1 != Blocks.double_stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(45) == 0 && l > 10 && j1 < 3;
     }
 
     /**
@@ -732,7 +729,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("EXPLODE".toLowerCase(), (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
     }

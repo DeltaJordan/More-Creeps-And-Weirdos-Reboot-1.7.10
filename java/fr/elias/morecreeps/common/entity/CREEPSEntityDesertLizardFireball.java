@@ -8,10 +8,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -99,7 +97,7 @@ public class CREEPSEntityDesertLizardFireball extends Entity
 
         if (inGround)
         {
-            Block i = worldObj.getBlockState(new BlockPos(xTile, yTile, zTile)).getBlock();
+            Block i = worldObj.getBlock(xTile, yTile, zTile);
 
             if (i != inTile)
             {
@@ -127,15 +125,15 @@ public class CREEPSEntityDesertLizardFireball extends Entity
             ticksInAir++;
         }
 
-        Vec3 vec3d = new Vec3(posX, posY, posZ);
-        Vec3 vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        Vec3 vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        Vec3 vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
-        vec3d = new Vec3(posX, posY, posZ);
-        vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
         if (movingobjectposition != null)
         {
-            vec3d1 = new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec3d1 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
 
         Entity entity = null;
@@ -211,7 +209,7 @@ public class CREEPSEntityDesertLizardFireball extends Entity
             for (int k = 0; k < 4; k++)
             {
                 float f3 = 0.25F;
-                worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)f3, posY - motionY * (double)f3, posZ - motionZ * (double)f3, motionX, motionY, motionZ);
+                worldObj.spawnParticle("BUBBLE".toLowerCase(), posX - motionX * (double)f3, posY - motionY * (double)f3, posZ - motionZ * (double)f3, motionX, motionY, motionZ);
             }
 
             f1 = 0.8F;
@@ -223,8 +221,8 @@ public class CREEPSEntityDesertLizardFireball extends Entity
         motionX *= f1;
         motionY *= f1;
         motionZ *= f1;
-        worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
-        worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.10000000000000001D, posZ, 0.0D, 0.0D, 0.0D);
+        worldObj.spawnParticle("SMOKE".toLowerCase(), posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
+        worldObj.spawnParticle("SMOKE".toLowerCase(), posX, posY + 0.10000000000000001D, posZ, 0.0D, 0.0D, 0.0D);
         setPosition(posX, posY, posZ);
     }
 

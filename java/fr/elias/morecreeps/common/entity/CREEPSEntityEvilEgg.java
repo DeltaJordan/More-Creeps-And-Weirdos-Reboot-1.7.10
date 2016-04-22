@@ -2,15 +2,14 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityEvilEgg extends EntityItem
 {
@@ -27,7 +26,7 @@ public class CREEPSEntityEvilEgg extends EntityItem
         initialVelocity = 1.0D;
         bounceFactor = 0.84999999999999998D;
         exploded = false;
-        setDefaultPickupDelay();
+        //delayBeforeCanPickup;
     }
 
     /**
@@ -36,7 +35,7 @@ public class CREEPSEntityEvilEgg extends EntityItem
      */
     public boolean isInRangeToRenderDist(double d)
     {
-        double d1 = getEntityBoundingBox().getAverageEdgeLength() * 4D;
+        double d1 = getBoundingBox().getAverageEdgeLength() * 4D;
         d1 *= 64D;
         return d < d1 * d1;
     }
@@ -182,14 +181,14 @@ public class CREEPSEntityEvilEgg extends EntityItem
                 for (int j = 0; j < 10; j++)
                 {
                     float f = 0.85F;
-                    worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX - 0.25D * (double)f, posY - motionY - 0.25D * (double)f, posZ - motionZ - 0.25D * (double)f, motionX, motionY, motionZ);
+                    worldObj.spawnParticle("BUBBLE".toLowerCase(), posX - motionX - 0.25D * (double)f, posY - motionY - 0.25D * (double)f, posZ - motionZ - 0.25D * (double)f, motionX, motionY, motionZ);
                 }
             }
 
             setDead();
         }
 
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
 
         for (int k = 0; k < list.size(); k++)
         {

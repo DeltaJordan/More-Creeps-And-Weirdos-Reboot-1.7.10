@@ -1,9 +1,12 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -14,17 +17,16 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityGooGoat extends EntityAnimal
 {
@@ -57,14 +59,14 @@ public class CREEPSEntityGooGoat extends EntityAnimal
         hungrytime = rand.nextInt(100) + 10;
         goatlevel = 1;
         modelspeed = 0.45F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.45D, true));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         this.targetTasks.addTask(2, new CREEPSEntityGooGoat.AIAttackEntity(this, EntityPlayer.class, true));
     }
 
@@ -96,11 +98,11 @@ public class CREEPSEntityGooGoat extends EntityAnimal
             int i = MathHelper.floor_double(posX);
             int j = MathHelper.floor_double(getBoundingBox().minY);
             int k = MathHelper.floor_double(posZ);
-            Block l = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+            Block l = worldObj.getBlock(i, j - 1, k);
 
             if (l == Blocks.grass && rand.nextInt(10) == 0)
             {
-                worldObj.setBlockState(new BlockPos(i, j - 1, k), Blocks.dirt.getDefaultState());
+                worldObj.setBlock(i, j - 1, k, Blocks.dirt);
                 hungrytime = hungrytime + rand.nextInt(100) + 25;
 
                 if (hungrytime > 300 && goatlevel < 5)
@@ -132,7 +134,7 @@ public class CREEPSEntityGooGoat extends EntityAnimal
      * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
      * (Animals, Spiders at day, peaceful PigZombies).
      */
-    /*protected Entity findPlayerToAttack()
+    protected Entity findPlayerToAttack()
     {
         float f = getBrightness(1.0F);
 
@@ -181,12 +183,13 @@ public class CREEPSEntityGooGoat extends EntityAnimal
         }
 
         return entityliving;
-    }*/
+    }
     class AIAttackEntity extends EntityAINearestAttackableTarget {
 
+		private EntityLivingBase targetEntity;
 		public AIAttackEntity(EntityCreature p_i45878_1_, Class p_i45878_2_,
 				boolean p_i45878_3_) {
-			super(p_i45878_1_, p_i45878_2_, p_i45878_3_);
+			super(p_i45878_1_, p_i45878_2_, 1, p_i45878_3_);
 		}
 
 		@Override
@@ -238,7 +241,7 @@ public class CREEPSEntityGooGoat extends EntityAnimal
     /**
      * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
      */
-    /*protected void attackEntity(Entity entity, float f)
+    protected void attackEntity(Entity entity, float f)
     {
         if (onGround)
         {
@@ -256,9 +259,9 @@ public class CREEPSEntityGooGoat extends EntityAnimal
             attackTime = 20;
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), attack);
         }
-    }*/
+    }
 
-    /*public int[] findTree(Entity entity, Material material, Double double1)
+    public int[] findTree(Entity entity, Material material, Double double1)
     {
         AxisAlignedBB axisalignedbb = entity.getBoundingBox().expand(double1.doubleValue(), double1.doubleValue(), double1.doubleValue());
         int i = MathHelper.floor_double(axisalignedbb.minX);
@@ -274,9 +277,9 @@ public class CREEPSEntityGooGoat extends EntityAnimal
             {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
-                    int j2 = worldObj.getBlockId(k1, l1, i2);
+                    int j2 = worldObj.getBlockMetadata(k1, l1, i2);
 
-                    if (j2 != 0 && Block.blocksList[j2].blockMaterial == material)
+                    if (j2 != 0 && worldObj.getBlock(k1, l1, i2).getMaterial() == material)
                     {
                         return (new int[]
                                 {
@@ -291,7 +294,7 @@ public class CREEPSEntityGooGoat extends EntityAnimal
                 {
                     -1, 0, 0
                 });
-    }*/
+    }
 
     /**
      * Checks if the entity's current position is a valid location to spawn this entity.
@@ -301,9 +304,9 @@ public class CREEPSEntityGooGoat extends EntityAnimal
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(40) == 0 && l > 7;
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(40) == 0 && l > 7;
     }
 
     /**
@@ -379,21 +382,21 @@ public class CREEPSEntityGooGoat extends EntityAnimal
             boolean flag = false;
             EntityPlayerMP player = (EntityPlayerMP) obj;
 
-            if (!player.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievegookill))
+            if (!player.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievegookill))
             {
                 flag = true;
                 player.addStat(MoreCreepsAndWeirdos.achievegookill, 1);
                 confetti();
             }
 
-            if (!player.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievegookill10) && MoreCreepsAndWeirdos.goatcount >= 10)
+            if (!player.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievegookill10) && MoreCreepsAndWeirdos.goatcount >= 10)
             {
                 flag = true;
                 player.addStat(MoreCreepsAndWeirdos.achievegookill10, 1);
                 confetti();
             }
 
-            if (!player.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievegookill25) && MoreCreepsAndWeirdos.goatcount >= 25)
+            if (!player.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievegookill25) && MoreCreepsAndWeirdos.goatcount >= 25)
             {
                 flag = true;
                 player.addStat(MoreCreepsAndWeirdos.achievegookill25, 1);

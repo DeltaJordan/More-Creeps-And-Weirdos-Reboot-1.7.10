@@ -2,6 +2,7 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -11,15 +12,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityFoam extends Entity implements IProjectile
 {
@@ -170,7 +168,7 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
             double d = rand.nextGaussian() * 0.10000000000000001D;
             double d1 = rand.nextGaussian() * 0.10000000000000001D;
             double d2 = rand.nextGaussian() * 0.10000000000000001D;
-            worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX + (double)(rand.nextFloat() * 2.0F), posY, posZ + (double)(rand.nextFloat() * 2.0F), d, d1, d2);
+            worldObj.spawnParticle("EXPLODE".toLowerCase(), posX + (double)(rand.nextFloat() * 2.0F), posY, posZ + (double)(rand.nextFloat() * 2.0F), d, d1, d2);
         }
 
         if (aoLightValueScratchXYNN == 100)
@@ -187,7 +185,7 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
 
         if (aoLightValueZPos)
         {
-            Block j = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)).getBlock();
+            Block j = worldObj.getBlock(hitX, hitY, hitZ);
 
             if (j != blockHit)
             {
@@ -215,19 +213,19 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
             aoLightValueScratchXYNN++;
         }
 
-        Vec3 vec3d = new Vec3(posX, posY, posZ);
-        Vec3 vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        Vec3 vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        Vec3 vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
-        vec3d = new Vec3(posX, posY, posZ);
-        vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
         if (movingobjectposition != null)
         {
-            vec3d1 = new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec3d1 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
 
         Entity entity = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
         double d3 = 0.0D;
 
         for (int k = 0; k < list.size(); k++)
@@ -246,7 +244,7 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
             }
 
             float f4 = 0.3F;
-            AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f4, f4, f4);
+            AxisAlignedBB axisalignedbb = entity1.getBoundingBox().expand(f4, f4, f4);
             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
 
             if (movingobjectposition1 == null)
@@ -288,10 +286,10 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
             }
             else
             {
-                hitX = movingobjectposition.getBlockPos().getX();
-                hitY = movingobjectposition.getBlockPos().getY();
-                hitZ = movingobjectposition.getBlockPos().getZ();
-                blockHit = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)).getBlock();
+                hitX = movingobjectposition.blockX;
+                hitY = movingobjectposition.blockY;
+                hitZ = movingobjectposition.blockZ;
+                blockHit = worldObj.getBlock(hitX, hitY, hitZ);
                 motionX = (float)(movingobjectposition.hitVec.xCoord - posX);
                 motionY = (float)(movingobjectposition.hitVec.yCoord - posY);
                 motionZ = (float)(movingobjectposition.hitVec.zCoord - posZ);
@@ -307,9 +305,9 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
                     {
                         for (int j1 = -2; j1 < 2; j1++)
                         {
-                            if (worldObj.getBlockState(new BlockPos(hitX + l, hitY + j1, hitZ + i1)).getBlock() == Blocks.fire)
+                            if (worldObj.getBlock(hitX + l, hitY + j1, hitZ + i1) == Blocks.fire)
                             {
-                                worldObj.setBlockToAir(new BlockPos(hitX + l, hitY + j1, hitZ + i1));
+                                worldObj.setBlockToAir(hitX + l, hitY + j1, hitZ + i1);
                             }
                         }
                     }
@@ -346,7 +344,7 @@ public class CREEPSEntityFoam extends Entity implements IProjectile
             for (int k1 = 0; k1 < 4; k1++)
             {
                 float f7 = 0.25F;
-                worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ);
+                worldObj.spawnParticle("BUBBLE".toLowerCase(), posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ);
             }
 
             f3 = 0.8F;

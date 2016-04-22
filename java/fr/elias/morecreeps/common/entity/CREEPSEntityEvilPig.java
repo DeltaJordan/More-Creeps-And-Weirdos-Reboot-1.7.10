@@ -11,7 +11,6 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -31,7 +30,7 @@ public class CREEPSEntityEvilPig extends EntityMob
         isImmuneToFire = true;
         modelsize = 1.0F;
         fallDistance = -25F;
-        ((PathNavigateGround)this.getNavigator()).func_179690_a(true);
+        this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.45D, true));
         this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
@@ -91,7 +90,7 @@ public class CREEPSEntityEvilPig extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+            if (entity != this && worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
             {
                 this.setRevengeTarget((EntityLivingBase) entity);
             }

@@ -2,6 +2,8 @@ package fr.elias.morecreeps.common.entity;
 
 import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -113,7 +115,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
             for (int i = 0; i < 4; i++)
             {
-                if (worldObj.getBlockState(new BlockPos(houseX, houseY, houseZ)).getBlock() == Blocks.air || worldObj.getBlockState(new BlockPos(houseX + 1, houseY, houseZ)).getBlock() == Blocks.air || worldObj.getBlockState(new BlockPos(houseX + 2, houseY, houseZ + 4)) == Blocks.air || worldObj.getBlockState(new BlockPos(houseX, houseY, houseZ + 2)).getBlock() == Blocks.air)
+                if (worldObj.getBlock(houseX, houseY, houseZ) == Blocks.air || worldObj.getBlock(houseX + 1, houseY, houseZ) == Blocks.air || worldObj.getBlock(houseX + 2, houseY, houseZ + 4) == Blocks.air || worldObj.getBlock(houseX, houseY, houseZ + 2) == Blocks.air)
                 {
                     houseY--;
                 }
@@ -134,28 +136,28 @@ public class CREEPSEntityCaveman extends EntityMob
             if (housechunk == 0)
             {
                 hammerswing = -2.8F;
-                worldObj.setBlockState(new BlockPos(houseX + 1, houseY, houseZ), Blocks.snow.getDefaultState());
+                worldObj.setBlock(houseX + 1, houseY, houseZ, Blocks.snow);
                 housechunk++;
                 snowFX(houseX + 1, houseY, houseZ);
             }
             else if (housechunk == 1)
             {
                 hammerswing = -2.8F;
-                worldObj.setBlockState(new BlockPos(houseX + 1, houseY + 1, houseZ), Blocks.snow.getDefaultState());
+                worldObj.setBlock(houseX + 1, houseY + 1, houseZ, Blocks.snow);
                 housechunk++;
                 snowFX(houseX + 1, houseY + 1, houseZ);
             }
             else if (housechunk == 2)
             {
                 hammerswing = -2.8F;
-                worldObj.setBlockState(new BlockPos(houseX + 3, houseY, houseZ), Blocks.snow.getDefaultState());
+                worldObj.setBlock(houseX + 3, houseY, houseZ, Blocks.snow);
                 snowFX(houseX + 3, houseY, houseZ);
                 housechunk++;
             }
             else if (housechunk == 3)
             {
                 hammerswing = -2.8F;
-                worldObj.setBlockState(new BlockPos(houseX + 3, houseY + 1, houseZ), Blocks.snow.getDefaultState());
+                worldObj.setBlock(houseX + 3, houseY + 1, houseZ, Blocks.snow);
                 snowFX(houseX + 3, houseY + 1, houseZ);
                 housechunk++;
             }
@@ -165,7 +167,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
                 for (int j = 1; j < 4; j++)
                 {
-                    worldObj.setBlockState(new BlockPos(houseX, houseY, houseZ + j), Blocks.snow.getDefaultState());
+                    worldObj.setBlock(houseX, houseY, houseZ + j, Blocks.snow);
                     snowFX(houseX, houseY, houseZ + j);
                 }
 
@@ -177,7 +179,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
                 for (int k = 1; k < 4; k++)
                 {
-                    worldObj.setBlockState(new BlockPos(houseX, houseY + 1, houseZ + k), Blocks.snow.getDefaultState());
+                    worldObj.setBlock(houseX, houseY + 1, houseZ + k, Blocks.snow);
                     snowFX(houseX, houseY + 1, houseZ + k);
                 }
 
@@ -189,7 +191,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
                 for (int l = 1; l < 4; l++)
                 {
-                    worldObj.setBlockState(new BlockPos(houseX + 4, houseY, houseZ + l), Blocks.snow.getDefaultState());
+                    worldObj.setBlock(houseX + 4, houseY, houseZ + l, Blocks.snow);
                     snowFX(houseX + 4, houseY, houseZ + l);
                 }
 
@@ -201,7 +203,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
                 for (int i1 = 1; i1 < 4; i1++)
                 {
-                    worldObj.setBlockState(new BlockPos(houseX + 4, houseY + 1, houseZ + i1), Blocks.snow.getDefaultState());
+                    worldObj.setBlock(houseX + 4, houseY + 1, houseZ + i1, Blocks.snow);
                     snowFX(houseX + 4, houseY + 1, houseZ + i1);
                 }
 
@@ -213,7 +215,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
                 for (int j1 = 1; j1 < 4; j1++)
                 {
-                    worldObj.setBlockState(new BlockPos(houseX + j1, houseY, houseZ + 4), Blocks.snow.getDefaultState());
+                    worldObj.setBlock(houseX + j1, houseY, houseZ + 4, Blocks.snow);
                     snowFX(houseX + j1, houseY, houseZ + 4);
                 }
 
@@ -225,7 +227,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
                 for (int k1 = 1; k1 < 4; k1++)
                 {
-                    worldObj.setBlockState(new BlockPos(houseX + k1, houseY + 1, houseZ + 4), Blocks.snow.getDefaultState());
+                    worldObj.setBlock(houseX + k1, houseY + 1, houseZ + 4, Blocks.snow);
                     snowFX(houseX + k1, houseY + 1, houseZ + 4);
                 }
 
@@ -239,7 +241,7 @@ public class CREEPSEntityCaveman extends EntityMob
                 {
                     for (int j2 = 1; j2 < 4; j2++)
                     {
-                        worldObj.setBlockState(new BlockPos(houseX + j2, houseY + 2, houseZ + l1), Blocks.snow.getDefaultState());
+                        worldObj.setBlock(houseX + j2, houseY + 2, houseZ + l1, Blocks.snow);
                         snowFX(houseX + j2, houseY + 2, houseZ + l1);
                     }
                 }
@@ -249,7 +251,7 @@ public class CREEPSEntityCaveman extends EntityMob
             else if (housechunk == 11)
             {
                 hammerswing = -2.8F;
-                worldObj.setBlockState(new BlockPos(houseX + 2, houseY + 3, houseZ + 2), Blocks.snow.getDefaultState());
+                worldObj.setBlock(houseX + 2, houseY + 3, houseZ + 2, Blocks.snow);
                 snowFX(houseX + 2, houseY + 3, houseZ + 2);
                 housechunk++;
             }
@@ -286,7 +288,7 @@ public class CREEPSEntityCaveman extends EntityMob
             hammerswing = 0.0F;
         }
 
-        /*EntityPlayerSP entityplayersp = ModLoader.getMinecraftInstance().thePlayer;
+        EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
         float f = getDistanceToEntity(entityplayersp);
 
         if (f < 8F)
@@ -296,7 +298,7 @@ public class CREEPSEntityCaveman extends EntityMob
         else
         {
             ignoreFrustumCheck = false;
-        }*/
+        }
     }
     
     public boolean isMovementBlocked()
@@ -310,7 +312,7 @@ public class CREEPSEntityCaveman extends EntityMob
         houseY = MathHelper.floor_double(posY);
         houseZ = MathHelper.floor_double(posZ);
 
-        if (worldObj.getBlockState(new BlockPos(houseX, houseY - 1, houseZ)).getBlock() == Blocks.air)
+        if (worldObj.getBlock(houseX, houseY - 1, houseZ) == Blocks.air)
         {
             houseY--;
         }
@@ -323,7 +325,7 @@ public class CREEPSEntityCaveman extends EntityMob
             {
                 for (int i1 = 0; i1 < 3; i1++)
                 {
-                    if (worldObj.getBlockState(new BlockPos(houseX + k, houseY + i1, houseZ + i)).getBlock() == Blocks.air)
+                    if (worldObj.getBlock(houseX + k, houseY + i1, houseZ + i) == Blocks.air)
                     {
                         area++;
                     }
@@ -340,8 +342,8 @@ public class CREEPSEntityCaveman extends EntityMob
         {
             for (int l = -2; l < 7; l++)
             {
-                Block j1 = worldObj.getBlockState(new BlockPos(houseX + l, houseY, houseZ + j)).getBlock();
-                Block k1 = worldObj.getBlockState(new BlockPos(houseX + l, houseY - 1, houseZ + j)).getBlock();
+                Block j1 = worldObj.getBlock(houseX + l, houseY, houseZ + j);
+                Block k1 = worldObj.getBlock(houseX + l, houseY - 1, houseZ + j);
 
                 if (j1 == Blocks.snow || j1 == Blocks.ice)
                 {
@@ -362,7 +364,7 @@ public class CREEPSEntityCaveman extends EntityMob
      * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
      * (Animals, Spiders at day, peaceful PigZombies).
      */
-    /*protected Entity findPlayerToAttack()
+    protected Entity findPlayerToAttack()
     {
         if (!evil || frozen > 0)
         {
@@ -372,13 +374,13 @@ public class CREEPSEntityCaveman extends EntityMob
         {
             return super.findPlayerToAttack();
         }
-    }*/
+    }
 
     class AIFindPlayerToAttack extends EntityAINearestAttackableTarget
     {
         public AIFindPlayerToAttack()
         {
-            super(CREEPSEntityCaveman.this, EntityPlayer.class, true);
+            super(CREEPSEntityCaveman.this, EntityPlayer.class, 0, true);
         }
         
         public void updateTask()
@@ -451,15 +453,15 @@ public class CREEPSEntityCaveman extends EntityMob
      * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
      * Args: x, y, z
      */
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()) == Blocks.gravel.getDefaultState() || worldObj.getBlockState(bp.down()) == Blocks.stone.getDefaultState())
+        if (worldObj.getBlock(x, y ,z) == Blocks.gravel || worldObj.getBlock(x, y ,z) == Blocks.stone)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -483,7 +485,7 @@ public class CREEPSEntityCaveman extends EntityMob
                     return true;
                 }
 
-                if (entity != this && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+                if (entity != this && worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
                 {
                     setRevengeTarget((EntityLivingBase) entity);
                 }
@@ -507,7 +509,7 @@ public class CREEPSEntityCaveman extends EntityMob
 
             for (int j = 0; j < 35; j++)
             {
-                worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, posX, posY + 1.0D, posZ, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle("SNOWBALL".toLowerCase(), posX, posY + 1.0D, posZ, 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -523,7 +525,7 @@ public class CREEPSEntityCaveman extends EntityMob
     {
         for (int l = 0; l < 40; l++)
         {
-            worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, i, (double)j + 0.5D, k, 1.0D, 1.0D, 1.0D);
+            worldObj.spawnParticle("SNOWBALLPOOF".toLowerCase(), i, (double)j + 0.5D, k, 1.0D, 1.0D, 1.0D);
         }
         if(worldObj.isRemote)
         {
@@ -576,12 +578,14 @@ public class CREEPSEntityCaveman extends EntityMob
      */
     public boolean getCanSpawnHere()
     {
-        int i = MathHelper.floor_double(posX);
+    	int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        IBlockState i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k));
-        return (i1 == Blocks.snow.getDefaultState() || i1 == Blocks.ice.getDefaultState() || i1 == Blocks.snow.getDefaultState()) && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0;
+    	int l = worldObj.getFullBlockLightValue(i, j, k);
+    	return this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && super.getCanSpawnHere();
+        
+        /*IBlockState i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k));
+        return (i1 == Blocks.snow.getDefaultState() || i1 == Blocks.ice.getDefaultState() || i1 == Blocks.snow.getDefaultState()) && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0;*/
     }
 
     /**
@@ -764,21 +768,21 @@ public class CREEPSEntityCaveman extends EntityMob
         if(player != null)
         {
         	MoreCreepsAndWeirdos.cavemancount++;
-            if (!((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve1caveman))
+            if (!((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve1caveman))
             {
                 worldObj.playSoundAtEntity(player, "morecreeps:achievement", 1.0F, 1.0F);
                 player.addStat(MoreCreepsAndWeirdos.achieve1caveman, 1);
                 confetti();
             }
 
-            if (!((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve1caveman) && MoreCreepsAndWeirdos.cavemancount >= 10)
+            if (!((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve1caveman) && MoreCreepsAndWeirdos.cavemancount >= 10)
             {
                 worldObj.playSoundAtEntity(player, "morecreeps:achievement", 1.0F, 1.0F);
                 player.addStat(MoreCreepsAndWeirdos.achieve10caveman, 1);
                 confetti();
             }
 
-            if (!((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve10caveman) && MoreCreepsAndWeirdos.cavemancount >= 50)
+            if (!((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve10caveman) && MoreCreepsAndWeirdos.cavemancount >= 50)
             {
                 worldObj.playSoundAtEntity(player, "morecreeps:achievement", 1.0F, 1.0F);
                 player.addStat(MoreCreepsAndWeirdos.achieve50caveman, 1);
