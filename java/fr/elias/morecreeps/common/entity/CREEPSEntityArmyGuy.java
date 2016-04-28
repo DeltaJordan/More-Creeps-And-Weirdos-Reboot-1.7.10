@@ -70,7 +70,7 @@ public class CREEPSEntityArmyGuy extends EntityMob implements IRangedAttackMob, 
         loyal = false;
         attack = 1;
         attackTime = 20;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityCreature.class, 1.0D, false));
         this.tasks.addTask(2, new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F));

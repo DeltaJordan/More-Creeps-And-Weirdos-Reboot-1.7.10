@@ -36,7 +36,7 @@ public class CREEPSEntityEvilSnowman extends EntityMob
         setSize(0.7F, 1.5F);
         snowsize = 1.0F;
         isImmuneToFire = true;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(4, new CREEPSEntityEvilSnowman.AIAttackTarget());
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));

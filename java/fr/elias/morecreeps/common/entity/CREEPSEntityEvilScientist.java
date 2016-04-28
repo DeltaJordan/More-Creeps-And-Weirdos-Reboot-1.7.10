@@ -63,7 +63,7 @@ public class CREEPSEntityEvilScientist extends EntityMob
         numexperiments = rand.nextInt(3) + 1;
         isImmuneToFire = true;
         modelsize = 1.0F;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(4, new CREEPSEntityEvilScientist.AITargetingSystem());
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));

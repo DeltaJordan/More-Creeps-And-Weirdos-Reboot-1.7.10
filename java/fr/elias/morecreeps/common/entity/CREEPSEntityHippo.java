@@ -19,10 +19,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -61,7 +58,7 @@ public class CREEPSEntityHippo extends EntityMob
         goatlevel = 1;
         modelsize = 2.0F;
         hippoHit = false;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.45D, true));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityMob.class, 0.45D, false));
@@ -70,7 +67,7 @@ public class CREEPSEntityHippo extends EntityMob
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         this.targetTasks.addTask(2, new CREEPSEntityHippo.AIAttackEntity(this, EntityPlayer.class, true));
         this.targetTasks.addTask(2, new CREEPSEntityHippo.AIAttackEntity(this, EntityMob.class, true));
         this.targetTasks.addTask(2, new CREEPSEntityHippo.AIAttackEntity(this, EntityAnimal.class, true));
@@ -83,15 +80,15 @@ public class CREEPSEntityHippo extends EntityMob
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.45D);
     }
 
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.water || worldObj.getBlockState(bp.down()) == Blocks.flowing_water)
+        if (worldObj.getBlock(x, y, z) == Blocks.water || worldObj.getBlock(x ,y, z) == Blocks.flowing_water)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -106,7 +103,7 @@ public class CREEPSEntityHippo extends EntityMob
             return null;
         }
 
-        if (worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+        if (worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
         {
             float f = getBrightness(1.0F);
 
@@ -194,7 +191,7 @@ public class CREEPSEntityHippo extends EntityMob
 
 		public AIAttackEntity(EntityCreature p_i45878_1_, Class p_i45878_2_,
 				boolean p_i45878_3_) {
-			super(p_i45878_1_, p_i45878_2_, p_i45878_3_);
+			super(p_i45878_1_, p_i45878_2_, 1, p_i45878_3_);
 		}
 
 		@Override
@@ -232,9 +229,9 @@ public class CREEPSEntityHippo extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.stone_slab && i1 != Blocks.double_stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(35) == 0; //&& l > 7;
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.stone_slab && i1 != Blocks.double_stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(35) == 0 && l > 7;
     }
 
     /**

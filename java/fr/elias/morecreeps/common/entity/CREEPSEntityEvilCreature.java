@@ -36,7 +36,7 @@ public class CREEPSEntityEvilCreature extends EntityMob
         jumping = false;
         isImmuneToFire = true;
         modelsize = 3F;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(4, new CREEPSEntityEvilCreature.AIAttackEntity());
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));

@@ -33,7 +33,7 @@ public class CREEPSEntityG extends EntityMob
         texture = "morecreeps:textures/entity/g.png";
         setSize(width * 2.0F, height * 2.5F);
         modelsize = 2.0F;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new CREEPSEntityG.AIAttackEntity());
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));

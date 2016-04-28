@@ -47,7 +47,7 @@ public class CREEPSEntityBigBaby extends EntityMob
         skin = 0;
         modelsize = 6.5F;
         hammerswing = 0.0F;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityBigBabyAI(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));

@@ -42,7 +42,7 @@ public class CREEPSEntityBabyMummy extends EntityMob
         babysize = rand.nextFloat() * 0.45F + 0.25F;
         setSize(0.6F, 0.6F);
         attackTime = 20;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityBabyMummyAI(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));

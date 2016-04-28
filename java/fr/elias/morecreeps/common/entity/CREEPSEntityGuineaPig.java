@@ -1136,32 +1136,32 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 for (int k4 = 1; k4 < byte2; k4++)
                 {
                     //worldObj.setBlockWithNotify(i + k4, j + 2, k + j2 + 10, Block.dirt.blockID);
-                	world.setBlockState(new BlockPos(i + k4, j + 2, k + j2 + 10), Blocks.dirt.getDefaultState());
+                	world.setBlock(i + k4, j + 2, k + j2 + 10, Blocks.dirt);
                 }
             }
 
             for (int k2 = 3; k2 < byte2 - 3; k2++)
             {
                 //worldObj.setBlockWithNotify(i + k2, j + 1, k + 6, 0);
-            	world.setBlockState(new BlockPos(i + k2, j + 1, k + 6), Blocks.air.getDefaultState());
+            	world.setBlock(i + k2, j + 1, k + 6, Blocks.air);
             }
 
             for (int l2 = 7; l2 < byte2 - 4; l2++)
             {
                 //worldObj.setBlockWithNotify(i + l2, j + 1, k + 7, 0);
-            	world.setBlockState(new BlockPos(i + l2, j + 1, k + 7), Blocks.air.getDefaultState());
+            	world.setBlock(i + l2, j + 1, k + 7, Blocks.air);
             }
 
             for (int i3 = 7; i3 < 12; i3++)
             {
                 //worldObj.setBlockWithNotify(i + 1, j + 2, k + i3, 37);
-            	world.setBlockState(new BlockPos(i + 1, j + 2, k + i3), Blocks.yellow_flower.getDefaultState());
+            	world.setBlock(i + 1, j + 2, k + i3, Blocks.yellow_flower);
                 //worldObj.setBlockWithNotify(i + 2, j + 2, k + i3, 37);
-            	world.setBlockState(new BlockPos(i + 2, j + 2, k + i3), Blocks.yellow_flower.getDefaultState());
+            	world.setBlock(i + 2, j + 2, k + i3, Blocks.yellow_flower);
                 //worldObj.setBlockWithNotify(i + 14, j + 2, k + i3, 38);
-            	world.setBlockState(new BlockPos(i + 14, j + 2, k + i3), Blocks.red_flower.getDefaultState());
+            	world.setBlock(i + 14, j + 2, k + i3, Blocks.red_flower);
                 //worldObj.setBlockWithNotify(i + 15, j + 2, k + i3, 38);
-            	world.setBlockState(new BlockPos(i + 15, j + 2, k + i3), Blocks.red_flower.getDefaultState());
+            	world.setBlock(i + 15, j + 2, k + i3, Blocks.red_flower);
             }
 
             for (int j3 = 0; j3 < 3; j3++)
@@ -1169,45 +1169,45 @@ public class CREEPSEntityGuineaPig extends EntityMob
                 for (int l4 = 6; l4 < byte2 - 3; l4++)
                 {
                     ///worldObj.setBlockWithNotify(i + l4, j + 2, k + j3 + 11, 8);
-                	world.setBlockState(new BlockPos(i + 9, j + 1, k + 5), Blocks.double_stone_slab.getDefaultState());
+                	world.setBlock(i + 9, j + 1, k + 5, Blocks.double_stone_slab);
                     ///worldObj.setBlockWithNotify(i + l4, j + 1, k + j3 + 11, 8);
-                	world.setBlockState(new BlockPos(i + 9, j + 1, k + 5), Blocks.double_stone_slab.getDefaultState());
+                	world.setBlock(i + 9, j + 1, k + 5, Blocks.double_stone_slab);
                 }
             }
 
             //worldObj.setBlock(i + 5, j + 2, k + 12, 8);
-            world.setBlockState(new BlockPos(i + 5, j + 2, k + 12), Blocks.flowing_water.getDefaultState());
+            world.setBlock(i + 5, j + 2, k + 12, Blocks.flowing_water);
             //worldObj.setBlock(i + 5, j + 2, k + 13, 8);
-            world.setBlockState(new BlockPos(i + 5, j + 2, k + 13), Blocks.flowing_water.getDefaultState());
+            world.setBlock(i + 5, j + 2, k + 13, Blocks.flowing_water);
             //worldObj.setBlockWithNotify(i + 9, j + 1, k + 8, 2);
-            world.setBlockState(new BlockPos(i + 9, j + 1, k + 8), Blocks.grass.getDefaultState());
+            world.setBlock(i + 9, j + 1, k + 8, Blocks.grass);
             //worldObj.setBlockWithNotify(i + 5, j + 3, k, 20);
-            world.setBlockState(new BlockPos(i + 5, j + 3, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 5, j + 3, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 5, j + 2, k, 20);
-            world.setBlockState(new BlockPos(i + 5, j + 2, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 5, j + 2, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 4, j + 3, k, 20);
-            world.setBlockState(new BlockPos(i + 4, j + 3, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 4, j + 3, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 4, j + 2, k, 20);
-            world.setBlockState(new BlockPos(i + 4, j + 2, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 4, j + 2, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 13, j + 3, k, 20);
-            world.setBlockState(new BlockPos(i + 13, j + 3, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 13, j + 3, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 13, j + 2, k, 20);
-            world.setBlockState(new BlockPos(i + 13, j + 2, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 13, j + 2, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 12, j + 3, k, 20);
-            world.setBlockState(new BlockPos(i + 12, j + 3, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 12, j + 3, k, Blocks.glass);
             //worldObj.setBlockWithNotify(i + 12, j + 2, k, 20);
-            world.setBlockState(new BlockPos(i + 12, j + 2, k), Blocks.glass.getDefaultState());
+            world.setBlock(i + 12, j + 2, k, Blocks.glass);
             //worldObj.setBlock(i + 1, j + 1, k + 3, 54);
-            world.setBlockState(new BlockPos(i + 1, j + 1, k + 3), Blocks.chest.getDefaultState());
+            world.setBlock(i + 1, j + 1, k + 3, Blocks.chest);
             TileEntityChest tileentitychest = new TileEntityChest();
             //setBlockTileEntity is about the same as setBlockState except is a tile entity, like a chest's
             //worldObj.setBlockTileEntity(i + 1, j + 1, k + 3, tileentitychest);
-            world.setTileEntity(new BlockPos(i + 1, j + 1, k + 3), tileentitychest);
+            world.setTileEntity(i + 1, j + 1, k + 3, tileentitychest);
             //worldObj.setBlock(i + 1, j + 1, k + 4, 54);
-            world.setBlockState(new BlockPos(i + 9, j + 1, k + 5), Blocks.double_stone_slab.getDefaultState());
+            world.setBlock(i + 9, j + 1, k + 5, Blocks.double_stone_slab);
             TileEntityChest tileentitychest1 = new TileEntityChest();
             //worldObj.setBlockTileEntity(i + 1, j + 1, k + 4, tileentitychest1);
-            world.setTileEntity(new BlockPos(i + 1, j + 1, k + 4), tileentitychest1);
+            world.setTileEntity(i + 1, j + 1, k + 4, tileentitychest1);
 
             for (int l5 = 0; l5 < tileentitychest.getSizeInventory(); l5++)
             {
@@ -1224,15 +1224,15 @@ public class CREEPSEntityGuineaPig extends EntityMob
             }
 
             //worldObj.setBlock((i + byte2) - 1, j + 1, k + 3, 54);
-            world.setBlockState(new BlockPos((i + byte2) - 1, j + 1, k + 3), Blocks.glass.getDefaultState());
+            world.setBlock((i + byte2) - 1, j + 1, k + 3, Blocks.glass);
             TileEntityChest tileentitychest2 = new TileEntityChest();
             //worldObj.setBlockTileEntity((i + byte2) - 1, j + 1, k + 3, tileentitychest2);
-            world.setTileEntity(new BlockPos((i + byte2) - 1, j + 1, k + 3),tileentitychest2);
+            world.setTileEntity((i + byte2) - 1, j + 1, k + 3,tileentitychest2);
             //worldObj.setBlock((i + byte2) - 1, j + 1, k + 4, 54);
-            world.setBlockState(new BlockPos((i + byte2) - 1, j + 1, k + 4), Blocks.glass.getDefaultState());
+            world.setBlock((i + byte2) - 1, j + 1, k + 4, Blocks.glass);
             TileEntityChest tileentitychest3 = new TileEntityChest();
             //worldObj.setBlockTileEntity((i + byte2) - 1, j + 1, k + 4, tileentitychest3);
-            world.setTileEntity(new BlockPos((i + byte2) - 1, j + 1, k + 4),tileentitychest3);
+            world.setTileEntity((i + byte2) - 1, j + 1, k + 4,tileentitychest3);
 
             for (int i6 = 0; i6 < tileentitychest1.getSizeInventory(); i6++)
             {

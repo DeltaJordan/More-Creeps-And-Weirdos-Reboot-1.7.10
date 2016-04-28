@@ -51,7 +51,7 @@ public class CREEPSEntityBlorp extends EntityAnimal
         hungrytime = rand.nextInt(20) + 20;
         blorplevel = 1;
         angry = false;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityBlorpAI(this));
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));

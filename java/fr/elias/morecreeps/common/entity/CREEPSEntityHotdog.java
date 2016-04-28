@@ -3,10 +3,12 @@ package fr.elias.morecreeps.common.entity;
 import java.util.Iterator;
 import java.util.List;
 
+import fr.elias.morecreeps.client.config.CREEPSConfig;
+import fr.elias.morecreeps.client.particles.CREEPSFxBlood;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -24,18 +26,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.client.gui.CREEPSGUIHotdog;
-import fr.elias.morecreeps.client.particles.CREEPSFxBlood;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityHotdog extends EntityMob
 {
@@ -149,7 +144,7 @@ public class CREEPSEntityHotdog extends EntityMob
         healtimer = 600;
         dogsize = 0.6F;
         chunky = false;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
@@ -297,7 +292,7 @@ public class CREEPSEntityHotdog extends EntityMob
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d3 = rand.nextGaussian() * 0.02D;
                 double d5 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
+                worldObj.spawnParticle("heart", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
             }
         }
 
@@ -326,13 +321,13 @@ public class CREEPSEntityHotdog extends EntityMob
 
             if (j == 1)
             {
-                worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d2 - d8, d4 + d7, d6, 0.0D, 0.0D, 0.0D);
-                worldObj.spawnParticle(EnumParticleTypes.FLAME, d2 - d8, d4 + d7, d6, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle("smoke", d2 - d8, d4 + d7, d6, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle("flame", d2 - d8, d4 + d7, d6, 0.0D, 0.0D, 0.0D);
             }
             else if (j != 2 && j == 3)
             {
-                worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d2, d4 + d7, d6 - d8, 0.0D, 0.0D, 0.0D);
-                worldObj.spawnParticle(EnumParticleTypes.FLAME, d2, d4 + d7, d6 - d8, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle("smoke", d2, d4 + d7, d6 - d8, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle("flame", d2, d4 + d7, d6 - d8, 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -582,7 +577,7 @@ public class CREEPSEntityHotdog extends EntityMob
 
                 if (entity instanceof EntityLiving)
                 {
-                    List list = worldObj.getEntitiesWithinAABB(CREEPSEntityHotdog.class, AxisAlignedBB.fromBounds(posX, posY, posZ, posX + 1.0D, posY + 1.0D, posZ + 1.0D).expand(16D, 4D, 16D));
+                    List list = worldObj.getEntitiesWithinAABB(CREEPSEntityHotdog.class, AxisAlignedBB.getBoundingBox(posX, posY, posZ, posX + 1.0D, posY + 1.0D, posZ + 1.0D).expand(16D, 4D, 16D));
                     Iterator iterator = list.iterator();
 
                     do
@@ -774,7 +769,7 @@ public class CREEPSEntityHotdog extends EntityMob
             double d = rand.nextGaussian() * 0.02D;
             double d2 = rand.nextGaussian() * 0.02D;
             double d4 = rand.nextGaussian() * 0.02D;
-            worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
+            worldObj.spawnParticle("heart", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
         }
 
         for (int j = 0; j < 4; j++)
@@ -784,7 +779,7 @@ public class CREEPSEntityHotdog extends EntityMob
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d3 = rand.nextGaussian() * 0.02D;
                 double d5 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
+                worldObj.spawnParticle("explode", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)j, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
             }
         }
     }
@@ -798,7 +793,7 @@ public class CREEPSEntityHotdog extends EntityMob
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle("explode", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
     }
@@ -811,9 +806,9 @@ public class CREEPSEntityHotdog extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return i1 != Blocks.sand && i1 != Blocks.cobblestone && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(new BlockPos(i, j, k)) && rand.nextInt(5) == 0 && l > 8;
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return i1 != Blocks.sand && i1 != Blocks.cobblestone && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(5) == 0 && l > 8;
     }
 
     /**
@@ -1020,7 +1015,7 @@ public class CREEPSEntityHotdog extends EntityMob
                     double d2 = rand.nextGaussian() * 0.02D;
                     double d3 = rand.nextGaussian() * 0.02D;
                     double d4 = rand.nextGaussian() * 0.02D;
-                    worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d2, d3, d4);
+                    worldObj.spawnParticle("explode", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d2, d3, d4);
                 }
 
                 worldObj.createExplosion(null, posX, posY, posZ, 1.1F, true);
@@ -1231,7 +1226,7 @@ public class CREEPSEntityHotdog extends EntityMob
             {
                 for (int j7 = -2; j7 < byte1 + 2; j7++)
                 {
-                    if (Block.getIdFromBlock(worldObj.getBlockState(new BlockPos(i + i5, j + j1, k + j7)).getBlock()) != 0)
+                    if (Block.getIdFromBlock(worldObj.getBlock(i + i5, j + j1, k + j7)) != 0)
                     {
                         i1++;
                     }
@@ -1239,7 +1234,7 @@ public class CREEPSEntityHotdog extends EntityMob
             }
         }
 
-        if (worldObj.isBlockLoaded(new BlockPos(i - byte0 / 2, j, k - byte1 / 2)) && worldObj.isBlockLoaded(new BlockPos(i + byte0, j, k)) && worldObj.isBlockLoaded(new BlockPos(i + byte0, j, k + byte1)) && worldObj.isBlockLoaded(new BlockPos(i, j, k - byte1)))
+        if (worldObj.blockExists(i - byte0 / 2, j, k - byte1 / 2) && worldObj.blockExists(i + byte0, j, k) && worldObj.blockExists(i + byte0, j, k + byte1) && worldObj.blockExists(i, j, k - byte1))
         {
             chunky = true;
         }
@@ -1252,22 +1247,22 @@ public class CREEPSEntityHotdog extends EntityMob
             worldObj.playSoundAtEntity(this, "morecreeps:guineapighotel", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             MoreCreepsAndWeirdos.proxy.addChatMessage("HOT DOG HEAVEN HAS BEEN BUILT!");
             //worldObj.setBlockWithNotify(i, j, k, Block.planks.blockID);
-            worldObj.setBlockState(new BlockPos(i, j, k), Blocks.planks.getDefaultState());
+            worldObj.setBlock(i, j, k, Blocks.planks);
             //worldObj.setBlockWithNotify(i, j + 1, k, Block.torchWood.blockID);
-            worldObj.setBlockState(new BlockPos(i, j + 1, k), Blocks.torch.getDefaultState());
+            worldObj.setBlock(i, j + 1, k, Blocks.torch);
             //worldObj.setBlockWithNotify(i + 5, j, k, Block.planks.blockID);
-            worldObj.setBlockState(new BlockPos(i + 5, j, k), Blocks.planks.getDefaultState());
+            worldObj.setBlock(i + 5, j, k, Blocks.planks);
             //worldObj.setBlockWithNotify(i + 5, j + 1, k, Block.torchWood.blockID);
-            worldObj.setBlockState(new BlockPos(i + 5, j + 1, k), Blocks.planks.getDefaultState());
+            worldObj.setBlock(i + 5, j + 1, k, Blocks.planks);
 
             for (int k1 = 0; k1 < l; k1++)
             {
                 for (int j5 = 0; j5 < 4; j5++)
                 {
                     //worldObj.setBlockWithNotify(i + j5 + 1, j + k1, k + k1, Block.stairCompactPlanks.blockID);
-                	worldObj.setBlockState(new BlockPos(i + j5 + 1, j + k1, k + k1), Blocks.oak_stairs.getDefaultState());
+                	worldObj.setBlock(i + j5 + 1, j + k1, k + k1, Blocks.oak_stairs);
                     //worldObj.setBlockMetadataWithNotify(i + j5 + 1, j + k1, k + k1, 2);
-                	worldObj.setBlockState(new BlockPos(i + j5 + 1, j + k1, k + k1), Blocks.grass.getDefaultState());
+                	worldObj.setBlock(i + j5 + 1, j + k1, k + k1, Blocks.grass);
                 }
             }
 
@@ -1276,39 +1271,39 @@ public class CREEPSEntityHotdog extends EntityMob
                 for (int k5 = 0; k5 < 4; k5++)
                 {
                     //worldObj.setBlockWithNotify(i - k5, j + l + l1, (k + l) - l1, Block.stairCompactPlanks.blockID);
-                	worldObj.setBlockState(new BlockPos(i - k5, j + l + l1, (k + l) - l1), Blocks.oak_stairs.getDefaultState());
+                	worldObj.setBlock(i - k5, j + l + l1, (k + l) - l1, Blocks.oak_stairs);
                     //worldObj.setBlockMetadataWithNotify(i - k5, j + l + l1, (k + l) - l1, 3);
-                	worldObj.setBlockState(new BlockPos(i - k5, j + l + l1, (k + l) - l1), Blocks.dirt.getDefaultState());
+                	worldObj.setBlock(i - k5, j + l + l1, (k + l) - l1, Blocks.dirt);
                 }
             }
 
             for (int i2 = 0; i2 < 10; i2++)
             {
                 //worldObj.setBlockWithNotify((i - i2) + 5, j + l, k + l + 6, Block.fence.blockID);
-            	worldObj.setBlockState(new BlockPos((i - i2) + 5, j + l, k + l + 6), Blocks.oak_fence.getDefaultState());
+            	worldObj.setBlock((i - i2) + 5, j + l, k + l + 6, Blocks.fence);
 
                 for (int l5 = 0; l5 < 7; l5++)
                 {
                     //worldObj.setBlockWithNotify(i + 5, j + l, k + l + l5, Block.fence.blockID);
-                	worldObj.setBlockState(new BlockPos(i + 5, j + l, k + l + l5), Blocks.oak_fence.getDefaultState());
+                	worldObj.setBlock(i + 5, j + l, k + l + l5, Blocks.fence);
                     //worldObj.setBlockWithNotify(i - 4, j + l, k + l + l5, Block.fence.blockID);
-                	worldObj.setBlockState(new BlockPos(i - 4, j + l, k + l + l5), Blocks.oak_fence.getDefaultState());
+                	worldObj.setBlock(i - 4, j + l, k + l + l5, Blocks.fence);
                     flag = !flag;
 
                     if (flag)
                     {
                         //worldObj.setBlockWithNotify(i + 5, j + l + 1, k + l + l5, Block.torchWood.blockID);
-                    	worldObj.setBlockState(new BlockPos(i + 5, j + l + 1, k + l + l5), Blocks.torch.getDefaultState());
+                    	worldObj.setBlock(i + 5, j + l + 1, k + l + l5, Blocks.torch);
                     }
 
                     if (flag)
                     {
                         //worldObj.setBlockWithNotify(i - 4, j + l + 1, k + l + l5, Block.torchWood.blockID);
-                    	worldObj.setBlockState(new BlockPos(i - 4, j + l + 1, k + l + l5), Blocks.torch.getDefaultState());
+                    	worldObj.setBlock(i - 4, j + l + 1, k + l + l5, Blocks.torch);
                     }
 
                     //worldObj.setBlockWithNotify((i - i2) + 5, (j + l) - 1, k + l + l5, Block.planks.blockID);
-                    worldObj.setBlockState(new BlockPos((i - i2) + 5, (j + l) - 1, k + l + l5), Blocks.planks.getDefaultState());
+                    worldObj.setBlock((i - i2) + 5, (j + l) - 1, k + l + l5, Blocks.planks);
                 }
             }
 
@@ -1321,12 +1316,12 @@ public class CREEPSEntityHotdog extends EntityMob
                         if (k7 < 0)
                         {
                             //worldObj.setBlockWithNotify((i + j2) - byte0 / 2, (j + l * 2 + k7) - 2, ((k + i6) - byte1) + 2, Block.dirt.blockID);
-                        	worldObj.setBlockState(new BlockPos((i + j2) - byte0 / 2, (j + l * 2 + k7) - 2, ((k + i6) - byte1)), Blocks.dirt.getDefaultState());
+                        	worldObj.setBlock((i + j2) - byte0 / 2, (j + l * 2 + k7) - 2, ((k + i6) - byte1), Blocks.dirt);
                         }
                         else
                         {
                             //worldObj.setBlockWithNotify((i + j2) - byte0 / 2, (j + l * 2 + k7) - 2, ((k + i6) - byte1) + 2, Block.grass.blockID);
-                        	worldObj.setBlockState(new BlockPos((i + j2) - byte0 / 2, (j + l * 2 + k7) - 2, ((k + i6) - byte1) + 2), Blocks.grass.getDefaultState());
+                        	worldObj.setBlock((i + j2) - byte0 / 2, (j + l * 2 + k7) - 2, ((k + i6) - byte1) + 2, Blocks.grass);
                         }
                     }
                 }
@@ -1335,19 +1330,19 @@ public class CREEPSEntityHotdog extends EntityMob
             for (int k2 = 0; k2 < rand.nextInt(10) + 2; k2++)
             {
                 //worldObj.setBlockWithNotify((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)) - byte1, 32);
-            	worldObj.setBlockState(new BlockPos((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6))), Blocks.deadbush.getDefaultState());
+            	worldObj.setBlock((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)), Blocks.deadbush);
             }
 
             for (int l2 = 0; l2 < rand.nextInt(10) + 2; l2++)
             {
                 //worldObj.setBlockWithNotify((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)) - byte1, 37);
-            	worldObj.setBlockState(new BlockPos((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6))), Blocks.yellow_flower.getDefaultState());
+            	worldObj.setBlock((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)), Blocks.yellow_flower);
             }
 
             for (int i3 = 0; i3 < rand.nextInt(10) + 2; i3++)
             {
                 //worldObj.setBlockWithNotify((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)) - byte1, 38);
-            	worldObj.setBlockState(new BlockPos((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)) - byte1), Blocks.red_flower.getDefaultState());
+            	worldObj.setBlock((i + rand.nextInt(byte0 - 10)) - byte0 / 2, (j + l * 2) - 1, (k + rand.nextInt(byte1 - 6)) - byte1, Blocks.red_flower);
             }
 
             for (int j3 = 0; j3 < rand.nextInt(30) + 2; j3++)
@@ -1355,12 +1350,12 @@ public class CREEPSEntityHotdog extends EntityMob
                 int j6 = rand.nextInt(byte0 - 12);
                 int l7 = rand.nextInt(byte1 - 8);
 
-                if (Block.getIdFromBlock(worldObj.getBlockState(new BlockPos((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1)).getBlock()) == 0)
+                if (Block.getIdFromBlock(worldObj.getBlock((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1)) == 0)
                 {
                     //worldObj.setBlockWithNotify((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1, 31);
-                	worldObj.setBlockState(new BlockPos((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1), Blocks.deadbush.getDefaultState());
+                	worldObj.setBlock((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1, Blocks.deadbush);
                     //worldObj.setBlockMetadataWithNotify((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1, 2);
-                	worldObj.setBlockState(new BlockPos((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1), Blocks.grass.getDefaultState());
+                	worldObj.setBlock((i + j6) - byte0 / 2, (j + l * 2) - 1, (k + l7) - byte1, Blocks.grass);
                 }
             }
 
@@ -1369,61 +1364,61 @@ public class CREEPSEntityHotdog extends EntityMob
                 int k6 = rand.nextInt(byte0 - 12);
                 int i8 = rand.nextInt(byte1 - 8);
 
-                if (Block.getIdFromBlock(worldObj.getBlockState(new BlockPos((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1)).getBlock()) == 0)
+                if (Block.getIdFromBlock(worldObj.getBlock((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1)) == 0)
                 {
                     //worldObj.setBlockWithNotify((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1, 31);
-                	worldObj.setBlockState(new BlockPos((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1), Blocks.deadbush.getDefaultState());
+                	worldObj.setBlock((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1, Blocks.deadbush);
                     //worldObj.setBlockMetadataWithNotify((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1, 1);
-                	worldObj.setBlockState(new BlockPos((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1), Blocks.stone.getDefaultState());
+                	worldObj.setBlock((i + k6) - byte0 / 2, (j + l * 2) - 1, (k + i8) - byte1, Blocks.stone);
                 }
             }
 
             for (int l3 = 1; l3 < byte0 - 1; l3++)
             {
                 //worldObj.setBlockWithNotify((i + l3) - byte0 / 2, (j + l * 2) - 1, (k - byte1) + 3, Block.fence.blockID);
-            	worldObj.setBlockState(new BlockPos((i + l3) - byte0 / 2, (j + l * 2) - 1, (k - byte1) + 3), Blocks.oak_fence.getDefaultState());
+            	worldObj.setBlock((i + l3) - byte0 / 2, (j + l * 2) - 1, (k - byte1) + 3, Blocks.fence);
                 //worldObj.setBlockWithNotify((i + l3) - byte0 / 2, (j + l * 2) - 1, k, Block.fence.blockID);
-            	worldObj.setBlockState(new BlockPos((i + l3) - byte0 / 2, (j + l * 2) - 1, k), Blocks.oak_fence.getDefaultState());
+            	worldObj.setBlock((i + l3) - byte0 / 2, (j + l * 2) - 1, k, Blocks.fence);
                 flag = !flag;
 
                 if (flag)
                 {
                     //worldObj.setBlockWithNotify((i + l3) - byte0 / 2, j + l * 2, (k - byte1) + 3, Block.torchWood.blockID);
-                	worldObj.setBlockState(new BlockPos((i + l3) - byte0 / 2, j + l * 2, (k - byte1) + 3), Blocks.torch.getDefaultState());
+                	worldObj.setBlock((i + l3) - byte0 / 2, j + l * 2, (k - byte1) + 3, Blocks.torch);
                 }
 
                 if (flag)
                 {
                     //worldObj.setBlockWithNotify((i + l3) - byte0 / 2, j + l * 2, k, Block.torchWood.blockID);
-                	worldObj.setBlockState(new BlockPos((i + l3) - byte0 / 2, j + l * 2, k), Blocks.torch.getDefaultState());
+                	worldObj.setBlock((i + l3) - byte0 / 2, j + l * 2, k, Blocks.torch);
                 }
             }
 
             for (int i4 = 4; i4 < byte1; i4++)
             {
                 //worldObj.setBlockWithNotify((i - byte0 / 2) + 1, (j + l * 2) - 1, (k + i4) - byte1, Block.fence.blockID);
-            	worldObj.setBlockState(new BlockPos((i - byte0 / 2) + 1, (j + l * 2) - 1, (k + i4) - byte1), Blocks.oak_fence.getDefaultState());
+            	worldObj.setBlock((i - byte0 / 2) + 1, (j + l * 2) - 1, (k + i4) - byte1, Blocks.fence);
                 //worldObj.setBlockWithNotify((i + byte0) - byte0 / 2 - 2, (j + l * 2) - 1, (k + i4) - byte1, Block.fence.blockID);
-            	worldObj.setBlockState(new BlockPos((i + byte0) - byte0 / 2 - 2, (j + l * 2) - 1, (k + i4) - byte1), Blocks.oak_fence.getDefaultState());
+            	worldObj.setBlock((i + byte0) - byte0 / 2 - 2, (j + l * 2) - 1, (k + i4) - byte1, Blocks.fence);
                 flag = !flag;
 
                 if (flag)
                 {
                     //worldObj.setBlockWithNotify((i - byte0 / 2) + 1, j + l * 2, (k + i4) - byte1, Block.torchWood.blockID);
-                	worldObj.setBlockState(new BlockPos((i - byte0 / 2) + 1, j + l * 2, (k + i4) - byte1), Blocks.torch.getDefaultState());
+                	worldObj.setBlock((i - byte0 / 2) + 1, j + l * 2, (k + i4) - byte1, Blocks.torch);
                 }
 
                 if (flag)
                 {
                     //worldObj.setBlockWithNotify((i + byte0) - byte0 / 2 - 2, j + l * 2, (k + i4) - byte1, Block.torchWood.blockID);
-                	worldObj.setBlockState(new BlockPos((i + byte0) - byte0 / 2 - 2, j + l * 2, (k + i4) - byte1), Blocks.torch.getDefaultState());
+                	worldObj.setBlock((i + byte0) - byte0 / 2 - 2, j + l * 2, (k + i4) - byte1, Blocks.torch);
                 }
             }
 
             //worldObj.setBlockWithNotify(i - 1, (j + l * 2) - 1, k, 107);
-            worldObj.setBlockState(new BlockPos(i - 1, (j + l * 2) - 1, k), Blocks.oak_fence_gate.getDefaultState());
+            worldObj.setBlock(i - 1, (j + l * 2) - 1, k, Blocks.fence_gate);
             //worldObj.setBlockWithNotify(i - 2, (j + l * 2) - 1, k, 107);
-            worldObj.setBlockState(new BlockPos(i - 2, (j + l * 2) - 1, k), Blocks.oak_fence_gate.getDefaultState());
+            worldObj.setBlock(i - 2, (j + l * 2) - 1, k, Blocks.fence_gate);
 
             for (int j4 = 0; j4 < 6; j4++)
             {
@@ -1437,8 +1432,9 @@ public class CREEPSEntityHotdog extends EntityMob
                 int l6 = rand.nextInt(byte0 - 10) + 3;
                 int j8 = rand.nextInt(byte1 - 6) + 3;
                 //worldObj.setBlockWithNotify((i + l6) - byte0 / 2, (j + l * 2) - 1, (k + j8) - byte1, Block.sapling.blockID);
-                worldObj.setBlockState(new BlockPos((i + l6) - byte0 / 2, (j + l * 2) - 1, (k + j8) - byte1), Blocks.sapling.getDefaultState());
-                ((BlockSapling)Blocks.sapling).generateTree(worldObj, new BlockPos((i + l6) - byte0 / 2, (j + l * 2) - 1, (k + j8) - byte1), Block.getStateById(1),worldObj.rand);
+                worldObj.setBlock((i + l6) - byte0 / 2, (j + l * 2) - 1, (k + j8) - byte1, Blocks.sapling);
+                //TODO Below may not grow the tree (I think), but there seems to be no other way :(
+                ((BlockSapling)Blocks.sapling).func_149879_c(worldObj, (i + l6) - byte0 / 2, (j + l * 2) - 1, (k + j8) - byte1, rand);
             }
 
             for (int l4 = (byte0 / 2 + rand.nextInt(8)) - 8; l4 < ((byte0 / 2 + rand.nextInt(10)) - 5) + 8; l4++)
@@ -1446,26 +1442,26 @@ public class CREEPSEntityHotdog extends EntityMob
                 for (int i7 = (byte1 / 2 + rand.nextInt(8)) - 8; i7 < ((byte1 / 2 + rand.nextInt(10)) - 5) + 8; i7++)
                 {
                     //worldObj.setBlockWithNotify((i + l4) - byte0 / 2, (j + l * 2) - 2, (k + i7) - byte1, Block.waterStill.blockID);
-                	worldObj.setBlockState(new BlockPos((i + l4) - byte0 / 2, (j + l * 2) - 2, (k + i7) - byte1), Blocks.water.getDefaultState());
+                	worldObj.setBlock((i + l4) - byte0 / 2, (j + l * 2) - 2, (k + i7) - byte1, Blocks.water);
                     //worldObj.setBlockWithNotify((i + l4) - byte0 / 2, (j + l * 2) - 3, (k + i7) - byte1, Block.waterStill.blockID);
-                	worldObj.setBlockState(new BlockPos((i + l4) - byte0 / 2, (j + l * 2) - 3, (k + i7) - byte1), Blocks.water.getDefaultState());
+                	worldObj.setBlock((i + l4) - byte0 / 2, (j + l * 2) - 3, (k + i7) - byte1, Blocks.water);
                 }
             }
 
             //worldObj.setBlock(i + 7, (j + l * 2) - 1, k - 5, 54);
-            worldObj.setBlockState(new BlockPos(i, j, k), Blocks.chest.getDefaultState());
+            worldObj.setBlock(i, j, k, Blocks.chest);
             TileEntityChest tileentitychest = new TileEntityChest();
             //worldObj.setBlockTileEntity(i + 7, (j + l * 2) - 1, k - 5, tileentitychest);
-            worldObj.setTileEntity(new BlockPos(i + 7, (j + l * 2) - 1, k - 5), tileentitychest);
+            worldObj.setTileEntity(i + 7, (j + l * 2) - 1, k - 5, tileentitychest);
             //worldObj.setBlockMetadataWithNotify(i + 7, (j + l * 2) - 1, k - 5, 4);
-            worldObj.setBlockState(new BlockPos(i + 7, (j + l * 2) - 1, k - 5), Blocks.cobblestone.getDefaultState());
+            worldObj.setBlock(i + 7, (j + l * 2) - 1, k - 5, Blocks.cobblestone);
             //worldObj.setBlock(i + 7, (j + l * 2) - 1, k - 6, 54);
-            worldObj.setBlockState(new BlockPos(i + 7, (j + l * 2) - 1, k - 6), Blocks.chest.getDefaultState());
+            worldObj.setBlock(i + 7, (j + l * 2) - 1, k - 6, Blocks.chest);
             TileEntityChest tileentitychest1 = new TileEntityChest();
             //worldObj.setBlockTileEntity(i + 7, (j + l * 2) - 1, k - 6, tileentitychest1);
-            worldObj.setTileEntity(new BlockPos(i + 7, (j + l * 2) - 1, k - 6), tileentitychest1);
+            worldObj.setTileEntity(i + 7, (j + l * 2) - 1, k - 6, tileentitychest1);
             //worldObj.setBlockMetadataWithNotify(i + 7, (j + l * 2) - 1, k - 6, 4);
-            worldObj.setBlockState(new BlockPos(i + 7, (j + l * 2) - 1, k - 6), Blocks.cobblestone.getDefaultState());
+            worldObj.setBlock(i + 7, (j + l * 2) - 1, k - 6, Blocks.cobblestone);
 
             for (int k8 = 0; k8 < tileentitychest.getSizeInventory() - 9; k8++)
             {
@@ -1480,15 +1476,15 @@ public class CREEPSEntityHotdog extends EntityMob
             }
 
             //worldObj.setBlock(i - 7, (j + l * 2) - 1, k - 5, 54);
-            worldObj.setBlockState(new BlockPos(i - 7, (j + l * 2) - 1, k - 5), Blocks.chest.getDefaultState());
+            worldObj.setBlock(i - 7, (j + l * 2) - 1, k - 5, Blocks.chest);
             TileEntityChest tileentitychest2 = new TileEntityChest();
             //worldObj.setBlockTileEntity(i - 7, (j + l * 2) - 1, k - 5, tileentitychest2);
-            worldObj.setTileEntity(new BlockPos(i - 7, (j + l * 2) - 1, k - 5), tileentitychest2);
+            worldObj.setTileEntity(i - 7, (j + l * 2) - 1, k - 5, tileentitychest2);
             //worldObj.setBlock(i - 7, (j + l * 2) - 1, k - 6, 54);
-            worldObj.setBlockState(new BlockPos(i - 7, (j + l * 2) - 1, k - 6), Blocks.chest.getDefaultState());
+            worldObj.setBlock(i - 7, (j + l * 2) - 1, k - 6, Blocks.chest);
             TileEntityChest tileentitychest3 = new TileEntityChest();
             ///worldObj.setBlockTileEntity(i - 7, (j + l * 2) - 1, k - 6, tileentitychest3);
-            worldObj.setTileEntity(new BlockPos(i - 7, (j + l * 2) - 1, k - 6), tileentitychest3);
+            worldObj.setTileEntity(i - 7, (j + l * 2) - 1, k - 6, tileentitychest3);
 
             for (int i9 = 0; i9 < tileentitychest2.getSizeInventory() - 9; i9++)
             {

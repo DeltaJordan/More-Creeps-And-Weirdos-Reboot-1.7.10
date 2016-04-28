@@ -30,7 +30,7 @@ public class CREEPSEntityEvilPig extends EntityMob
         isImmuneToFire = true;
         modelsize = 1.0F;
         fallDistance = -25F;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.45D, true));
         this.tasks.addTask(6, new EntityAIWander(this, 1.0D));

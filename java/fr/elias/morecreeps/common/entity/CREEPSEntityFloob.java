@@ -56,7 +56,7 @@ public class CREEPSEntityFloob extends EntityMob
         rayTime = rand.nextInt(50) + 50;
         isImmuneToFire = true;
         modelsize = 1.0F;
-        this.getNavigator().setCanSwim(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
