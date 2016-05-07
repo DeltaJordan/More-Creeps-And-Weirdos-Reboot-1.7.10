@@ -206,65 +206,139 @@ public class CREEPSEntityG extends EntityMob
     {
     	if(!worldObj.isRemote)
     	{
+    		int maxitems = 0;
             if (rand.nextInt(200) == 98)
             {
                 dropItem(Item.getItemFromBlock(Blocks.gold_block), 1);
+                maxitems++;
             }
-            else if (rand.nextInt(5) == 0)
+            if (rand.nextInt(5) == 0)
             {
                 dropItem(Items.gold_ingot, rand.nextInt(2) + 1);
+                maxitems++;
             }
-            else if (rand.nextInt(150) > 145)
+            if (rand.nextInt(150) > 145)
             {
                 dropItem(Items.golden_sword, 1);
+                maxitems++;
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.golden_pickaxe, 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            		{
+                		dropItem(Items.golden_pickaxe, 1);
+                		maxitems++;
+            		}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.golden_shovel, 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.golden_shovel, 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.golden_axe, 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.golden_axe, 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.golden_helmet, 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.golden_helmet, 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.golden_chestplate, 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.golden_chestplate, 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.golden_boots, 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.golden_boots, 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 80)
-            {
-                dropItem(Items.wheat, rand.nextInt(6) + 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 80)
+            	{
+            		dropItem(Items.wheat, rand.nextInt(6) + 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Item.getItemFromBlock(Blocks.glass), rand.nextInt(6) + 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Item.getItemFromBlock(Blocks.glass), rand.nextInt(6) + 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(MoreCreepsAndWeirdos.goodonut, rand.nextInt(3) + 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(MoreCreepsAndWeirdos.goodonut, rand.nextInt(3) + 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 88)
-            {
-                dropItem(Item.getItemFromBlock(Blocks.grass), rand.nextInt(6) + 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 88)
+            	{
+            		dropItem(Item.getItemFromBlock(Blocks.grass), rand.nextInt(6) + 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Item.getItemFromBlock(Blocks.glowstone), rand.nextInt(2) + 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Item.getItemFromBlock(Blocks.glowstone), rand.nextInt(2) + 1);
+            		maxitems++;
+            	}
             }
-            else if (rand.nextInt(100) > 98)
-            {
-                dropItem(Items.glowstone_dust, rand.nextInt(2) + 1);
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.glowstone_dust, rand.nextInt(2) + 1);
+            		maxitems++;
+            	}
+            }
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.glass_bottle, rand.nextInt(2) + 1);
+            		maxitems++;
+            	}
+            }
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.gold_nugget, rand.nextInt(2) + 1);
+            		maxitems++;
+            	}
+            }
+            if (maxitems < 3){
+            	if (rand.nextInt(100) == 88)
+            	{
+            		dropItem(Items.golden_apple, rand.nextInt(2) + 1);
+            		maxitems++;
+            	}
+            }
+            if (maxitems < 3){
+            	if (rand.nextInt(100) > 98)
+            	{
+            		dropItem(Items.gunpowder, rand.nextInt(2) + 1);
+            		maxitems++;
+            	}
+            }
+            if (maxitems < 3){
+            	if (rand.nextInt(100) == 88)
+            	{
+            		dropItem(Items.ghast_tear, rand.nextInt(2) + 1);
+            	}
             }
     	}
         super.onDeath(damagesource);

@@ -18,8 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -41,13 +39,13 @@ public class CREEPSEntityKid extends EntityAnimal
         checktimer = 0;
         modelsize = 0.6F;
         setEntitySize(width * modelsize, height * modelsize);
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new CREEPSEntityKid.AIAttackEntity());
         this.tasks.addTask(2, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
     }
 
     public void setEntitySize(float width, float height)
@@ -160,16 +158,17 @@ public class CREEPSEntityKid extends EntityAnimal
     /**
      * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
      * Args: x, y, z
+     * @return 
      */
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.sand || worldObj.getBlockState(bp.down()).getBlock() == Blocks.gravel)
+        if (worldObj.getBlock(x, y, z) == Blocks.sand || worldObj.getBlock(x, y, z) == Blocks.gravel)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -276,9 +275,9 @@ public class CREEPSEntityKid extends EntityAnimal
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.grass || i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(15) == 0;// && l > 6;
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return (i1 == Blocks.grass || i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(15) == 0 && l > 6;
     }
 
     /**
@@ -327,8 +326,8 @@ public class CREEPSEntityKid extends EntityAnimal
             int i = MathHelper.floor_double(posX);
             int j = MathHelper.floor_double(getBoundingBox().minY);
             int k = MathHelper.floor_double(posZ);
-            Block l = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-            Block i1 = worldObj.getBlockState(new BlockPos(i, j, k)).getBlock();
+            Block l = worldObj.getBlock(i, j - 1, k);
+            Block i1 = worldObj.getBlock(i, j, k);
 
             if (i1 == Blocks.snow || l == Blocks.snow || l == Blocks.ice)
             {

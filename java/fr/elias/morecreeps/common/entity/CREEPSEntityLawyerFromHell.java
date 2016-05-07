@@ -2,8 +2,10 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
+import fr.elias.morecreeps.client.config.CREEPSConfig;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,16 +23,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityLawyerFromHell extends EntityMob
 {
@@ -83,13 +80,13 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
         modelsize = 1.0F;
         maxObstruct = 20;
         
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        //this.tasks.addTask(1, new CREEPSEntityLawyerFromHell.AIAttackEntity());
+        this.tasks.addTask(1, new CREEPSEntityLawyerFromHell.AIAttackEntity());
         this.tasks.addTask(2, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         this.targetTasks.addTask(2, new CREEPSEntityLawyerFromHell.AIAttackEntity());
     }
 
@@ -104,18 +101,18 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
      * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
      * (Animals, Spiders at day, peaceful PigZombies).
      */
-    protected boolean findPlayerToAttack()
+    protected Entity findPlayerToAttack()
     {
         if (lawyerstate == 0 && !undead)
         {
-            return false;
+            return null;
         }
 
         if (MoreCreepsAndWeirdos.instance.currentfine <= 0 && !undead)
         {
             lawyerstate = 0;
-            //pathToEntity = null;
-            return false;
+            pathToEntity = null;
+            return null;
         }
 
         if (lawyerstate > 0)
@@ -124,16 +121,16 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
 
             if (entityplayer != null && canEntityBeSeen(entityplayer))
             {
-                return true;
+                return entityplayer;
             }
             else
             {
-                return false;
+                return null;
             }
         }
         else
         {
-            return false;
+            return null;
         }
     }
 
@@ -255,10 +252,11 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
      */
     class AIAttackEntity extends EntityAIBase
     {
+    	EntityPlayer entityplayer;
 		@Override
 		public boolean shouldExecute()
 		{
-			return CREEPSEntityLawyerFromHell.this.findPlayerToAttack();
+			return (entityplayer == CREEPSEntityLawyerFromHell.this.findPlayerToAttack());
 		}
 		
 		public void updateTask()
@@ -427,7 +425,7 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                     {
                         for (int l2 = -1; l2 < 14; l2++)
                         {
-                            if (worldObj.getBlockState(new BlockPos(jailX + k1, jailY + j, jailZ + l2)).getBlock() == Blocks.air)
+                            if (worldObj.getBlock(jailX + k1, jailY + j, jailZ + l2) == Blocks.air)
                             {
                                 area++;
                             }
@@ -444,7 +442,7 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                 while (true);
             }
 
-            if (worldObj.getBlockState(new BlockPos(jailX + 15 + 1, jailY + 20, jailZ + 7)).getBlock() == Blocks.flowing_water || worldObj.getBlockState(new BlockPos(jailX + 15 + 1, jailY + 20, jailZ + 7)).getBlock() == Blocks.water)
+            if (worldObj.getBlock(jailX + 15 + 1, jailY + 20, jailZ + 7) == Blocks.flowing_water || worldObj.getBlock(jailX + 15 + 1, jailY + 20, jailZ + 7) == Blocks.water)
             {
                 area++;
             }
@@ -461,17 +459,17 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
 
                             if (j4 < 1)
                             {
-                                worldObj.setBlockState(new BlockPos(jailX + i3, jailY + k, jailZ + l1), Blocks.gravel.getDefaultState());
+                                worldObj.setBlock(jailX + i3, jailY + k, jailZ + l1, Blocks.gravel);
                                 continue;
                             }
 
                             if (j4 < 15)
                             {
-                                worldObj.setBlockState(new BlockPos(jailX + i3, jailY + k, jailZ + l1), Blocks.mossy_cobblestone.getDefaultState());
+                                worldObj.setBlock(jailX + i3, jailY + k, jailZ + l1, Blocks.mossy_cobblestone);
                             }
                             else
                             {
-                                worldObj.setBlockState(new BlockPos(jailX + i3, jailY + k, jailZ + l1), Blocks.stone.getDefaultState());
+                                worldObj.setBlock(jailX + i3, jailY + k, jailZ + l1, Blocks.stone);
                             }
                         }
                     }
@@ -483,8 +481,8 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                     {
                         for (int j3 = 0; j3 < 13; j3++)
                         {
-                            worldObj.setBlockState(new BlockPos(jailX + j3, jailY + l, jailZ + i2 + 1), Blocks.air.getDefaultState());
-                            worldObj.setBlockState(new BlockPos(jailX + j3, jailY + l, jailZ + i2 + 1), Blocks.air.getDefaultState());
+                            worldObj.setBlock(jailX + j3, jailY + l, jailZ + i2 + 1, Blocks.air);
+                            worldObj.setBlock(jailX + j3, jailY + l, jailZ + i2 + 1, Blocks.air);
                         }
                     }
                 }
@@ -495,8 +493,8 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                     {
                         for (int k3 = 3; k3 < 11; k3++)
                         {
-                            worldObj.setBlockState(new BlockPos(jailX + k3, jailY + i1, jailZ + j2 + 1), Blocks.stone.getDefaultState());
-                            worldObj.setBlockState(new BlockPos(jailX + k3, jailY + i1, jailZ + j2 + 1), Blocks.stone.getDefaultState());
+                            worldObj.setBlock(jailX + k3, jailY + i1, jailZ + j2 + 1, Blocks.stone);
+                            worldObj.setBlock(jailX + k3, jailY + i1, jailZ + j2 + 1, Blocks.stone);
                         }
                     }
                 }
@@ -507,33 +505,33 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                     {
                         for (int l3 = 5; l3 < 9; l3++)
                         {
-                            worldObj.setBlockState(new BlockPos(jailX + l3, jailY + j1, jailZ + k2 + 1), Blocks.air.getDefaultState());
-                            worldObj.setBlockState(new BlockPos(jailX + l3, jailY + j1, jailZ + k2 + 1), Blocks.air.getDefaultState());
+                            worldObj.setBlock(jailX + l3, jailY + j1, jailZ + k2 + 1, Blocks.air);
+                            worldObj.setBlock(jailX + l3, jailY + j1, jailZ + k2 + 1, Blocks.air);
                         }
                     }
                 }
 
-                worldObj.setBlockState(new BlockPos(jailX + 7, jailY + 1, jailZ + 4), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 7, jailY + 1, jailZ + 5), Blocks.iron_bars.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY + 1, jailZ + 7), Blocks.glass.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 4, jailY + 1, jailZ + 7), Blocks.glass.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 10, jailY + 1, jailZ + 7), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ + 7), Blocks.iron_bars.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 7, jailY + 1, jailZ + 11), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 7, jailY + 1, jailZ + 10), Blocks.iron_bars.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 4, jailY, jailZ + 8), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY, jailZ + 8), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 4, jailY + 1, jailZ + 8), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY + 1, jailZ + 8), Blocks.air.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY, jailZ + 8), Blocks.oak_door.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY, jailZ + 8), Blocks.oak_door.getDefaultState(), 0);//setBlockmetadatawithnotify
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY + 1, jailZ + 8), Blocks.oak_door.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 3, jailY + 1, jailZ + 8), Blocks.oak_door.getDefaultState(), 8);//wtf? 8 flag ?
+                worldObj.setBlock(jailX + 7, jailY + 1, jailZ + 4, Blocks.air);
+                worldObj.setBlock(jailX + 7, jailY + 1, jailZ + 5, Blocks.iron_bars);
+                worldObj.setBlock(jailX + 3, jailY + 1, jailZ + 7, Blocks.glass);
+                worldObj.setBlock(jailX + 4, jailY + 1, jailZ + 7, Blocks.glass);
+                worldObj.setBlock(jailX + 10, jailY + 1, jailZ + 7, Blocks.air);
+                worldObj.setBlock(jailX + 9, jailY + 1, jailZ + 7, Blocks.iron_bars);
+                worldObj.setBlock(jailX + 7, jailY + 1, jailZ + 11, Blocks.air);
+                worldObj.setBlock(jailX + 7, jailY + 1, jailZ + 10, Blocks.iron_bars);
+                worldObj.setBlock(jailX + 4, jailY, jailZ + 8, Blocks.air);
+                worldObj.setBlock(jailX + 3, jailY, jailZ + 8, Blocks.air);
+                worldObj.setBlock(jailX + 4, jailY + 1, jailZ + 8, Blocks.air);
+                worldObj.setBlock(jailX + 3, jailY + 1, jailZ + 8, Blocks.air);
+                worldObj.setBlock(jailX + 3, jailY, jailZ + 8, Blocks.wooden_door);
+                worldObj.setBlock(jailX + 3, jailY, jailZ + 8, Blocks.wooden_door);
+                worldObj.setBlock(jailX + 3, jailY + 1, jailZ + 8, Blocks.wooden_door);
+                worldObj.setBlock(jailX + 3, jailY + 1, jailZ + 8, Blocks.wooden_door);
                 byte byte0 = 15;
                 byte byte1 = 7;
                 int i4;
 
-                for (i4 = 80; worldObj.getBlockState(new BlockPos(jailX + byte0, i4, jailZ + byte1)).getBlock() == Blocks.air || worldObj.getBlockState(new BlockPos(jailX + byte0, i4, jailZ + byte1)).getBlock() == Blocks.leaves.getDefaultState() || worldObj.getBlockState(new BlockPos(jailX + byte0, i4, jailZ + byte1)).getBlock() == Blocks.log.getDefaultState(); i4--) { }
+                for (i4 = 80; worldObj.getBlock(jailX + byte0, i4, jailZ + byte1) == Blocks.air || worldObj.getBlock(jailX + byte0, i4, jailZ + byte1) == Blocks.leaves || worldObj.getBlock(jailX + byte0, i4, jailZ + byte1) == Blocks.log; i4--) { }
 
                 for (int k4 = 0; k4 < i4 - jailY; k4++)
                 {
@@ -541,7 +539,7 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                     {
                         for (int i7 = 0; i7 < 2; i7++)
                         {
-                            worldObj.setBlockState(new BlockPos(jailX + i5 + byte0, jailY + k4, jailZ + byte1 + i7), Blocks.air.getDefaultState());
+                            worldObj.setBlock(jailX + i5 + byte0, jailY + k4, jailZ + byte1 + i7, Blocks.air);
                         }
                     }
                 }
@@ -552,26 +550,26 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                 {
                     if (l4 == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + byte0, jailY + j5, jailZ + byte1), Blocks.stone_stairs.getDefaultState());
-                        worldObj.setBlockState(new BlockPos(jailX + byte0, jailY + j5, jailZ + byte1), Blocks.stone_stairs.getDefaultState(), 3);
+                        worldObj.setBlock(jailX + byte0, jailY + j5, jailZ + byte1, Blocks.stone_stairs);
+                        worldObj.setBlock(jailX + byte0, jailY + j5, jailZ + byte1, Blocks.stone_stairs);
                     }
 
                     if (l4 == 1)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + byte0 + 1, jailY + j5, jailZ + byte1), Blocks.stone_stairs.getDefaultState());
-                        worldObj.setBlockState(new BlockPos(jailX + byte0 + 1, jailY + j5, jailZ + byte1), Blocks.stone_stairs.getDefaultState(), 0);
+                        worldObj.setBlock(jailX + byte0 + 1, jailY + j5, jailZ + byte1, Blocks.stone_stairs);
+                        worldObj.setBlock(jailX + byte0 + 1, jailY + j5, jailZ + byte1, Blocks.stone_stairs);
                     }
 
                     if (l4 == 2)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + byte0 + 1, jailY + j5, jailZ + byte1 + 1), Blocks.stone_stairs.getDefaultState());
-                        worldObj.setBlockState(new BlockPos(jailX + byte0 + 1, jailY + j5, jailZ + byte1 + 1), Blocks.stone_stairs.getDefaultState(), 2);
+                        worldObj.setBlock(jailX + byte0 + 1, jailY + j5, jailZ + byte1 + 1, Blocks.stone_stairs);
+                        worldObj.setBlock(jailX + byte0 + 1, jailY + j5, jailZ + byte1 + 1, Blocks.stone_stairs);
                     }
 
                     if (l4 == 3)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + byte0, jailY + j5, jailZ + byte1 + 1), Blocks.stone_stairs.getDefaultState());
-                        worldObj.setBlockState(new BlockPos(jailX + byte0, jailY + j5, jailZ + byte1 + 1), Blocks.stone_stairs.getDefaultState(), 1);
+                        worldObj.setBlock(jailX + byte0, jailY + j5, jailZ + byte1 + 1, Blocks.stone_stairs);
+                        worldObj.setBlock(jailX + byte0, jailY + j5, jailZ + byte1 + 1, Blocks.stone_stairs);
                     }
 
                     if (l4++ == 3)
@@ -582,17 +580,17 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
 
                 for (int k5 = 0; k5 < 3; k5++)
                 {
-                    worldObj.setBlockState(new BlockPos(jailX + 13 + k5, jailY, jailZ + 7), Blocks.air.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 13 + k5, jailY + 1, jailZ + 7), Blocks.air.getDefaultState());
+                    worldObj.setBlock(jailX + 13 + k5, jailY, jailZ + 7, Blocks.air);
+                    worldObj.setBlock(jailX + 13 + k5, jailY + 1, jailZ + 7, Blocks.air);
                 }
 
-                worldObj.setBlockState(new BlockPos(jailX + 13, jailY, jailZ + byte1), Blocks.iron_door.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 13, jailY, jailZ + byte1), Blocks.iron_door.getDefaultState(), 0);
-                worldObj.setBlockState(new BlockPos(jailX + 13, jailY + 1, jailZ + byte1), Blocks.iron_door.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 13, jailY + 1, jailZ + byte1), Blocks.iron_door.getDefaultState(), 8);
-                worldObj.setBlockState(new BlockPos(jailX + 15, jailY, jailZ + byte1), Blocks.stone_stairs.getDefaultState());
-                worldObj.setBlockState(new BlockPos(jailX + 15, jailY, jailZ + byte1), Blocks.stone_stairs.getDefaultState(), 0);
-                worldObj.setBlockState(new BlockPos(jailX + 14, jailY + 2, jailZ + byte1), Blocks.air.getDefaultState());
+                worldObj.setBlock(jailX + 13, jailY, jailZ + byte1, Blocks.iron_door);
+                worldObj.setBlock(jailX + 13, jailY, jailZ + byte1, Blocks.iron_door);
+                worldObj.setBlock(jailX + 13, jailY + 1, jailZ + byte1, Blocks.iron_door);
+                worldObj.setBlock(jailX + 13, jailY + 1, jailZ + byte1, Blocks.iron_door);
+                worldObj.setBlock(jailX + 15, jailY, jailZ + byte1, Blocks.stone_stairs);
+                worldObj.setBlock(jailX + 15, jailY, jailZ + byte1, Blocks.stone_stairs);
+                worldObj.setBlock(jailX + 14, jailY + 2, jailZ + byte1, Blocks.air);
 
                 for (int l5 = 0; l5 < 32; l5++)
                 {
@@ -600,8 +598,8 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                     {
                         for (int l7 = 0; l7 < 4; l7++)
                         {
-                            worldObj.setBlockToAir(new BlockPos(jailX + j7, jailY + l7, jailZ - l5 - 1));
-                            worldObj.setBlockToAir(new BlockPos(jailX + j7, jailY + l7, jailZ + l5 + 15));
+                            worldObj.setBlockToAir(jailX + j7, jailY + l7, jailZ - l5 - 1);
+                            worldObj.setBlockToAir(jailX + j7, jailY + l7, jailZ + l5 + 15);
                         }
                     }
                 }
@@ -614,65 +612,65 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                         {
                             for (int l8 = 0; l8 < 4; l8++)
                             {
-                                worldObj.setBlockToAir(new BlockPos(jailX + 10 + i8, jailY + l8, (jailZ - i6 * 7) + k7));
-                                worldObj.setBlockToAir(new BlockPos(jailX + 2 + i8, jailY + l8, (jailZ - i6 * 7) + k7));
-                                worldObj.setBlockToAir(new BlockPos(jailX + 10 + i8, jailY + l8, jailZ + i6 * 7 + 12 + k7));
-                                worldObj.setBlockToAir(new BlockPos(jailX + 2 + i8, jailY + l8, jailZ + i6 * 7 + 12 + k7));
+                                worldObj.setBlockToAir(jailX + 10 + i8, jailY + l8, (jailZ - i6 * 7) + k7);
+                                worldObj.setBlockToAir(jailX + 2 + i8, jailY + l8, (jailZ - i6 * 7) + k7);
+                                worldObj.setBlockToAir(jailX + 10 + i8, jailY + l8, jailZ + i6 * 7 + 12 + k7);
+                                worldObj.setBlockToAir(jailX + 2 + i8, jailY + l8, jailZ + i6 * 7 + 12 + k7);
                             }
                         }
                     }
                 }
 
-                worldObj.setBlockToAir(new BlockPos(jailX + 7, jailY, jailZ));
-                worldObj.setBlockToAir(new BlockPos(jailX + 7, jailY + 1, jailZ));
-                worldObj.setBlockToAir(new BlockPos(jailX + 7, jailY, jailZ + 14));
-                worldObj.setBlockToAir(new BlockPos(jailX + 7, jailY + 1, jailZ + 14));
+                worldObj.setBlockToAir(jailX + 7, jailY, jailZ);
+                worldObj.setBlockToAir(jailX + 7, jailY + 1, jailZ);
+                worldObj.setBlockToAir(jailX + 7, jailY, jailZ + 14);
+                worldObj.setBlockToAir(jailX + 7, jailY + 1, jailZ + 14);
 
                 for (int j6 = 0; j6 < 4; j6++)
                 {
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ - j6 * 7 - 5 - 2), Blocks.iron_bars.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState(), 2);
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState(), 10);
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5 - 2), Blocks.iron_bars.getDefaultState());
-                    worldObj.setBlockToAir(new BlockPos(jailX + 9, jailY, jailZ - j6 * 7 - 5));
-                    worldObj.setBlockToAir(new BlockPos(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5));
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState(), 0);
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5), Blocks.oak_door.getDefaultState(), 8);
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ + j6 * 7 + 19 + 2), Blocks.iron_bars.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState(), 2);
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 5, jailY + 1, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState(), 10);
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19 + 2), Blocks.iron_bars.getDefaultState());
-                    worldObj.setBlockToAir(new BlockPos(jailX + 9, jailY, jailZ + j6 * 7 + 19));
-                    worldObj.setBlockToAir(new BlockPos(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19));
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState(), 0);
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19), Blocks.oak_door.getDefaultState(), 8);
+                    worldObj.setBlock(jailX + 5, jailY + 1, jailZ - j6 * 7 - 5 - 2, Blocks.iron_bars);
+                    worldObj.setBlock(jailX + 5, jailY, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY + 1, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY + 1, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5 - 2, Blocks.iron_bars);
+                    worldObj.setBlockToAir(jailX + 9, jailY, jailZ - j6 * 7 - 5);
+                    worldObj.setBlockToAir(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5);
+                    worldObj.setBlock(jailX + 9, jailY, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY + 1, jailZ - j6 * 7 - 5, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY + 1, jailZ + j6 * 7 + 19 + 2, Blocks.iron_bars);
+                    worldObj.setBlock(jailX + 5, jailY, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY + 1, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 5, jailY + 1, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19 + 2, Blocks.iron_bars);
+                    worldObj.setBlockToAir(jailX + 9, jailY, jailZ + j6 * 7 + 19);
+                    worldObj.setBlockToAir(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19);
+                    worldObj.setBlock(jailX + 9, jailY, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19, Blocks.wooden_door);
+                    worldObj.setBlock(jailX + 9, jailY + 1, jailZ + j6 * 7 + 19, Blocks.wooden_door);
 
                     if (rand.nextInt(1) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 12, jailY + 2, jailZ - j6 * 7 - 5), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 12, jailY + 2, jailZ - j6 * 7 - 5, Blocks.torch);
                     }
 
                     if (rand.nextInt(1) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 2, jailY + 2, jailZ - j6 * 7 - 5), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 2, jailY + 2, jailZ - j6 * 7 - 5, Blocks.torch);
                     }
 
                     if (rand.nextInt(1) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 12, jailY + 2, jailZ + j6 * 7 + 19), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 12, jailY + 2, jailZ + j6 * 7 + 19, Blocks.torch);
                     }
 
                     if (rand.nextInt(1) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 2, jailY + 2, jailZ + j6 * 7 + 19), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 2, jailY + 2, jailZ + j6 * 7 + 19, Blocks.torch);
                     }
                 }
 
@@ -680,22 +678,22 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                 {
                     if (rand.nextInt(2) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 6, jailY + 2, jailZ - k6 * 4 - 2), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 6, jailY + 2, jailZ - k6 * 4 - 2, Blocks.torch);
                     }
 
                     if (rand.nextInt(2) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 8, jailY + 2, jailZ - k6 * 4 - 2), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 8, jailY + 2, jailZ - k6 * 4 - 2, Blocks.torch);
                     }
 
                     if (rand.nextInt(2) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 6, jailY + 2, jailZ + k6 * 4 + 18), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 6, jailY + 2, jailZ + k6 * 4 + 18, Blocks.torch);
                     }
 
                     if (rand.nextInt(2) == 0)
                     {
-                        worldObj.setBlockState(new BlockPos(jailX + 8, jailY + 2, jailZ + k6 * 4 + 18), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(jailX + 8, jailY + 2, jailZ + k6 * 4 + 18, Blocks.torch);
                     }
                 }
             }
@@ -705,18 +703,18 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
             }
         }
 
-        worldObj.setBlockState(new BlockPos(jailX + 12, jailY, jailZ + 13), Blocks.chest.getDefaultState());
+        worldObj.setBlock(jailX + 12, jailY, jailZ + 13, Blocks.chest);
         TileEntityChest tileentitychest = new TileEntityChest();
-        worldObj.setTileEntity(new BlockPos(jailX + 12, jailY, jailZ + 13), tileentitychest);
-        worldObj.setBlockState(new BlockPos(jailX + 12, jailY, jailZ + 1), Blocks.chest.getDefaultState());
+        worldObj.setTileEntity(jailX + 12, jailY, jailZ + 13, tileentitychest);
+        worldObj.setBlock(jailX + 12, jailY, jailZ + 1, Blocks.chest);
         TileEntityChest tileentitychest1 = new TileEntityChest();
-        worldObj.setTileEntity(new BlockPos(jailX + 12, jailY, jailZ + 1), tileentitychest1);
-        worldObj.setBlockState(new BlockPos(jailX, jailY, jailZ + 13), Blocks.chest.getDefaultState());
+        worldObj.setTileEntity(jailX + 12, jailY, jailZ + 1, tileentitychest1);
+        worldObj.setBlock(jailX, jailY, jailZ + 13, Blocks.chest);
         TileEntityChest tileentitychest2 = new TileEntityChest();
-        worldObj.setTileEntity(new BlockPos(jailX, jailY, jailZ + 13), tileentitychest2);
-        worldObj.setBlockState(new BlockPos(jailX, jailY, jailZ + 1), Blocks.chest.getDefaultState());
+        worldObj.setTileEntity(jailX, jailY, jailZ + 13, tileentitychest2);
+        worldObj.setBlock(jailX, jailY, jailZ + 1, Blocks.chest);
         TileEntityChest tileentitychest3 = new TileEntityChest();
-        worldObj.setTileEntity(new BlockPos(jailX, jailY, jailZ + 1), tileentitychest3);
+        worldObj.setTileEntity(jailX, jailY, jailZ + 1, tileentitychest3);
 
         for (int l6 = 1; l6 < tileentitychest.getSizeInventory(); l6++)
         {
@@ -754,15 +752,16 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
             }
         }
 
-        worldObj.setBlockState(new BlockPos(jailX + 11, jailY, jailZ + 13), Blocks.mob_spawner.getDefaultState());
+        worldObj.setBlock(jailX + 11, jailY, jailZ + 13, Blocks.mob_spawner);
         TileEntityMobSpawner tileentitymobspawner = new TileEntityMobSpawner();
-        worldObj.setTileEntity(new BlockPos(jailX + 11, jailY, jailZ + 13), tileentitymobspawner);
-        tileentitymobspawner.getSpawnerBaseLogic().setEntityName("Skeleton");
+        worldObj.setTileEntity(jailX + 11, jailY, jailZ + 13, tileentitymobspawner);
+        //Thank you MCPBot for the knowledge that getSpawnerBaseLogic used to be func_145881_a()
+        tileentitymobspawner.func_145881_a().setEntityName("Skeleton");
         tileentitychest1.setInventorySlotContents(rand.nextInt(5), new ItemStack(Items.stone_pickaxe, 1, 0));
         tileentitychest1.setInventorySlotContents(rand.nextInt(5) + 5, new ItemStack(Items.apple, 1, 0));
         tileentitychest2.setInventorySlotContents(rand.nextInt(5) + 5, new ItemStack(Blocks.torch, rand.nextInt(16), 0));
         tileentitychest2.setInventorySlotContents(rand.nextInt(5), new ItemStack(Items.apple, 1, 0));
-        worldObj.setBlockState(new BlockPos(jailX + 6, jailY + 2, jailZ + 9), Blocks.torch.getDefaultState());
+        worldObj.setBlock(jailX + 6, jailY + 2, jailZ + 9, Blocks.torch);
         int j9 = rand.nextInt(11);
 
         for (int k9 = 0; k9 < 4; k9++)
@@ -1186,9 +1185,9 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        IBlockState i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k));
-        return i1 != Blocks.cobblestone.getDefaultState() && i1 != Blocks.log.getDefaultState() && i1 != Blocks.double_stone_slab.getDefaultState() && i1 != Blocks.stone_slab.getDefaultState() && i1 != Blocks.planks.getDefaultState() && i1 != Blocks.wool.getDefaultState() && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(5) == 0; //&& l > 10;
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(5) == 0 && l > 10;
     }
 
     /**
@@ -1208,14 +1207,14 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)((float)i * 0.5F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)((float)i * 0.5F) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)((float)i * 0.5F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)((float)i * 0.5F) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)((float)i * 0.5F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)((float)i * 0.5F) - (double)width, d, d1, d2, new int[0]);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)((float)i * 0.5F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)((float)i * 0.5F) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)((float)i * 0.5F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)((float)i * 0.5F) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)((float)i * 0.5F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)((float)i * 0.5F), posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)((float)i * 0.5F) - (double)width, d, d1, d2);
             }
         }
     }
@@ -1260,7 +1259,7 @@ public class CREEPSEntityLawyerFromHell extends EntityMob
 
     public static boolean blockExists(World parWorld, int x, int y, int z) 
     {
-    	IBlockState state = parWorld.getBlockState(new BlockPos(x, y, z));
+    	Block state = parWorld.getBlock(x, y, z);
     	if (state != null)
     	return true;
     	else

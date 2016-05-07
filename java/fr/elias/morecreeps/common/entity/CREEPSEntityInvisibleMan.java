@@ -20,8 +20,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -89,10 +87,11 @@ public class CREEPSEntityInvisibleMan extends EntityMob
 
     class AIAttackEntity extends EntityAIBase
     {
+    	EntityPlayer entityplayer;
 		@Override
 		public boolean shouldExecute()
 		{
-			return CREEPSEntityInvisibleMan.this.findPlayerToAttack();
+			return (entityplayer == CREEPSEntityInvisibleMan.this.findPlayerToAttack());
 		}
 		
 		public void updateTask()
