@@ -18,10 +18,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -48,7 +45,7 @@ public class CREEPSEntityRatMan extends EntityMob
         modelspeed = 0.61F;
         stepHeight = 1.0F;
 
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIBreakDoor(this));
         tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.25D, false));
@@ -58,7 +55,7 @@ public class CREEPSEntityRatMan extends EntityMob
         tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8F));
         tasks.addTask(6, new EntityAILookIdle(this));
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
     }
     public void applyEntityAttributes()
     {
@@ -108,15 +105,15 @@ public class CREEPSEntityRatMan extends EntityMob
      * Args: x, y, z
      */
     //the old "getBlockPathHeight" or something called like this
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.sand || worldObj.getBlockState(bp.down()).getBlock() == Blocks.gravel)
+        if (worldObj.getBlock(x, y, z) == Blocks.sand || worldObj.getBlock(x, y, z) == Blocks.gravel)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -134,7 +131,7 @@ public class CREEPSEntityRatMan extends EntityMob
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+            if (entity != this && worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
             {
                 setRevengeTarget((EntityLivingBase) entity);
             }
@@ -155,9 +152,9 @@ public class CREEPSEntityRatMan extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k));// && l > 6;
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return (i1 == Blocks.sand || i1 == Blocks.dirt || i1 == Blocks.gravel) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && l > 6;
     }
 
     /**

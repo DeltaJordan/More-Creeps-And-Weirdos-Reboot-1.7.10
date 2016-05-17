@@ -15,7 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityMoney extends EntityThrowable
@@ -47,7 +47,7 @@ public class CREEPSEntityMoney extends EntityThrowable
      */
     public boolean isInRangeToRenderDist(double d)
     {
-        double d1 = getEntityBoundingBox().getAverageEdgeLength() * 4D;
+        double d1 = getBoundingBox().getAverageEdgeLength() * 4D;
         d1 *= 64D;
         return d < d1 * d1;
     }
@@ -164,7 +164,7 @@ public class CREEPSEntityMoney extends EntityThrowable
         if (!onGround)
         {
             Object obj = null;
-            List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(0.5D, 0.5D, 0.5D));
+            List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().addCoord(motionX, motionY, motionZ).expand(0.5D, 0.5D, 0.5D));
             double d3 = 0.0D;
 
             for (int i = 0; i < list.size(); i++)
@@ -180,7 +180,7 @@ public class CREEPSEntityMoney extends EntityThrowable
                         entity.attackEntityFrom(DamageSource.causeMobDamage(player), 10);
                     }
 
-                    if (((EntityLiving)entity).getHealth() <= 0 && !((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievefalseidol))
+                    if (((EntityLiving)entity).getHealth() <= 0 && !((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievefalseidol))
                     {
                         player.addStat(MoreCreepsAndWeirdos.achievefalseidol, 1);
                         double d4 = -MathHelper.sin((player.rotationYaw * (float)Math.PI) / 180F);
@@ -247,21 +247,21 @@ public class CREEPSEntityMoney extends EntityThrowable
                 if(!(entityplayer instanceof EntityPlayerSP))
                 {
                     EntityPlayerMP playerMP = (EntityPlayerMP) entityplayer;
-                    if (!playerMP.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve100bucks) && i > 99)
+                    if (!playerMP.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve100bucks) && i > 99)
                     {
                         flag = true;
                         confetti(entityplayer);
                         entityplayer.addStat(MoreCreepsAndWeirdos.achieve100bucks, 1);
                     }
 
-                    if (!playerMP.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve500bucks) && i > 499)
+                    if (!playerMP.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve500bucks) && i > 499)
                     {
                         flag = true;
                         confetti(entityplayer);
                         entityplayer.addStat(MoreCreepsAndWeirdos.achieve500bucks, 1);
                     }
 
-                    if (!playerMP.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve1000bucks) && i > 999)
+                    if (!playerMP.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve1000bucks) && i > 999)
                     {
                         flag = true;
                         confetti(entityplayer);

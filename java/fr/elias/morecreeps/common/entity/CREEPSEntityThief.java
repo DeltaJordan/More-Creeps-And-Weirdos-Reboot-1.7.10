@@ -1,5 +1,6 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,10 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -52,7 +50,7 @@ public class CREEPSEntityThief extends EntityMob
         foundplayer = false;
         tempDamage = 0;
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(2, new AIThief()); 
         tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 0.35D));
@@ -311,7 +309,7 @@ public class CREEPSEntityThief extends EntityMob
                     double d = rand.nextGaussian() * 0.02D;
                     double d1 = rand.nextGaussian() * 0.02D;
                     double d2 = rand.nextGaussian() * 0.02D;
-                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
+                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
                 }
             }
         }
@@ -362,8 +360,8 @@ public class CREEPSEntityThief extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
 
         if (j < 50)
         {
@@ -371,7 +369,7 @@ public class CREEPSEntityThief extends EntityMob
         }
         else
         {
-            return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(10) == 0 && l > 7;
+            return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(10) == 0 && l > 7;
         }
     }
 

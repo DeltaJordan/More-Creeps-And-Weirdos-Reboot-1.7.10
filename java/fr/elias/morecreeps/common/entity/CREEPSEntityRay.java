@@ -1,31 +1,16 @@
 package fr.elias.morecreeps.common.entity;
 
-import java.util.List;
-
+import fr.elias.morecreeps.client.config.CREEPSConfig;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import fr.elias.morecreeps.client.config.CREEPSConfig;
-import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityRay extends EntityThrowable
 {
@@ -59,50 +44,52 @@ public class CREEPSEntityRay extends EntityThrowable
     			if(!worldObj.isRemote)
     			{
     				if(CREEPSConfig.rayGunFire){
-    					worldObj.setBlockState(getPosition(), Blocks.fire.getDefaultState());
+    					worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.fire);
     				}
     				else{
-        				worldObj.setBlockToAir(getPosition().down());
+        				worldObj.setBlockToAir((int)posX, (int)posY - 1, (int)posZ);
     				}
     			}
     		}
     	}
     	if(!worldObj.isRemote)
     	{
-    		checkNearBlock(Blocks.ice, Blocks.water, getPosition());
-    		checkNearBlock(Blocks.ice, Blocks.water, getPosition().east());
-    		checkNearBlock(Blocks.ice, Blocks.water, getPosition().west());
-    		checkNearBlock(Blocks.ice, Blocks.water, getPosition().north());
-    		checkNearBlock(Blocks.ice, Blocks.water, getPosition().south());
+    		checkNearBlock(Blocks.ice, Blocks.water, (int)posX, (int)posY, (int)posZ);
+    		checkNearBlock(Blocks.ice, Blocks.water, (int)posX + 1, (int)posY, (int)posZ);
+    		checkNearBlock(Blocks.ice, Blocks.water, (int)posX - 1, (int)posY, (int)posZ);
+    		checkNearBlock(Blocks.ice, Blocks.water, (int)posX, (int)posY, (int)posZ - 1);
+    		checkNearBlock(Blocks.ice, Blocks.water, (int)posX, (int)posY, (int)posZ + 1);
     		
     		if(rand.nextBoolean())
     		{
-        		checkNearBlock2(Blocks.air, Blocks.fire, getPosition());
-        		checkNearBlock2(Blocks.air, Blocks.fire, getPosition().east());
-        		checkNearBlock2(Blocks.air, Blocks.fire, getPosition().west());
-        		checkNearBlock2(Blocks.air, Blocks.fire, getPosition().north());
-        		checkNearBlock2(Blocks.air, Blocks.fire, getPosition().south());
+        		checkNearBlock2(Blocks.air, Blocks.fire, (int)posX, (int)posY, (int)posZ);
+        		checkNearBlock2(Blocks.air, Blocks.fire, (int)posX + 1, (int)posY, (int)posZ);
+        		checkNearBlock2(Blocks.air, Blocks.fire, (int)posX - 1, (int)posY, (int)posZ);
+        		checkNearBlock2(Blocks.air, Blocks.fire, (int)posX, (int)posY, (int)posZ - 1);
+        		checkNearBlock2(Blocks.air, Blocks.fire, (int)posX, (int)posY, (int)posZ + 1);
     		}
     	}
     }
     
-    public void checkNearBlock(Block blockToReplace, Block theNewBlock, BlockPos bp)
+    public void checkNearBlock(Block blockToReplace, Block theNewBlock, int x, int y, int z)
     {
-    	if(worldObj.getBlockState(bp).getBlock() == blockToReplace && CREEPSConfig.rayGunMelt)
+    	if(worldObj.getBlock(x, y, z) == blockToReplace && CREEPSConfig.rayGunMelt)
     	{
-    		worldObj.setBlockState(bp, theNewBlock.getDefaultState());
+    		worldObj.setBlock(x, y, z, theNewBlock);
     	}
     }
     
-    public void checkNearBlock2(Block blockToReplace, Block theNewBlock, BlockPos bp)
+    public void checkNearBlock2(Block blockToReplace, Block theNewBlock, int x, int y, int z)
     {
-    	if(worldObj.getBlockState(bp).getBlock() == blockToReplace)
+    	if(worldObj.getBlock(x, y, z) == blockToReplace)
     	{
     		if(CREEPSConfig.rayGunFire)
     		{
-        		worldObj.setBlockState(bp, theNewBlock.getDefaultState());
-    		}else{
-    			worldObj.setBlockToAir(bp);
+        		worldObj.setBlock(x, y, z, theNewBlock);
+    		}
+    		
+    		else{
+    			worldObj.setBlockToAir(x, y, z);
     		}
     	}
     }
@@ -133,17 +120,17 @@ public class CREEPSEntityRay extends EntityThrowable
                 {
                     int k = damage;
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL)
+                    if (worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
                     {
                         k = 0;
                     }
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.EASY)
+                    if (worldObj.difficultySetting == EnumDifficulty.EASY)
                     {
                         k = k / 3 + 1;
                     }
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.HARD)
+                    if (worldObj.difficultySetting == EnumDifficulty.HARD)
                     {
                         k = (k * 3) / 2;
                     }

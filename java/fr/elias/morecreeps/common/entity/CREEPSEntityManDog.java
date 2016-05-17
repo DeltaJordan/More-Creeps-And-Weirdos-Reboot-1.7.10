@@ -2,6 +2,8 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,17 +17,12 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityManDog extends EntityMob
 {
@@ -105,12 +102,12 @@ public class CREEPSEntityManDog extends EntityMob
         superdistancetimer = rand.nextInt(100) + 50;
         frisbeestack = new ItemStack(Items.stick, 1);
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
         this.targetTasks.addTask(2, new AIAttackEntity());
     }
 
@@ -185,7 +182,7 @@ public class CREEPSEntityManDog extends EntityMob
             if (frisbeetime >= 20 && !isDead && !chase && !fetch)
             {
                 frisbeeent = null;
-                List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(25D, 25D, 25D));
+                List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().expand(25D, 25D, 25D));
 
                 for (int i = 0; i < list.size(); i++)
                 {
@@ -400,16 +397,16 @@ public class CREEPSEntityManDog extends EntityMob
      * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
      * (Animals, Spiders at day, peaceful PigZombies).
      */
-    protected boolean findPlayerToAttack()
+    protected Entity findPlayerToAttack()
     {
         if (tamed)
         {
             entityToAttack = null;
-            return false;
+            return null;
         }
         else
         {
-            return false;
+            return null;
         }
     }
 
@@ -462,7 +459,7 @@ public class CREEPSEntityManDog extends EntityMob
                 double d = rand.nextGaussian() * 0.059999999999999998D;
                 double d1 = rand.nextGaussian() * 0.059999999999999998D;
                 double d2 = rand.nextGaussian() * 0.059999999999999998D;
-                worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
+                worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)i, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
         }
     }
@@ -517,12 +514,11 @@ public class CREEPSEntityManDog extends EntityMob
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
+        int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        BlockPos bp = new BlockPos(i, j, k);
-        Block i1 = worldObj.getBlockState(bp.down()).getBlock();
-        return i1 != Blocks.sand && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).size() == 0 && worldObj.canSeeSky(bp) && rand.nextInt(25) == 0; //&& l > 10;
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j, k);
+        return i1 != Blocks.sand && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(25) == 0 && l > 10;
     }
     public int getMaxSpawnedInChunk()
     {

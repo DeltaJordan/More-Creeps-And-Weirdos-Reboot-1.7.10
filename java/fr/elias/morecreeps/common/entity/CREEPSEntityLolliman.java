@@ -2,8 +2,10 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.client.particles.CREEPSFxConfetti;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -20,18 +22,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.particles.CREEPSFxConfetti;
-import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityLolliman extends EntityAnimal
 {
@@ -56,12 +52,12 @@ public class CREEPSEntityLolliman extends EntityAnimal
         rockettime = 0;
         modelsize = 2.0F;
         treats = 0;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
     }
 
     public void applyEntityAttributes()
@@ -97,11 +93,11 @@ public class CREEPSEntityLolliman extends EntityAnimal
                 }
 
                 worldObj.playSoundAtEntity(this, "morecreeps:lollimantakeoff", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-                //smallconfetti();
+                smallconfetti();
 
                 //Actually not stable
                 EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 4D);
-                if (!((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievelolliman))
+                if (!((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievelolliman))
                 {
                     worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
                     entityplayer.addStat(MoreCreepsAndWeirdos.achievelolliman, 1);
@@ -218,21 +214,21 @@ public class CREEPSEntityLolliman extends EntityAnimal
      * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
      * Args: x, y, z
      */
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.water || worldObj.getBlockState(bp.down()).getBlock() == Blocks.flowing_water)
+        if (worldObj.getBlock(x, y, z) == Blocks.water || worldObj.getBlock(x, y, z) == Blocks.flowing_water)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
-    /*protected Entity findPlayerToAttack()
+    protected Entity findPlayerToAttack()
     {
-        if (worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)
+        if (worldObj.difficultySetting != EnumDifficulty.PEACEFUL)
         {
             float f = getBrightness(1.0F);
 
@@ -305,16 +301,16 @@ public class CREEPSEntityLolliman extends EntityAnimal
             attackTime = 20;
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), attack);
         }
-    }*/
+    }
 
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(15) == 0; //&& l > 7;
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(15) == 0 && l > 7;
     }
 
     /**
@@ -406,19 +402,18 @@ public class CREEPSEntityLolliman extends EntityAnimal
         super.onDeath(damagesource);
     }
 
-    /*public void smallconfetti()
+    public void smallconfetti()
     {
         for (int i = 1; i < 20; i++)
         {
             for (int j = 0; j < 20; j++)
             {
-                CREEPSFxConfetti creepsfxconfetti = new CREEPSFxConfetti(worldObj, posX + (double)(worldObj.rand.nextFloat() * 8F - worldObj.rand.nextFloat() * 8F), posY + (double)rand.nextInt(4) + 6D, posZ + (double)(worldObj.rand.nextFloat() * 8F - worldObj.rand.nextFloat() * 8F), worldObj.rand.nextInt(99));
+                CREEPSFxConfetti creepsfxconfetti = new CREEPSFxConfetti(worldObj, posX + (double)(worldObj.rand.nextFloat() * 8F - worldObj.rand.nextFloat() * 8F), posY + (double)rand.nextInt(4) + 6D, posZ + (double)(worldObj.rand.nextFloat() * 8F - worldObj.rand.nextFloat() * 8F));
                 creepsfxconfetti.renderDistanceWeight = 30D;
-                creepsfxconfetti.particleMaxAge = 55;
-                ModLoader.getMinecraftInstance().effectRenderer.addEffect(creepsfxconfetti);
+                Minecraft.getMinecraft().effectRenderer.addEffect(creepsfxconfetti);
             }
         }
-    }*/
+    }
 
     public void confetti()
     {

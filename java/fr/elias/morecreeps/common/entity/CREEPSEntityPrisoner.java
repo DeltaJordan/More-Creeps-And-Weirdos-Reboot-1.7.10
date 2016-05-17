@@ -1,7 +1,8 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -18,13 +19,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityPrisoner extends EntityMob
 {
@@ -58,14 +55,14 @@ public class CREEPSEntityPrisoner extends EntityMob
         {
             evil = false;
         }
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.4D, true));
         this.tasks.addTask(2, new EntityAIMoveTowardsRestriction(this, 0.5D));
         this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
     }
     
     public void applyEntityAttributes()
@@ -97,9 +94,9 @@ public class CREEPSEntityPrisoner extends EntityMob
         else
         {
             int i = MathHelper.floor_double(posX);
-            int j = MathHelper.floor_double(getEntityBoundingBox().minY);
+            int j = MathHelper.floor_double(getBoundingBox().minY);
             int k = MathHelper.floor_double(posZ);
-            Block l = worldObj.getBlockState(new BlockPos(i, j, k)).getBlock();
+            Block l = worldObj.getBlock(i, j, k);
             EntityPlayer entityplayersp = worldObj.getClosestPlayerToEntity(this, 2D);
 
             if (entityplayersp != null)
@@ -120,19 +117,19 @@ public class CREEPSEntityPrisoner extends EntityMob
     {
         MoreCreepsAndWeirdos.prisonercount++;
 
-        if (!((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieveprisoner))
+        if (!((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieveprisoner))
         {
             worldObj.playSoundAtEntity(player, "morecreeps:achievement", 1.0F, 1.0F);
             player.addStat(MoreCreepsAndWeirdos.achieveprisoner, 1);
             confetti(player);
         }
-        else if (!((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve5prisoner) && MoreCreepsAndWeirdos.prisonercount == 5)
+        else if (!((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve5prisoner) && MoreCreepsAndWeirdos.prisonercount == 5)
         {
             worldObj.playSoundAtEntity(player, "morecreeps:achievement", 1.0F, 1.0F);
             player.addStat(MoreCreepsAndWeirdos.achieve5prisoner, 1);
             confetti(player);
         }
-        else if (!((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve10prisoner) && MoreCreepsAndWeirdos.prisonercount == 10)
+        else if (!((EntityPlayerMP)player).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieve10prisoner) && MoreCreepsAndWeirdos.prisonercount == 10)
         {
             worldObj.playSoundAtEntity(player, "morecreeps:achievement", 1.0F, 1.0F);
             player.addStat(MoreCreepsAndWeirdos.achieve10prisoner, 1);
@@ -242,14 +239,14 @@ public class CREEPSEntityPrisoner extends EntityMob
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2, new int[0]);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
             }
         }
     }

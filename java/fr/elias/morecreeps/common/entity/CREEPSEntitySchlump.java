@@ -2,9 +2,11 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.client.particles.CREEPSFxConfetti;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,19 +18,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.particles.CREEPSFxConfetti;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntitySchlump extends EntityAnimal
 {
-	Block doorgetter[] = {
-			Blocks.acacia_door, Blocks.birch_door, Blocks.dark_oak_door, Blocks.jungle_door, Blocks.oak_door, Blocks.spruce_door
-	};
 	World world;
 	EntityPlayer entityplayer;
     protected double attackRange;
@@ -196,14 +191,14 @@ public class CREEPSEntitySchlump extends EntityAnimal
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
 
-        if (worldObj.canBlockSeeSky(new BlockPos(i, j, k)))
+        if (worldObj.canBlockSeeTheSky(i, j, k));
         {
         	MoreCreepsAndWeirdos.proxy.addChatMessage("Your Schlump needs to be indoors or it will die!");
             worldObj.playSoundAtEntity(this, "morecreeps:schlump-indoors", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             return false;
         }
 
-        if (worldObj.getBlockLightOpacity(new BlockPos(i, j, k)) > 11)
+        if (worldObj.getBlockLightOpacity(i, j, k) > 11)
         {
         	MoreCreepsAndWeirdos.proxy.addChatMessage("It is too bright in here for your little Schlump!");
             worldObj.playSoundAtEntity(this, "morecreeps:schlump-bright", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
@@ -218,7 +213,7 @@ public class CREEPSEntitySchlump extends EntityAnimal
             {
                 for (int i2 = 0; i2 < 5; i2++)
                 {
-                    if (worldObj.getBlockState(new BlockPos((int)posX + i1, (int)posY + i2, (int)posZ + k1)).getBlock() == Blocks.air)
+                    if (worldObj.getBlock((int)posX + i1, (int)posY + i2, (int)posZ + k1) == Blocks.air)
                     {
                         l++;
                     }
@@ -241,11 +236,11 @@ public class CREEPSEntitySchlump extends EntityAnimal
             {
                 for (int k2 = -5; k2 < 5; k2++)
                 {
-                    Block l2 = worldObj.getBlockState(new BlockPos((int)posX + l1, (int)posY + k2, (int)posZ + j2)).getBlock();
+                    Block l2 = worldObj.getBlock((int)posX + l1, (int)posY + k2, (int)posZ + j2);
 
                     
                     
-                    if (l2 == this.doorgetter[rand.nextInt(doorgetter.length)])
+                    if (l2 == Blocks.wooden_door)
                     {
                         j1 += 10;
                     }
@@ -559,7 +554,7 @@ public class CREEPSEntitySchlump extends EntityAnimal
                     break;
 
                 case 30:
-                    entityitem = entityDropItem(new ItemStack(Items.cooked_fish, 1, 0), 1.0F);
+                    entityitem = entityDropItem(new ItemStack(Items.cooked_fished, 1, 0), 1.0F);
                     break;
 
                 case 31:
@@ -662,8 +657,8 @@ public class CREEPSEntitySchlump extends EntityAnimal
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        int i1 = Block.getIdFromBlock((worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock()));
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        int i1 = Block.getIdFromBlock((worldObj.getBlock(i, j - 1, k)));
         return true;
     }
 
@@ -752,7 +747,7 @@ public class CREEPSEntitySchlump extends EntityAnimal
         {
             for (int j = 0; j < 10; j++)
             {
-                CREEPSFxConfetti creepsfxconfetti = new CREEPSFxConfetti(worldObj, posX + (double)(worldObj.rand.nextFloat() * 4F - worldObj.rand.nextFloat() * 4F), posY + (double)rand.nextInt(4) + 6D, posZ + (double)(worldObj.rand.nextFloat() * 4F - worldObj.rand.nextFloat() * 4F), Item.getItemFromBlock(Block.getBlockById(worldObj.rand.nextInt(99))));
+                CREEPSFxConfetti creepsfxconfetti = new CREEPSFxConfetti(worldObj, posX + (double)(worldObj.rand.nextFloat() * 4F - worldObj.rand.nextFloat() * 4F), posY + (double)rand.nextInt(4) + 6D, posZ + (double)(worldObj.rand.nextFloat() * 4F - worldObj.rand.nextFloat() * 4F));
                 creepsfxconfetti.renderDistanceWeight = 20D;
                 //Alternative not available?
                 //creepsfxconfetti.particleMaxAge = rand.nextInt(40) + 30;

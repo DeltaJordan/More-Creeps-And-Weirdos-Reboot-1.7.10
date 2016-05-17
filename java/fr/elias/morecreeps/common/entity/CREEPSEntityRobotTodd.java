@@ -2,6 +2,7 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.Random;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,12 +20,9 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityRobotTodd extends EntityMob
 {
@@ -47,10 +45,10 @@ public class CREEPSEntityRobotTodd extends EntityMob
         attackRange = 16D;
         jumping = false;
         robotsize = 2.5F;
-        //yOffset *= 1.5F;
+        yOffset *= 1.5F;
         setSize(1.5F, 2.5F);
         modelspeed = 0.4F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIBreakDoor(this));
         
@@ -62,8 +60,8 @@ public class CREEPSEntityRobotTodd extends EntityMob
         tasks.addTask(6, new EntityAIWatchClosest(this, CREEPSEntityRobotTed.class, 8F));
         tasks.addTask(7, new EntityAILookIdle(this));
         targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, CREEPSEntityRobotTed.class, true));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, CREEPSEntityRobotTed.class, 0, true));
     }
 
     public void applyEntityAttributes()
@@ -102,9 +100,9 @@ public class CREEPSEntityRobotTodd extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(getPosition());
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canSeeSky(new BlockPos(i, j, k)) && rand.nextInt(10) == 0 && l > 8;
+        int l = worldObj.getBlockLightOpacity(i, j ,k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(10) == 0 && l > 8;
     }
 
     /**

@@ -3,7 +3,6 @@ package fr.elias.morecreeps.common.entity;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -14,9 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -24,13 +21,15 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
 import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 
 public class CREEPSEntityRocket extends Entity
 {
     protected int hitX;
     protected int hitY;
     protected int hitZ;
-    protected IBlockState blockHit;
+    //Don't know how to fix; not in 1.7.10
+    //protected IBlockState blockHit;
 
     /** Light value one block more in z axis */
     protected boolean aoLightValueZPos;
@@ -63,7 +62,8 @@ public class CREEPSEntityRocket extends Entity
         hitX = -1;
         hitY = -1;
         hitZ = -1;
-        blockHit = null;
+        //Don't know how to fix; not in 1.7.10
+        //blockHit = false;
         aoLightValueZPos = false;
         aoLightValueScratchXYNN = 0;
         setSize(0.325F, 0.1425F);
@@ -189,7 +189,7 @@ public class CREEPSEntityRocket extends Entity
         double d = rand.nextGaussian() * 0.02D;
         double d1 = rand.nextGaussian() * 0.02D;
         double d2 = rand.nextGaussian() * 0.02D;
-        worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
+        worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
 
         if (aoLightValueScratchXYNN == 100)
         {
@@ -205,9 +205,9 @@ public class CREEPSEntityRocket extends Entity
 
         if (aoLightValueZPos)
         {
-            Block i = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)).getBlock();
+            Block i = worldObj.getBlock(hitX, hitY, hitZ);
 
-            if (i != blockHit)
+            /*if (i != blockHit)
             {
                 aoLightValueZPos = false;
                 motionX *= rand.nextFloat() * 0.2F;
@@ -215,9 +215,8 @@ public class CREEPSEntityRocket extends Entity
                 motionZ *= rand.nextFloat() * 0.2F;
                 aoLightValueScratchXYZNNP = 0;
                 aoLightValueScratchXYNN = 0;
-            }
-            else
-            {
+            }*/
+           
                 aoLightValueScratchXYZNNP++;
 
                 if (aoLightValueScratchXYZNNP == 100)
@@ -226,22 +225,22 @@ public class CREEPSEntityRocket extends Entity
                 }
 
                 return;
-            }
+            
         }
         else
         {
             aoLightValueScratchXYNN++;
         }
 
-        Vec3 vec3d = new Vec3(posX, posY, posZ);
-        Vec3 vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        Vec3 vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        Vec3 vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
-        vec3d = new Vec3(posX, posY, posZ);
-        vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
        
         if (movingobjectposition != null)
         {
-            vec3d1 =  new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec3d1 =  Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
 
         Entity entity = null;
@@ -305,17 +304,17 @@ public class CREEPSEntityRocket extends Entity
                 {
                     int k = damage;
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL)
+                    if (worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
                     {
                         k = 0;
                     }
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.EASY)
+                    if (worldObj.difficultySetting == EnumDifficulty.EASY)
                     {
                         k = k / 3 + 1;
                     }
 
-                    if (worldObj.getDifficulty() == EnumDifficulty.HARD)
+                    if (worldObj.difficultySetting == EnumDifficulty.HARD)
                     {
                         k = (k * 3) / 2;
                     }
@@ -337,10 +336,10 @@ public class CREEPSEntityRocket extends Entity
             }
             else
             {
-                hitX = movingobjectposition.getBlockPos().getX();
-                hitY = movingobjectposition.getBlockPos().getY();
-                hitZ = movingobjectposition.getBlockPos().getZ();
-                blockHit = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ));
+                hitX = movingobjectposition.blockX;
+                hitY = movingobjectposition.blockY;
+                hitZ = movingobjectposition.blockZ;
+                //blockHit = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ));
                 motionX = (float)(movingobjectposition.hitVec.xCoord - posX);
                 motionY = (float)(movingobjectposition.hitVec.yCoord - posY);
                 motionZ = (float)(movingobjectposition.hitVec.zCoord - posZ);
@@ -384,7 +383,7 @@ public class CREEPSEntityRocket extends Entity
             for (int l = 0; l < 4; l++)
             {
                 float f7 = 0.25F;
-                worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ, new int[0]);
+                worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * (double)f7, posY - motionY * (double)f7, posZ - motionZ * (double)f7, motionX, motionY, motionZ);
             }
 
             f3 = 0.8F;
@@ -422,7 +421,7 @@ public class CREEPSEntityRocket extends Entity
             entity.motionY += 0.20000000298023224D;
             entity.attackEntityFrom(DamageSource.generic, 10);
 
-            if (((EntityLivingBase)entity).getHealth() <= 0 && !entity.isDead && !((EntityPlayerMP)entityplayer).getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieverocketrampage) && MoreCreepsAndWeirdos.rocketcount >= 50)
+            if (((EntityLivingBase)entity).getHealth() <= 0 && !entity.isDead && !((EntityPlayerMP)entityplayer).func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achieverocketrampage) && MoreCreepsAndWeirdos.rocketcount >= 50)
             {
                 worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
                 entityplayer.addStat(MoreCreepsAndWeirdos.achieverocketrampage, 1);

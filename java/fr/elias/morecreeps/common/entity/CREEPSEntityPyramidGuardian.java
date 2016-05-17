@@ -2,30 +2,22 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.BlockBed;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityPyramidGuardian extends EntityMob
 {
@@ -55,10 +47,10 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
         setSize(0.4F, 0.4F);
         alternate = 1;
         bedrockcounter = 0;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 0.4D, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
     }
     public void applyEntityAttributes()
     {
@@ -89,7 +81,7 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
     }
 
     /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * Called frequently so the entity can update its  every tick as required. For example, zombies and skeletons
      * use this to react to sunlight and start to burn.
      */
     public void onLivingUpdate()
@@ -125,7 +117,7 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
         if (damagesource.getEntity() != null && damagesource.getEntity() instanceof EntityPlayer)
         {
         	EntityPlayerMP playerMPAchievement = (EntityPlayerMP) damagesource.getEntity();
-            if (!playerMPAchievement.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievepyramid))
+            if (!playerMPAchievement.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievepyramid))
             {
                 worldObj.playSoundAtEntity(playerMPAchievement, "morecreeps:achievement", 1.0F, 1.0F);
                 playerMPAchievement.addStat(MoreCreepsAndWeirdos.achievepyramid, 1);
@@ -147,10 +139,10 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
                         {
                             for (int j3 = -40; j3 < 40; j3++)
                             {
-                                if (worldObj.getBlockState(new BlockPos(i + k2, j + l, k + j3)).getBlock() == Blocks.bedrock)
+                                if (worldObj.getBlock(i + k2, j + l, k + j3) == Blocks.bedrock)
                                 {
                                     bedrockcounter++;
-                                    worldObj.setBlockState(new BlockPos(i + k2, j + l, k + j3), Blocks.sandstone.getDefaultState());
+                                    worldObj.setBlock(i + k2, j + l, k + j3, Blocks.sandstone);
                                 }
                             }
                         }
@@ -165,37 +157,37 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
                         {
                             for (int k3 = 9; k3 < 25; k3++)
                             {
-                                worldObj.setBlockToAir(new BlockPos(i - l2, j + i1, k - k3));
+                                worldObj.setBlockToAir(i - l2, j + i1, k - k3);
                             }
                         }
                     }
 
-                    worldObj.setBlockState(new BlockPos(i - 2, j, k - 2), Blocks.sandstone.getDefaultState());
-                    worldObj.setBlockToAir(new BlockPos(i - 2, j + 1, k - 1));
-                    worldObj.setBlockToAir(new BlockPos(i - 2, j + 1, k - 2));
-                    worldObj.setBlockToAir(new BlockPos(i - 2, j + 2, k - 1));
-                    worldObj.setBlockToAir(new BlockPos(i - 2, j + 2, k - 2));
-                    worldObj.setBlockState(new BlockPos(i - 2, j + 1, k - 3), Blocks.sandstone.getDefaultState());
-                    worldObj.setBlockToAir(new BlockPos(i - 2, j + 2, k - 3));
-                    worldObj.setBlockState(new BlockPos(i - 2, j + 2, k - 4), Blocks.sandstone.getDefaultState());
-                    worldObj.setBlockToAir(new BlockPos(i - 2, j + 3, k - 4));
+                    worldObj.setBlock(i - 2, j, k - 2, Blocks.sandstone);
+                    worldObj.setBlockToAir(i - 2, j + 1, k - 1);
+                    worldObj.setBlockToAir(i - 2, j + 1, k - 2);
+                    worldObj.setBlockToAir(i - 2, j + 2, k - 1);
+                    worldObj.setBlockToAir(i - 2, j + 2, k - 2);
+                    worldObj.setBlock(i - 2, j + 1, k - 3, Blocks.sandstone);
+                    worldObj.setBlockToAir(i - 2, j + 2, k - 3);
+                    worldObj.setBlock(i - 2, j + 2, k - 4, Blocks.sandstone);
+                    worldObj.setBlockToAir(i - 2, j + 3, k - 4);
 
                     for (int j1 = 2; j1 < 18; j1++)
                     {
-                        worldObj.setBlockToAir(new BlockPos(i - 2, j + 3, k - j1));
-                        worldObj.setBlockToAir(new BlockPos(i - 2, j + 4, k - j1));
+                        worldObj.setBlockToAir(i - 2, j + 3, k - j1);
+                        worldObj.setBlockToAir(i - 2, j + 4, k - j1);
                         alternate *= -1;
 
                         if (alternate > 0)
                         {
-                            worldObj.setBlockState(new BlockPos(i - 2, j + 4, k - j1), Blocks.torch.getDefaultState());
+                            worldObj.setBlock(i - 2, j + 4, k - j1, Blocks.torch);
                         }
                     }
 
                     for (int k1 = 2; k1 < 20; k1++)
                     {
-                        worldObj.setBlockToAir(new BlockPos(i - k1, j + 3, k - 17));
-                        worldObj.setBlockToAir(new BlockPos(i - k1, j + 4, k - 17));
+                        worldObj.setBlockToAir(i - k1, j + 3, k - 17);
+                        worldObj.setBlockToAir(i - k1, j + 4, k - 17);
                     }
 
                     for (int l1 = 9; l1 < 24; l1++)
@@ -204,12 +196,12 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
 
                         if (alternate > 0)
                         {
-                            worldObj.setBlockState(new BlockPos(i - 8, j + 8, k - l1), Blocks.torch.getDefaultState());
-                            worldObj.setBlockState(new BlockPos(i - 24, j + 8, k - l1), Blocks.torch.getDefaultState());
+                            worldObj.setBlock(i - 8, j + 8, k - l1, Blocks.torch);
+                            worldObj.setBlock(i - 24, j + 8, k - l1, Blocks.torch);
                         }
 
-                        worldObj.setBlockState(new BlockPos(i - l1, j + 8, k - 9), Blocks.torch.getDefaultState());
-                        worldObj.setBlockState(new BlockPos(i - l1, j + 8, k - 24), Blocks.torch.getDefaultState());
+                        worldObj.setBlock(i - l1, j + 8, k - 9, Blocks.torch);
+                        worldObj.setBlock(i - l1, j + 8, k - 24, Blocks.torch);
                     }
 
                     for (int i2 = 0; i2 < rand.nextInt(2) + 2; i2++)
@@ -226,14 +218,14 @@ public class CREEPSEntityPyramidGuardian extends EntityMob
                         worldObj.spawnEntityInWorld(creepsentitymummy);
                     }
 
-                    worldObj.setBlockState(new BlockPos(i - 14, j + 3, k - 15), Blocks.sea_lantern.getDefaultState());
-                    worldObj.setBlockState(new BlockPos(i - 16, j + 3, k - 15), Blocks.sea_lantern.getDefaultState());
+                    worldObj.setBlock(i - 14, j + 3, k - 15, Blocks.glowstone);
+                    worldObj.setBlock(i - 16, j + 3, k - 15, Blocks.glowstone);
                     BlockBed blockbed = (BlockBed)Blocks.bed;
                     int i3 = 0;
                     int l3 = 1;
                     int i4 = 0;
-                    worldObj.setBlockState(new BlockPos(i - 15, j + 3, k - 15), blockbed.getDefaultState(), i4);
-                    worldObj.setBlockState(new BlockPos((i - 15) + i3, j + 3, (k + l3) - 15), blockbed.getDefaultState(), i4 + 8);
+                    worldObj.setBlock(i - 15, j + 3, k - 15, blockbed);
+                    worldObj.setBlock((i - 15) + i3, j + 3, (k + l3) - 15, blockbed);
                 }
             }
         }

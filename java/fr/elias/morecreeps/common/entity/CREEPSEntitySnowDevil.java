@@ -2,9 +2,10 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -24,14 +25,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.gui.CREEPSGUISnowdevilname;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntitySnowDevil extends EntityMob
 {
@@ -85,7 +81,7 @@ public class CREEPSEntitySnowDevil extends EntityMob
         tamed = false;
         name = "";
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 0.35D));
         tasks.addTask(5, new EntityAIWander(this, 0.35D));
@@ -285,10 +281,10 @@ public class CREEPSEntitySnowDevil extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        Block j1 = worldObj.getBlockState(new BlockPos(i, j, k)).getBlock();
-        return (i1 == Blocks.snow || j1 == Blocks.snow) && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(new BlockPos(i, j, k)) && rand.nextInt(5) == 0 && l > 6;
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        Block j1 = worldObj.getBlock(i, j, k);
+        return (i1 == Blocks.snow || j1 == Blocks.snow) && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(5) == 0 && l > 6;
     }
 
     /**
@@ -376,7 +372,7 @@ public class CREEPSEntitySnowDevil extends EntityMob
             if (itemstack.getItem() == Items.snowball)
             {
             	if (!world.isRemote){
-            		if (!playermp.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnowdevil))
+            		if (!playermp.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievesnowdevil))
                 	{
                     	worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
                     	playermp.addStat(MoreCreepsAndWeirdos.achievesnowdevil, 1);

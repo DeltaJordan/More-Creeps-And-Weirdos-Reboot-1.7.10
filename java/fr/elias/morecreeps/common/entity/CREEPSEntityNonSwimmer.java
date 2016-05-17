@@ -1,17 +1,15 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIControlledByPlayer;
-import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -22,13 +20,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityNonSwimmer extends EntityAnimal
 {
@@ -54,7 +49,7 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
         towel = false;
         waittime = rand.nextInt(1500) + 500;
         modelsize = 1.0F;
-        ((PathNavigateGround)this.getNavigator()).func_179690_a(true);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
         this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
@@ -94,10 +89,9 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
         {
         	this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
             int i = MathHelper.floor_double(posX);
-            int k = MathHelper.floor_double(getEntityBoundingBox().minY);
+            int k = MathHelper.floor_double(getBoundingBox().minY);
             int i1 = MathHelper.floor_double(posZ);
-            BlockPos bp = new BlockPos(i, k, i1);
-            Block k1 = worldObj.getBlockState(bp).getBlock();
+            Block k1 = worldObj.getBlock(i, k, i1);
 
             if (k1 != Blocks.flowing_water && k1 != Blocks.water)
             {
@@ -119,10 +113,9 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
         if (saved && rand.nextInt(100) == 0 && !towel && onGround)
         {
             int j = MathHelper.floor_double(posX);
-            int l = MathHelper.floor_double(getEntityBoundingBox().minY);
+            int l = MathHelper.floor_double(getBoundingBox().minY);
             int j1 = MathHelper.floor_double(posZ);
-            BlockPos bp = new BlockPos(j, l, j1);
-            Block l1 = worldObj.getBlockState(bp).getBlock();
+            Block l1 = worldObj.getBlock(j, l, j1);
 
             if (l1 != Blocks.water && l1 != Blocks.flowing_water)
             {
@@ -131,7 +124,7 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
                 creepsentitytowel.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
                 int i2 = rand.nextInt(6);
                 creepsentitytowel.texture = (new StringBuilder()).append("morecreeps:textures/entity/towel").append(String.valueOf(i2)).append(".png").toString();
-                //creepsentitytowel.basetexture = (new StringBuilder()).append("/mob/creeps/towel").append(String.valueOf(i2)).append(".png").toString();
+                creepsentitytowel.basetexture = (new StringBuilder()).append("/mob/creeps/towel").append(String.valueOf(i2)).append(".png").toString();
                 worldObj.spawnEntityInWorld(creepsentitytowel);
                 mountEntity(creepsentitytowel);
             }
@@ -142,7 +135,7 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
 
     public void giveReward(EntityPlayerMP entityplayersp)
     {
-        if (!entityplayersp.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievenonswimmer))
+        if (!entityplayersp.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievenonswimmer))
         {
             confetti(entityplayersp);
             worldObj.playSoundAtEntity(entityplayersp, "morecreeps:achievement", 1.0F, 1.0F);
@@ -202,7 +195,7 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
         }
     }
 
-    /*public int[] findTree(Entity entity, Double double1)
+    public int[] findTree(Entity entity, Double double1)
     {
         AxisAlignedBB axisalignedbb = entity.boundingBox.expand(double1.doubleValue(), double1.doubleValue(), double1.doubleValue());
         int i = MathHelper.floor_double(axisalignedbb.minX);
@@ -218,9 +211,9 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
             {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
-                    int j2 = worldObj.getBlockId(k1, l1, i2);
+                    Block j2 = worldObj.getBlock(k1, l1, i2);
 
-                    if (j2 != 0 && (j2 == Block.waterStill || j2 == Block.waterMoving))
+                    if (j2 != Blocks.air && (j2 == Blocks.water || j2 == Blocks.flowing_water))
                     {
                         return (new int[]
                                 {
@@ -235,21 +228,21 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
                 {
                     -1, 0, 0
                 });
-    }*/
+    }
 
     /**
      * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
      * Args: x, y, z
      */
-    public float func_180484_a(BlockPos bp)
+    public float getBlockPathWeight(int x, int y, int z)
     {
-        if (worldObj.getBlockState(bp.down()).getBlock() == Blocks.water || worldObj.getBlockState(bp.down()) == Blocks.flowing_water)
+        if (worldObj.getBlock(x, y, z) == Blocks.water || worldObj.getBlock(x, y, z) == Blocks.flowing_water)
         {
             return 10F;
         }
         else
         {
-            return -(float)bp.getY();
+            return -(float)y;
         }
     }
 
@@ -348,13 +341,12 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
+        int j = MathHelper.floor_double(getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        //int l = worldObj.getFullBlockLightValue(i, j, k);
-        BlockPos bp = new BlockPos(i, j, k);
-        Block i1 = worldObj.getBlockState(bp.down()).getBlock();
+        int l = worldObj.getFullBlockLightValue(i, j, k);
+        Block i1 = worldObj.getBlock(i, j, k);
         int j1 = worldObj.countEntities(CREEPSEntityNonSwimmer.class);
-        return (i1 == Blocks.flowing_water || i1 == Blocks.water) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).size() == 0 && worldObj.canSeeSky(bp) && rand.nextInt(25) == 0 && /*l > 9 && */j1 < 4;
+        return (i1 == Blocks.flowing_water || i1 == Blocks.water) && i1 != Blocks.cobblestone && i1 != Blocks.log && i1 != Blocks.double_stone_slab && i1 != Blocks.stone_slab && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(25) == 0 && l > 9 && j1 < 4;
     }
 
     /**
@@ -374,14 +366,14 @@ public class CREEPSEntityNonSwimmer extends EntityAnimal
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2, new int[0]);
-                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2, new int[0]);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, ((posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width) + (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F) + (double)i) - (double)width, d, d1, d2);
+                worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width - (double)i, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)i - (double)width, d, d1, d2);
             }
         }
     }

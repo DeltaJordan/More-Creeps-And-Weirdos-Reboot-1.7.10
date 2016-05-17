@@ -1,8 +1,10 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -18,16 +20,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.gui.CREEPSGUISneakySal;
-import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.entity.CREEPSEntityRockMonster.AIAttackEntity;
 
 public class CREEPSEntitySneakySal extends EntityMob
 {
@@ -103,7 +98,7 @@ public class CREEPSEntitySneakySal extends EntityMob
         shooting = false;
         shootingdelay = 20;
         modelsize = 1.5F;
-        ((PathNavigateGround)this.getNavigator()).func_179688_b(true);
+        this.getNavigator().setBreakDoors(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 0.35D));
         tasks.addTask(5, new EntityAIWander(this, 0.35D));
@@ -404,9 +399,9 @@ public class CREEPSEntitySneakySal extends EntityMob
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
-        return i1 != Blocks.snow && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(new BlockPos(i, j, k)) && rand.nextInt(15) == 0 && l > 8;
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
+        return i1 != Blocks.snow && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(15) == 0 && l > 8;
     }
 
     /**

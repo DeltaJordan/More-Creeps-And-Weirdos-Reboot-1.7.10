@@ -2,6 +2,8 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -11,9 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityTombstone extends EntityAnimal
 {
@@ -228,7 +228,7 @@ public class CREEPSEntityTombstone extends EntityAnimal
                 double d = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
                 double d4 = rand.nextGaussian() * 0.02D;
-                worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4, new int[0]);
+                worldObj.spawnParticle(EnumParticleTypes.HEART, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d2, d4);
             }
 
             for (int k = 0; k < 4; k++)
@@ -238,7 +238,7 @@ public class CREEPSEntityTombstone extends EntityAnimal
                     double d1 = rand.nextGaussian() * 0.02D;
                     double d3 = rand.nextGaussian() * 0.02D;
                     double d5 = rand.nextGaussian() * 0.02D;
-                    worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)k, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5, new int[0]);
+                    worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height) + (double)k, (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d1, d3, d5);
                 }
             }
         }

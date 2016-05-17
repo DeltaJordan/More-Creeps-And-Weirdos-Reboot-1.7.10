@@ -2,9 +2,9 @@ package fr.elias.morecreeps.common.entity;
 
 import java.util.List;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,24 +14,17 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import fr.elias.morecreeps.client.particles.CREEPSFxSmoke;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityShrink extends EntityThrowable
 {
     protected int hitX;
     protected int hitY;
     protected int hitZ;
-    protected IBlockState blockHit;
+    //protected IBlockState blockHit;
 
     /** Light value one block more in z axis */
     protected boolean aoLightValueZPos;
@@ -64,7 +57,7 @@ public class CREEPSEntityShrink extends EntityThrowable
         hitX = -1;
         hitY = -1;
         hitZ = -1;
-        blockHit = null;
+        //blockHit = null;
         aoLightValueZPos = false;
         aoLightValueScratchXYNN = 0;
         setSize(0.0325F, 0.01125F);
@@ -185,18 +178,17 @@ public class CREEPSEntityShrink extends EntityThrowable
 
         if (aoLightValueZPos)
         {
-            Block i = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ)).getBlock();
+            Block i = worldObj.getBlock(hitX, hitY, hitZ);
 
-            if (i != blockHit)
+            /*if (i != blockHit)
             {
                 aoLightValueZPos = false;
                 motionX *= rand.nextFloat() * 0.2F;
                 motionZ *= rand.nextFloat() * 0.2F;
                 aoLightValueScratchXYZNNP = 0;
                 aoLightValueScratchXYNN = 0;
-            }
-            else
-            {
+            }*/
+            
                 aoLightValueScratchXYZNNP++;
 
                 if (aoLightValueScratchXYZNNP == 5)
@@ -206,25 +198,25 @@ public class CREEPSEntityShrink extends EntityThrowable
 
                 return;
             }
-        }
+        
         else
         {
             aoLightValueScratchXYNN++;
         }
 
-        Vec3 vec3d = new Vec3(posX, posY, posZ);
-        Vec3 vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        Vec3 vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        Vec3 vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
-        vec3d = new Vec3(posX, posY, posZ);
-        vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
+        vec3d = Vec3.createVectorHelper(posX, posY, posZ);
+        vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
         if (movingobjectposition != null)
         {
-            vec3d1 = new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec3d1 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
 
         Entity entity = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
         double d = 0.0D;
 
         for (int j = 0; j < list.size(); j++)
@@ -243,7 +235,7 @@ public class CREEPSEntityShrink extends EntityThrowable
             }
 
             float f4 = 0.3F;
-            AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f4, f4, f4);
+            AxisAlignedBB axisalignedbb = entity1.getBoundingBox().expand(f4, f4, f4);
             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
 
             if (movingobjectposition1 == null)
@@ -845,10 +837,10 @@ public class CREEPSEntityShrink extends EntityThrowable
             }
             else
             {
-                hitX = movingobjectposition.getBlockPos().getX();
-                hitY = movingobjectposition.getBlockPos().getY();
-                hitZ = movingobjectposition.getBlockPos().getZ();
-                blockHit = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ));
+                hitX = movingobjectposition.blockX;
+                hitY = movingobjectposition.blockY;
+                hitZ = movingobjectposition.blockZ;
+                //blockHit = worldObj.getBlockState(new BlockPos(hitX, hitY, hitZ));
                 motionX = (float)(movingobjectposition.hitVec.xCoord - posX);
                 motionY = (float)(movingobjectposition.hitVec.yCoord - posY);
                 motionZ = (float)(movingobjectposition.hitVec.zCoord - posZ);
@@ -859,10 +851,10 @@ public class CREEPSEntityShrink extends EntityThrowable
                 aoLightValueZPos = true;
                 setDead();
 
-                if (blockHit.getBlock() == Blocks.ice)
+                /*if (blockHit.getBlock() == Blocks.ice)
                 {
                     worldObj.setBlockState(new BlockPos(hitX, hitY, hitZ), Blocks.flowing_water.getDefaultState());
-                }
+                }*/
 
                 setDead();
             }
@@ -974,7 +966,7 @@ public class CREEPSEntityShrink extends EntityThrowable
                     double d = rand.nextGaussian() * 0.12D;
                     double d1 = rand.nextGaussian() * 0.12D;
                     double d2 = rand.nextGaussian() * 0.12D;
-                    worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2, new int[0]);
+                    worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
                 }
             }
         }

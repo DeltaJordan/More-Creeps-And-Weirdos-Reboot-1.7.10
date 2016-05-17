@@ -11,10 +11,10 @@ import net.minecraft.world.World;
 
 public class CREEPSFxConfetti extends EntityFX
 {
-    public CREEPSFxConfetti(World world, double d, double d1, double d2, Item item)
+    public CREEPSFxConfetti(World world, double d, double d1, double d2)
     {
         super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
-      //Below was added in 1.8, may be unneeded
+        //Below was added in 1.8, may be unneeded
         //this.particleIcon = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getParticleIcon(item);
         setSize(0.5F, 0.5F);
         particleRed = 1.0F;

@@ -1,8 +1,9 @@
 package fr.elias.morecreeps.common.entity;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -21,16 +22,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.gui.CREEPSGUIZebraname;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSEntityZebra extends EntityAnimal
 {
@@ -114,7 +110,7 @@ public class CREEPSEntityZebra extends EntityAnimal
      */
     public float getBlockPathWeight(int i, int j, int k)
     {
-        if (worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock() == Blocks.leaves || worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock() == Blocks.grass)
+        if (worldObj.getBlock(i, j - 1, k) == Blocks.leaves || worldObj.getBlock(i, j - 1, k) == Blocks.grass)
         {
             return 10F;
         }
@@ -163,7 +159,7 @@ public class CREEPSEntityZebra extends EntityAnimal
      */
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.getDifficulty().getDifficultyId() > 0)
+        if (worldObj.difficultySetting.getDifficultyId() > 0)
         {
             float f = getBrightness(1.0F);
 
@@ -233,7 +229,7 @@ public class CREEPSEntityZebra extends EntityAnimal
                 return true;
             }
 
-            if (entity != this && worldObj.getDifficulty().getDifficultyId() > 0)
+            if (entity != this && worldObj.difficultySetting.getDifficultyId() > 0)
             {
                 this.setAttackTarget((EntityLivingBase) entity);
             }
@@ -420,7 +416,7 @@ public class CREEPSEntityZebra extends EntityAnimal
             	}
             	
             	if (!world.isRemote){
-                    if (!playermp.getStatFile().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievezebra))
+                    if (!playermp.func_147099_x().hasAchievementUnlocked(MoreCreepsAndWeirdos.achievezebra))
                     {
                         confetti();
                         worldObj.playSoundAtEntity(entityplayer, "morecreeps:achievement", 1.0F, 1.0F);
@@ -520,10 +516,10 @@ public class CREEPSEntityZebra extends EntityAnimal
     	int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(posZ);
-        int l = worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
-        Block i1 = worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
+        int l = worldObj.getBlockLightOpacity(i, j, k);
+        Block i1 = worldObj.getBlock(i, j - 1, k);
         int j1 = worldObj.countEntities(CREEPSEntityNonSwimmer.class);
-        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeSky(new BlockPos(i, j, k)) && rand.nextInt(5) == 0 && l > 7 && j1 < 15;
+        return (i1 == Blocks.grass || i1 == Blocks.dirt) && i1 != Blocks.cobblestone && i1 != Blocks.planks && i1 != Blocks.wool && worldObj.getCollidingBoundingBoxes(this, getBoundingBox()).size() == 0 && worldObj.checkBlockCollision(getBoundingBox()) && worldObj.canBlockSeeTheSky(i, j, k) && rand.nextInt(5) == 0 && l > 7 && j1 < 15;
     }
 
     public void confetti()
