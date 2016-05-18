@@ -2,23 +2,18 @@ package fr.elias.morecreeps.proxy;
 
 import java.util.Random;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import fr.elias.morecreeps.client.gui.handler.CREEPSGuiHandler;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import fr.elias.morecreeps.common.entity.CREEPSEntityAtom;
 import fr.elias.morecreeps.common.entity.CREEPSEntityCaveman;
 import fr.elias.morecreeps.common.entity.CREEPSEntityDigBug;
 import fr.elias.morecreeps.common.entity.CREEPSEntityHorseHead;
 import fr.elias.morecreeps.common.entity.CREEPSEntityRay;
 import fr.elias.morecreeps.common.entity.CREEPSEntityTrophy;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 
 public class CommonProxy
 {

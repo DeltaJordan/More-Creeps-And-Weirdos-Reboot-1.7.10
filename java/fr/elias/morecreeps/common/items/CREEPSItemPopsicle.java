@@ -22,7 +22,7 @@ public class CREEPSItemPopsicle extends Item
      */
     public EnumAction getItemUseAction(ItemStack itemstack)
     {
-        return EnumAction.EAT;
+        return EnumAction.eat;
     }
 
     /**

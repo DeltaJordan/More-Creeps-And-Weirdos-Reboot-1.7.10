@@ -2,15 +2,13 @@ package fr.elias.morecreeps.common.items;
 
 import java.util.Random;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.client.particles.CREEPSFxDirt;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSItemEarthGem extends Item
 {
@@ -37,23 +35,23 @@ public class CREEPSItemEarthGem extends Item
             {
                 for (int i1 = -3; i1 < 3; i1++)
                 {
-                    Block i = world.getBlockState(new BlockPos((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 2D) + (double)k), (int)(entityplayer.posZ + (double)i1))).getBlock();
-                    Block j = world.getBlockState(new BlockPos((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1))).getBlock();
+                    Block i = world.getBlock((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 2D) + (double)k), (int)(entityplayer.posZ + (double)i1));
+                    Block j = world.getBlock((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1));
 
                     if ((i == Blocks.dirt || i == Blocks.grass) && random.nextInt(5) == 0 && j == Blocks.air)
                     {
                     	MoreCreepsAndWeirdos.proxy.dirt(world, entityplayer, random, l, i1, k);
 
-                        world.setBlockState(new BlockPos((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 2D) + (double)k), (int)(entityplayer.posZ + (double)i1)), Blocks.farmland.getDefaultState());
-                        world.setBlockState(new BlockPos((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1)), Block.getStateById(59));
+                        world.setBlock((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 2D) + (double)k), (int)(entityplayer.posZ + (double)i1), Blocks.farmland);
+                        world.setBlock((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1), Block.getBlockById(59));
                     }
 
-                    /*int k1 = world.getBlockMetadata((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1));
+                    int k1 = world.getBlockMetadata((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1));
 
-                    if (k1 < 7 && (i == 59 || i == 60))
+                    if (k1 < 7 && (Block.getIdFromBlock(i) == 59 || Block.getIdFromBlock(i) == 60))
                     {
-                        world.setBlockMetadataWithNotify((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1), k1 + 1);
-                    }*/
+                        world.setBlockMetadataWithNotify((int)(entityplayer.posX + (double)l), (int)((entityplayer.posY - 1.0D) + (double)k), (int)(entityplayer.posZ + (double)i1), k1 + 1, 0);
+                    }
                 }
             }
         }

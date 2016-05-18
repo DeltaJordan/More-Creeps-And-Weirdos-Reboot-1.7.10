@@ -2,13 +2,12 @@ package fr.elias.morecreeps.common.items;
 
 import java.util.Random;
 
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -36,7 +35,7 @@ public class CREEPSItemMiningGem extends Item
         double d = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double)f;
         double d3 = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double)f + 1.6200000000000001D) - (double)entityplayer.getYOffset();
         double d6 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double)f;
-        Vec3 vec3d = new Vec3(d, d3, d6);
+        Vec3 vec3d = Vec3.createVectorHelper(d, d3, d6);
         float f3 = MathHelper.cos(-f2 * 0.01745329F - (float)Math.PI);
         float f4 = MathHelper.sin(-f2 * 0.01745329F - (float)Math.PI);
         float f5 = -MathHelper.cos(-f1 * 0.01745329F);
@@ -55,10 +54,10 @@ public class CREEPSItemMiningGem extends Item
 
         if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
         {
-            int i = movingobjectposition.getBlockPos().getX();
-            int j = movingobjectposition.getBlockPos().getY();
-            int k = movingobjectposition.getBlockPos().getZ();
-            Block l = world.getBlockState(new BlockPos(i, j, k)).getBlock();
+            int i = movingobjectposition.blockX;
+            int j = movingobjectposition.blockY;
+            int k = movingobjectposition.blockZ;
+            Block l = world.getBlock(i, j, k);
 
             if (l == Blocks.stone || l == Blocks.cobblestone || l == Blocks.mossy_cobblestone || l == Blocks.gravel)
             {
@@ -82,7 +81,7 @@ public class CREEPSItemMiningGem extends Item
                     case 1:
                         if (random.nextInt(7) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.gold_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.gold_ore);
                         }
 
                         break;
@@ -90,7 +89,7 @@ public class CREEPSItemMiningGem extends Item
                     case 2:
                         if (random.nextInt(5) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.iron_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.iron_ore);
                         }
 
                         break;
@@ -98,7 +97,7 @@ public class CREEPSItemMiningGem extends Item
                     case 3:
                         if (random.nextInt(1) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.coal_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.coal_ore);
                         }
 
                         break;
@@ -106,7 +105,7 @@ public class CREEPSItemMiningGem extends Item
                     case 4:
                         if (random.nextInt(5) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.lapis_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.lapis_ore);
                         }
 
                         break;
@@ -114,7 +113,7 @@ public class CREEPSItemMiningGem extends Item
                     case 5:
                         if (random.nextInt(10) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.diamond_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.diamond_ore);
                         }
 
                         break;
@@ -122,7 +121,7 @@ public class CREEPSItemMiningGem extends Item
                     case 6:
                         if (random.nextInt(3) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.redstone_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.redstone_ore);
                         }
 
                         break;
@@ -130,13 +129,13 @@ public class CREEPSItemMiningGem extends Item
                     case 7:
                         if (random.nextInt(3) == 0)
                         {
-                            world.setBlockState(new BlockPos(i, j, k), Blocks.redstone_ore.getDefaultState());
+                            world.setBlock(i, j, k, Blocks.redstone_ore);
                         }
 
                         break;
 
                     default:
-                        world.setBlockState(new BlockPos(i, j, k), Blocks.air.getDefaultState());
+                        world.setBlock(i, j, k, Blocks.air);
                         break;
                 }
             }

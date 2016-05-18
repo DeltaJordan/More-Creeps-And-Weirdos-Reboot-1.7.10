@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -42,22 +41,22 @@ public class CREEPSItemBullet extends Item
         wayZ = entityplayer.posZ + (double)j;
         k = getHeightValue(world, (int)wayX, (int)wayZ);
         wayY = k + wayvert;
-        world.setBlockState(new BlockPos((int)wayX, (int)wayY, (int)wayZ), Blocks.dirt.getDefaultState());
+        world.setBlock((int)wayX, (int)wayY, (int)wayZ, Blocks.dirt);
         wayX = entityplayer.posX + (double)j;
         wayZ = entityplayer.posZ + (double)i;
         k = getHeightValue(world, (int)wayX, (int)wayZ);
         wayY = k + wayvert;
-        world.setBlockState(new BlockPos((int)wayX, (int)wayY, (int)wayZ), Blocks.ice.getDefaultState());
+        world.setBlock((int)wayX, (int)wayY, (int)wayZ, Blocks.ice);
         wayX = entityplayer.posX + (double)i;
         wayZ = entityplayer.posZ + (double)j;
         k = getHeightValue(world, (int)wayX, (int)wayZ);
         wayY = k + wayvert;
-        world.setBlockState(new BlockPos((int)wayX, (int)wayY, (int)wayZ), Blocks.sandstone.getDefaultState());
+        world.setBlock((int)wayX, (int)wayY, (int)wayZ, Blocks.sandstone);
         wayX = entityplayer.posX + (double)j;
         wayZ = entityplayer.posZ - (double)i;
         k = getHeightValue(world, (int)wayX, (int)wayZ);
         wayY = k + wayvert;
-        world.setBlockState(new BlockPos((int)wayX, (int)wayY, (int)wayZ), Blocks.glass.getDefaultState());
+        world.setBlock((int)wayX, (int)wayY, (int)wayZ, Blocks.glass);
         return itemstack;
     }
     public static int getHeightValue(World world, int x, int z)
@@ -69,7 +68,7 @@ public class CREEPSItemBullet extends Item
                 return 0;
             }
             Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
-            return chunk.getHeight(x & 15, z & 15);
+            return chunk.getHeightValue(x & 15, z & 15);
         }
         return 64;
     }

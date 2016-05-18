@@ -3,20 +3,19 @@ package fr.elias.morecreeps.common.items;
 import java.util.List;
 import java.util.Random;
 
+import fr.elias.morecreeps.common.entity.CREEPSEntityGuineaPig;
+import fr.elias.morecreeps.common.entity.CREEPSEntityHotdog;
+import fr.elias.morecreeps.common.entity.CREEPSEntityHunchback;
+import fr.elias.morecreeps.common.entity.CREEPSEntityPreacher;
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.entity.CREEPSEntityGuineaPig;
-import fr.elias.morecreeps.common.entity.CREEPSEntityHotdog;
-import fr.elias.morecreeps.common.entity.CREEPSEntityHunchback;
-import fr.elias.morecreeps.common.entity.CREEPSEntityPreacher;
 
 public class CREEPSItemFireGem extends Item
 {
@@ -35,7 +34,7 @@ public class CREEPSItemFireGem extends Item
         world.playSoundAtEntity(entityplayer, "morecreeps:firegem", 1.0F, 1.0F);
         itemstack.damageItem(1, entityplayer);
         entityplayer.swingItem();
-        List list = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(entityplayer.posX, entityplayer.posY, entityplayer.posZ, entityplayer.posX + 1.0D, entityplayer.posY + 1.0D, entityplayer.posZ + 1.0D).expand(10D, 10D, 10D));
+        List list = world.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(entityplayer.posX, entityplayer.posY, entityplayer.posZ, entityplayer.posX + 1.0D, entityplayer.posY + 1.0D, entityplayer.posZ + 1.0D).expand(10D, 10D, 10D));
 
         for (int i = 0; i < list.size(); i++)
         {

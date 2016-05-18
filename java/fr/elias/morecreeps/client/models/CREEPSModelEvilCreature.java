@@ -30,7 +30,7 @@ public class CREEPSModelEvilCreature extends ModelBase
     public boolean isSneak;
     public boolean getvictim;
     public int raise;
-    public float swingProgress = FMLClientHandler.instance().getClient().thePlayer.swingProgress;
+    //public float swingProgress = FMLClientHandler.instance().getClient().thePlayer.swingProgress;
 
     public CREEPSModelEvilCreature()
     {
@@ -96,7 +96,7 @@ public class CREEPSModelEvilCreature extends ModelBase
      */
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
     {
-        float f6 = MathHelper.sin(swingProgress * (float)Math.PI);
+        //float f6 = MathHelper.sin(swingProgress * (float)Math.PI);
         bipedBody.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 2.0F * f1 * 1.5F;
         bipedHead.rotateAngleY = f3 / (180F / (float)Math.PI);
         bipedHead.rotateAngleX = f4 / (180F / (float)Math.PI);
@@ -108,8 +108,8 @@ public class CREEPSModelEvilCreature extends ModelBase
         bipedLeftLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         bipedRightLeg.rotateAngleY = 0.0F;
         bipedLeftLeg.rotateAngleY = 0.0F;
-        bipedRightArm.rotateAngleY = -(0.1F - f6 * 0.6F);
-        bipedLeftArm.rotateAngleY = 0.1F - f6 * 0.6F;
+        //bipedRightArm.rotateAngleY = -(0.1F - f6 * 0.6F);
+        //bipedLeftArm.rotateAngleY = 0.1F - f6 * 0.6F;
         bipedRightArm.rotateAngleX = -1.05708F + MathHelper.cos(f2 / 10F);
         bipedLeftArm.rotateAngleX = -1.05708F + MathHelper.sin(f2 / 10F);
 
@@ -126,7 +126,7 @@ public class CREEPSModelEvilCreature extends ModelBase
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (swingProgress > -9990F)
+        /*if (swingProgress > -9990F)
         {
             float f7 = swingProgress;
             bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt_float(f7) * (float)Math.PI * 2.0F) * 0.2F;
@@ -144,7 +144,7 @@ public class CREEPSModelEvilCreature extends ModelBase
             bipedRightArm.rotateAngleX -= (double)f8 * 1.2D + (double)f9;
             bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0F;
             bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float)Math.PI) * -0.4F;
-        }
+        }*/
 
         if (isSneak)
         {

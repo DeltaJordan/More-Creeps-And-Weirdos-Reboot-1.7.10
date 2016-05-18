@@ -37,7 +37,7 @@ public class CREEPSModelArmyGuy extends ModelBase
     public boolean head;
     public boolean shooting;
     public float modelsize;
-    public float swingProgress = FMLClientHandler.instance().getClient().thePlayer.swingProgress;
+    //public float swingProgress = FMLClientHandler.instance().getClient().thePlayer.swingProgress;
 
     public CREEPSModelArmyGuy()
     {
@@ -167,7 +167,7 @@ public class CREEPSModelArmyGuy extends ModelBase
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (swingProgress > -9990F)
+        /*if (swingProgress > -9990F)
         {
             float f6 = swingProgress;
             bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt_float(f6) * (float)Math.PI * 2.0F) * 0.2F;
@@ -187,7 +187,7 @@ public class CREEPSModelArmyGuy extends ModelBase
             bipedRightArm.rotateAngleX -= (double)f7 * 1.2D + (double)f8;
             bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0F;
             bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float)Math.PI) * -0.4F;
-        }
+        }*/
 
         if (isSneak)
         {

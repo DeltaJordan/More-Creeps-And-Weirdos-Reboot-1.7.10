@@ -2,6 +2,10 @@ package fr.elias.morecreeps.common.items;
 
 import java.util.Random;
 
+import org.lwjgl.input.Mouse;
+
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,11 +13,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
-import org.lwjgl.input.Mouse;
-
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
 
 public class CREEPSItemSkyGem extends Item
 {

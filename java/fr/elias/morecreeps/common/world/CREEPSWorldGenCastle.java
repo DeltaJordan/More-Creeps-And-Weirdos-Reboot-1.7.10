@@ -3,21 +3,19 @@ package fr.elias.morecreeps.common.world;
 import java.util.Map;
 import java.util.Random;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.entity.CREEPSEntityCastleKing;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.entity.CREEPSEntityCastleKing;
 
 public class CREEPSWorldGenCastle extends WorldGenerator
 {
@@ -33,14 +31,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
     {
     }
 
-    public static boolean blockExists(World parWorld, int x, int y, int z) 
-    {
-    	IBlockState state = parWorld.getBlockState(new BlockPos(x, y, z));
-    	if (state != null)
-    	return true;
-    	else
-    	return false;
-    }
+    
     
     public boolean generate(World world, Random random, int i, int j, int k)
     {
@@ -81,10 +72,10 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         while (k2 < 3)
         {
             k2 = 0;
-            Block i3 = world.getBlockState(new BlockPos(l - 4, i1 - l2, j1 - 4)).getBlock();
-            Block k3 = world.getBlockState(new BlockPos(l + 30, i1 - l2, j1 - 4)).getBlock();
-            Block i4 = world.getBlockState(new BlockPos(l - 4, i1 - l2, j1 + 30)).getBlock();
-            Block k4 = world.getBlockState(new BlockPos(l + 30, i1 - l2, j1 + 30)).getBlock();
+            Block i3 = world.getBlock(l - 4, i1 - l2, j1 - 4);
+            Block k3 = world.getBlock(l + 30, i1 - l2, j1 - 4);
+            Block i4 = world.getBlock(l - 4, i1 - l2, j1 + 30);
+            Block k4 = world.getBlock(l + 30, i1 - l2, j1 + 30);
 
             if (i3 != Blocks.air && i3 != Blocks.leaves && i3 != Blocks.water && i3 != Blocks.flowing_water)
             {
@@ -131,7 +122,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
         i1 = l1 = (i1 - l2) + 2;
 
-        if (blockExists(world, k1 - 4, l1, i2 - 4) && blockExists(world, k1 + 30, l1, i2 - 4) && blockExists(world, k1 + 30, l1, i2 + 30) && blockExists(world, k1 - 4, l1, i2 + 30))
+        if (world.blockExists(k1 - 4, l1, i2 - 4) && world.blockExists(k1 + 30, l1, i2 - 4) && world.blockExists(k1 + 30, l1, i2 + 30) && world.blockExists(k1 - 4, l1, i2 + 30))
         {
             chunky = true;
         }
@@ -155,7 +146,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int j4 = -12 + j3; j4 < 38; j4 += 2)
                 {
-                    Block l4 = world.getBlockState(new BlockPos(i + l3, i1 + j3, k + j4)).getBlock();
+                    Block l4 = world.getBlock(i + l3, i1 + j3, k + j4);
                     //TODO check if "2" blocks is a good idea
                     if (l4 != Blocks.air && l4 != Blocks.leaves && l4 != Blocks.leaves2 && l4 != Blocks.log && l4 != Blocks.log2)
                     {
@@ -197,7 +188,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int i8 = -12; i8 < 38; i8++)
                 {
-                    world.setBlockToAir(new BlockPos(l + k6, i1 + k5, j1 + i8));
+                    world.setBlockToAir(l + k6, i1 + k5, j1 + i8);
                 }
             }
         }
@@ -208,9 +199,9 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int j8 = -12; j8 < 38; j8++)
                 {
-                    if (world.getBlockState(new BlockPos(l + l6, i1 - l5, j1 + j8)).getBlock() == Blocks.air)
+                    if (world.getBlock(l + l6, i1 - l5, j1 + j8) == Blocks.air)
                     {
-                        world.setBlockState(new BlockPos(l + l6, i1 - l5, j1 + j8), Blocks.stone.getDefaultState());
+                        world.setBlock(l + l6, i1 - l5, j1 + j8, Blocks.stone);
                     }
                 }
             }
@@ -220,7 +211,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             for (int i7 = -10; i7 < 36; i7++)
             {
-                world.setBlockState(new BlockPos(l + i6, i1 - 1, j1 + i7), Blocks.water.getDefaultState());
+                world.setBlock(l + i6, i1 - 1, j1 + i7, Blocks.water);
             }
         }
 
@@ -232,21 +223,21 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int k8 = -4; k8 < 30; k8++)
                 {
-                    if ((world.getBlockState(new BlockPos(l + j7, i1 + 6 + j6, j1 + k8)) == Blocks.air || world.getBlockState(new BlockPos(l + j7, i1 + 6 + j6, j1 + k8)).getBlock() == Blocks.water) && rand.nextInt(50) != 0)
+                    if ((world.getBlock(l + j7, i1 + 6 + j6, j1 + k8)) == Blocks.air || world.getBlock(l + j7, i1 + 6 + j6, j1 + k8) == Blocks.water && rand.nextInt(50) != 0)
                     {
-                        world.setBlockState(new BlockPos(l + j7, i1 + 6 + j6, j1 + k8), Blocks.double_stone_slab.getDefaultState());
+                        world.setBlock(l + j7, i1 + 6 + j6, j1 + k8, Blocks.double_stone_slab);
                     }
 
-                    if (world.getBlockState(new BlockPos(l + j7, i1 + 7 + j6, j1 + k8)).getBlock() != Blocks.air || random.nextInt(25) != 0 || j6 >= (castleHeight - 1) * 7 - 7)
+                    if (world.getBlock(l + j7, i1 + 7 + j6, j1 + k8) != Blocks.air || random.nextInt(25) != 0 || j6 >= (castleHeight - 1) * 7 - 7)
                     {
                         continue;
                     }
 
-                    world.setBlockState(new BlockPos(l + j7, i1 + 7 + j6, j1 + k8), Blocks.web.getDefaultState());
+                    world.setBlock(l + j7, i1 + 7 + j6, j1 + k8, Blocks.web);
 
                     if (rand.nextInt(10) == 0)
                     {
-                        world.setBlockState(new BlockPos(l + j7, i1 + 8 + j6, j1 + k8), Blocks.web.getDefaultState());
+                        world.setBlock(l + j7, i1 + 8 + j6, j1 + k8, Blocks.web);
                     }
                 }
             }
@@ -263,11 +254,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                 int l8 = rand.nextInt(20) - 10;
                 int l12 = rand.nextInt(20) - 10;
 
-                if (world.getBlockState(new BlockPos(l + 10 + l8, i1 + 7 + j6, j1 + 5 + l12)).getBlock() == Blocks.air)
+                if (world.getBlock(l + 10 + l8, i1 + 7 + j6, j1 + 5 + l12) == Blocks.air)
                 {
-                    world.setBlockState(new BlockPos(l + 10 + l8, i1 + 7 + j6, j1 + 5 + l12), Blocks.mob_spawner.getDefaultState());
-                    TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getTileEntity(new BlockPos(l + 10 + l8, i1 + 7 + j6, j1 + 5 + l12));
-                    tileentitymobspawner.getSpawnerBaseLogic().setEntityName(populateSpawner(random));
+                    world.setBlock(l + 10 + l8, i1 + 7 + j6, j1 + 5 + l12, Blocks.mob_spawner);
+                    TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getTileEntity(l + 10 + l8, i1 + 7 + j6, j1 + 5 + l12);
+                    tileentitymobspawner.func_145881_a().setEntityName(populateSpawner(random));
                     k7++;
                 }
             }
@@ -295,11 +286,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                     i9 = rand.nextInt(20) - 10;
                     i13 = rand.nextInt(20) - 10;
                 }
-                while (world.getBlockState(new BlockPos(l + 10 + i9, i1 + 7 + j6, j1 + 5 + i13)) != Blocks.air);
+                while (world.getBlock(l + 10 + i9, i1 + 7 + j6, j1 + 5 + i13) != Blocks.air);
 
-                world.setBlockState(new BlockPos(l + 10 + i9, i1 + 7 + j6, j1 + 5 + i13), Blocks.mob_spawner.getDefaultState());
-                TileEntityMobSpawner tileentitymobspawner1 = (TileEntityMobSpawner)world.getTileEntity(new BlockPos(l + 10 + i9, i1 + 7 + j6, j1 + 5 + i13));
-                tileentitymobspawner1.getSpawnerBaseLogic().setEntityName("CastleGuard");
+                world.setBlock(l + 10 + i9, i1 + 7 + j6, j1 + 5 + i13, Blocks.mob_spawner);
+                TileEntityMobSpawner tileentitymobspawner1 = (TileEntityMobSpawner)world.getTileEntity(l + 10 + i9, i1 + 7 + j6, j1 + 5 + i13);
+                tileentitymobspawner1.func_145881_a().setEntityName("CastleGuard");
                 k7++;
             }
             while (true);
@@ -315,7 +306,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int i16 = -2; i16 < castleHeight * 7 - 6; i16++)
                 {
-                    world.setBlockState(new BlockPos(l + j9, i1 + i16, j1 - 5), cobbler(1, random));
+                    world.setBlock(l + j9, i1 + i16, j1 - 5, Blocks.cobblestone);
                 }
             }
         }
@@ -324,19 +315,19 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l + k9, i1 + 29, j1 - 5), cobbler(1, random));
+                world.setBlock(l + k9, i1 + 29, j1 - 5, Blocks.cobblestone);
             }
 
             alternate = !alternate;
-            world.setBlockState(new BlockPos(l + k9, i1 + 20, j1 - 6), cobbler(1, random));
-            world.setBlockState(new BlockPos(l + k9, i1 + 16, j1 - 6), cobbler(1, random));
+            world.setBlock(l + k9, i1 + 20, j1 - 6, Blocks.cobblestone);
+            world.setBlock(l + k9, i1 + 16, j1 - 6, Blocks.cobblestone);
 
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l + k9, i1 + 10, j1 - 6), cobbler(1, random));
+                world.setBlock(l + k9, i1 + 10, j1 - 6, Blocks.cobblestone);
             }
 
-            world.setBlockState(new BlockPos(l + k9, i1 + 9, j1 - 6), cobbler(1, random));
+            world.setBlock(l + k9, i1 + 9, j1 - 6, Blocks.cobblestone);
         }
 
         itemstack = new ItemStack(MoreCreepsAndWeirdos.mininggem, 1);
@@ -349,7 +340,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int j16 = -2; j16 < castleHeight * 7 - 6; j16++)
                 {
-                    world.setBlockState(new BlockPos(l + l9, i1 + j16, j1 + 29), cobbler(1, random));
+                    world.setBlock(l + l9, i1 + j16, j1 + 29, Blocks.cobblestone);
                 }
             }
         }
@@ -358,19 +349,19 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l + i10, i1 + 29, j1 + 29), cobbler(1, random));
+                world.setBlock(l + i10, i1 + 29, j1 + 29, Blocks.cobblestone);
             }
 
             alternate = !alternate;
-            world.setBlockState(new BlockPos(l + i10, i1 + 20, j1 + 30), cobbler(1, random));
-            world.setBlockState(new BlockPos(l + i10, i1 + 16, j1 + 30), cobbler(1, random));
+            world.setBlock(l + i10, i1 + 20, j1 + 30, Blocks.cobblestone);
+            world.setBlock(l + i10, i1 + 16, j1 + 30, Blocks.cobblestone);
 
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l + i10, i1 + 10, j1 + 30), cobbler(1, random));
+                world.setBlock(l + i10, i1 + 10, j1 + 30, Blocks.cobblestone);
             }
 
-            world.setBlockState(new BlockPos(l + i10, i1 + 9, j1 + 30), cobbler(1, random));
+            world.setBlock(l + i10, i1 + 9, j1 + 30, Blocks.cobblestone);
         }
 
         itemstack = new ItemStack(MoreCreepsAndWeirdos.skygem, 1);
@@ -383,7 +374,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int k16 = -2; k16 < castleHeight * 7 - 6; k16++)
                 {
-                    world.setBlockState(new BlockPos(l - 5, i1 + k16, j1 + j10), cobbler(1, random));
+                    world.setBlock(l - 5, i1 + k16, j1 + j10, Blocks.cobblestone);
                 }
             }
         }
@@ -392,19 +383,19 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l - 5, i1 + 29, j1 + k10), cobbler(1, random));
+                world.setBlock(l - 5, i1 + 29, j1 + k10, Blocks.cobblestone);
             }
 
             alternate = !alternate;
-            world.setBlockState(new BlockPos(l - 6, i1 + 20, j1 + k10), cobbler(1, random));
-            world.setBlockState(new BlockPos(l - 6, i1 + 16, j1 + k10), cobbler(1, random));
+            world.setBlock(l - 6, i1 + 20, j1 + k10, Blocks.cobblestone);
+            world.setBlock(l - 6, i1 + 16, j1 + k10, Blocks.cobblestone);
 
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l - 6, i1 + 10, j1 + k10), cobbler(1, random));
+                world.setBlock(l - 6, i1 + 10, j1 + k10, Blocks.cobblestone);
             }
 
-            world.setBlockState(new BlockPos(l - 6, i1 + 9, j1 + k10), cobbler(1, random));
+            world.setBlock(l - 6, i1 + 9, j1 + k10, Blocks.cobblestone);
         }
 
         itemstack = new ItemStack(MoreCreepsAndWeirdos.healinggem, 1);
@@ -417,7 +408,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int l16 = -2; l16 < castleHeight * 7 - 6; l16++)
                 {
-                    world.setBlockState(new BlockPos(l + 29, i1 + l16, j1 + l10), cobbler(1, random));
+                    world.setBlock(l + 29, i1 + l16, j1 + l10, Blocks.cobblestone);
                 }
             }
         }
@@ -426,32 +417,32 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l + 29, i1 + 29, j1 + i11), cobbler(1, random));
+                world.setBlock(l + 29, i1 + 29, j1 + i11, Blocks.cobblestone);
             }
 
             alternate = !alternate;
-            world.setBlockState(new BlockPos(l + 30, i1 + 20, j1 + i11), cobbler(1, random));
-            world.setBlockState(new BlockPos(l + 30, i1 + 16, j1 + i11), cobbler(1, random));
+            world.setBlock(l + 30, i1 + 20, j1 + i11, Blocks.cobblestone);
+            world.setBlock(l + 30, i1 + 16, j1 + i11, Blocks.cobblestone);
 
             if (alternate)
             {
-                world.setBlockState(new BlockPos(l + 30, i1 + 10, j1 + i11), cobbler(1, random));
+                world.setBlock(l + 30, i1 + 10, j1 + i11, Blocks.cobblestone);
             }
 
-            world.setBlockState(new BlockPos(l + 30, i1 + 9, j1 + i11), cobbler(1, random));
+            world.setBlock(l + 30, i1 + 9, j1 + i11, Blocks.cobblestone);
         }
 
         for (int j11 = 0; j11 < (castleHeight - 1) * 7 - 6; j11 += 7)
         {
             for (int j14 = 6; j14 < 20; j14 += 3)
             {
-                world.setBlockState(new BlockPos(l + j14, i1 + 4 + j11, j1 - 4), Blocks.torch.getDefaultState());
-                world.setBlockState(new BlockPos(l + j14, i1 + 4 + j11, j1 + 28), Blocks.torch.getDefaultState());
+                world.setBlock(l + j14, i1 + 4 + j11, j1 - 4, Blocks.torch);
+                world.setBlock(l + j14, i1 + 4 + j11, j1 + 28, Blocks.torch);
 
                 if (j14 > 6 && j14 < 17)
                 {
-                    world.setBlockState(new BlockPos(l - 4, i1 + 4 + j11, j1 + j14), Blocks.torch.getDefaultState());
-                    world.setBlockState(new BlockPos(l + 28, i1 + 4 + j11, j1 + j14), Blocks.torch.getDefaultState());
+                    world.setBlock(l - 4, i1 + 4 + j11, j1 + j14, Blocks.torch);
+                    world.setBlock(l + 28, i1 + 4 + j11, j1 + j14, Blocks.torch);
                 }
             }
         }
@@ -460,8 +451,8 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             for (int k14 = 0; k14 < 4; k14++)
             {
-                world.setBlockToAir(new BlockPos(l + k11, i1 + k14, j1 - 5));
-                world.setBlockToAir(new BlockPos(l + k11, i1 + k14, j1 + 29));
+                world.setBlockToAir(l + k11, i1 + k14, j1 - 5);
+                world.setBlockToAir(l + k11, i1 + k14, j1 + 29);
             }
         }
 
@@ -471,43 +462,43 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int i17 = 0; i17 < 4; i17++)
                 {
-                    world.setBlockState(new BlockPos(l + l11, i1 - 1, j1 - 6 - l14), Blocks.planks.getDefaultState());
-                    world.setBlockState(new BlockPos(l + l11, i1 - 1, j1 + 30 + l14), Blocks.planks.getDefaultState());
+                    world.setBlock(l + l11, i1 - 1, j1 - 6 - l14, Blocks.planks);
+                    world.setBlock(l + l11, i1 - 1, j1 + 30 + l14, Blocks.planks);
                 }
             }
         }
 
-        world.setBlockState(new BlockPos(l + 9, i1 + 5, j1 + 30), Blocks.torch.getDefaultState());
-        world.setBlockState(new BlockPos(l + 16, i1 + 5, j1 + 30), Blocks.torch.getDefaultState());
-        world.setBlockState(new BlockPos(l + 9, i1 + 5, j1 - 6), Blocks.torch.getDefaultState());
-        world.setBlockState(new BlockPos(l + 16, i1 + 5, j1 - 6), Blocks.torch.getDefaultState());
+        world.setBlock(l + 9, i1 + 5, j1 + 30, Blocks.torch);
+        world.setBlock(l + 16, i1 + 5, j1 + 30, Blocks.torch);
+        world.setBlock(l + 9, i1 + 5, j1 - 6, Blocks.torch);
+        world.setBlock(l + 16, i1 + 5, j1 - 6, Blocks.torch);
 
         for (int i12 = 0; i12 < castleHeight * 7; i12 += 7)
         {
             for (int i15 = 0; i15 < 2; i15++)
             {
-                world.setBlockState(new BlockPos(l + 17, i1 + i12, j1 + -1 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 5, i1 + i12, j1 + -1 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 17, i1 + i12, j1 + 24 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 5, i1 + i12, j1 + 24 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 19, i1 + i12, j1 + -1 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 7, i1 + i12, j1 + -1 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 19, i1 + i12, j1 + 24 + i15), Blocks.stone_stairs.getDefaultState());
-                world.setBlockState(new BlockPos(l + 7, i1 + i12, j1 + 24 + i15), Blocks.stone_stairs.getDefaultState());
+                world.setBlock(l + 17, i1 + i12, j1 + -1 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 5, i1 + i12, j1 + -1 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 17, i1 + i12, j1 + 24 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 5, i1 + i12, j1 + 24 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 19, i1 + i12, j1 + -1 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 7, i1 + i12, j1 + -1 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 19, i1 + i12, j1 + 24 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 7, i1 + i12, j1 + 24 + i15, Blocks.stone_stairs);
                 //old method: world.setBlockMetadataWithNotify(x, y, z, block id, meta id (if needed, used for wool color etc.));
                 //world.setBlockMetadataWithNotify(l + 19, i1 + i12, j1 + -1 + i15, 1);
-                world.setBlockState(new BlockPos(l + 19, i1 + i12, j1 + -1 + i15), Blocks.stone.getDefaultState());
+                world.setBlock(l + 19, i1 + i12, j1 + -1 + i15, Blocks.stone);
                 //world.setBlockMetadataWithNotify(l + 7, i1 + i12, j1 + -1 + i15, 1);
-                world.setBlockState(new BlockPos(l + 7, i1 + i12, j1 + -1 + i15), Blocks.stone.getDefaultState());
+                world.setBlock(l + 7, i1 + i12, j1 + -1 + i15, Blocks.stone);
                 //world.setBlockMetadataWithNotify(l + 19, i1 + i12, j1 + 24 + i15, 1);
-                world.setBlockState(new BlockPos(l + 19, i1 + i12, j1 + 24 + i15), Blocks.stone.getDefaultState());
+                world.setBlock(l + 19, i1 + i12, j1 + 24 + i15, Blocks.stone);
                 //world.setBlockMetadataWithNotify(l + 7, i1 + i12, j1 + 24 + i15, 1);
-                world.setBlockState(new BlockPos(l + 7, i1 + i12, j1 + 24 + i15), Blocks.stone.getDefaultState());
+                world.setBlock(l + 7, i1 + i12, j1 + 24 + i15, Blocks.stone);
                 //fixed :)
-                world.setBlockState(new BlockPos(l + 19, i1 + i12, j1 + -1 + i15), Blocks.stone_stairs.getDefaultState(), 1);
-                world.setBlockState(new BlockPos(l + 7, i1 + i12, j1 + -1 + i15), Blocks.stone_stairs.getDefaultState(), 1);
-                world.setBlockState(new BlockPos(l + 19, i1 + i12, j1 + 24 + i15), Blocks.stone_stairs.getDefaultState(), 1);
-                world.setBlockState(new BlockPos(l + 7, i1 + i12, j1 + 24 + i15), Blocks.stone_stairs.getDefaultState(), 1);
+                world.setBlock(l + 19, i1 + i12, j1 + -1 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 7, i1 + i12, j1 + -1 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 19, i1 + i12, j1 + 24 + i15, Blocks.stone_stairs);
+                world.setBlock(l + 7, i1 + i12, j1 + 24 + i15, Blocks.stone_stairs);
                 //TODO check if it works
             }
         }
@@ -518,7 +509,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int j17 = 0; j17 < 9; j17++)
                 {
-                    world.setBlockState(new BlockPos(l + 9 + j15, i1 + j12, (j1 + 16) - j17), Blocks.stone_slab.getDefaultState());
+                    world.setBlock(l + 9 + j15, i1 + j12, (j1 + 16) - j17, Blocks.stone_slab);
                 }
             }
         }
@@ -527,12 +518,12 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         {
             for (int k15 = 0; k15 < 9; k15 += 3)
             {
-                world.setBlockState(new BlockPos(l + 9 + k15, i1 + k12, j1 + 16), Blocks.double_stone_slab.getDefaultState());
-                world.setBlockState(new BlockPos(l + 9 + k15, i1 + k12 + 1, j1 + 16), Blocks.double_stone_slab.getDefaultState());
-                world.setBlockState(new BlockPos(l + 9 + k15, i1 + k12 + 2, j1 + 16), Blocks.torch.getDefaultState());
-                world.setBlockState(new BlockPos(l + 9 + k15, i1 + k12, j1 + 8), Blocks.double_stone_slab.getDefaultState());
-                world.setBlockState(new BlockPos(l + 9 + k15, i1 + k12 + 1, j1 + 8), Blocks.double_stone_slab.getDefaultState());
-                world.setBlockState(new BlockPos(l + 9 + k15, i1 + k12 + 2, j1 + 8), Blocks.torch.getDefaultState());
+                world.setBlock(l + 9 + k15, i1 + k12, j1 + 16, Blocks.double_stone_slab);
+                world.setBlock(l + 9 + k15, i1 + k12 + 1, j1 + 16, Blocks.double_stone_slab);
+                world.setBlock(l + 9 + k15, i1 + k12 + 2, j1 + 16, Blocks.torch);
+                world.setBlock(l + 9 + k15, i1 + k12, j1 + 8, Blocks.double_stone_slab);
+                world.setBlock(l + 9 + k15, i1 + k12 + 1, j1 + 8, Blocks.double_stone_slab);
+                world.setBlock(l + 9 + k15, i1 + k12 + 2, j1 + 8, Blocks.torch);
             }
         }
 
@@ -542,11 +533,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
         for (int l15 = 0; l15 < castleHeight * 7; l15 += 7)
         {
-            world.setBlockState(new BlockPos(l + 9 + 3, i1 + l15, (j1 + 16) - 3), Blocks.double_stone_slab.getDefaultState());
-            world.setBlockState(new BlockPos(l + 9 + 3, i1 + l15, (j1 + 16) - 4), Blocks.double_stone_slab.getDefaultState());
-            world.setBlockState(new BlockPos(l + 9 + 3, i1 + l15 + 1, (j1 + 16) - 4), Blocks.chest.getDefaultState());
-            world.setBlockState(new BlockPos(l + 9 + 3, i1 + l15 + 1, (j1 + 16) - 3), Blocks.chest.getDefaultState());
-            TileEntityChest tileentitychest = (TileEntityChest)world.getTileEntity(new BlockPos(l + 9 + 3, i1 + l15 + 1, (j1 + 16) - 3));
+            world.setBlock(l + 9 + 3, i1 + l15, (j1 + 16) - 3, Blocks.double_stone_slab);
+            world.setBlock(l + 9 + 3, i1 + l15, (j1 + 16) - 4, Blocks.double_stone_slab);
+            world.setBlock(l + 9 + 3, i1 + l15 + 1, (j1 + 16) - 4, Blocks.chest);
+            world.setBlock(l + 9 + 3, i1 + l15 + 1, (j1 + 16) - 3, Blocks.chest);
+            TileEntityChest tileentitychest = (TileEntityChest)world.getTileEntity(l + 9 + 3, i1 + l15 + 1, (j1 + 16) - 3);
 
             for (int k17 = 0; k17 < random.nextInt(20); k17++)
             {
@@ -611,7 +602,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                         {
                             if (j3 > -5 && j3 < 4)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                world.setBlock(k4, i5, j5, Blocks.cobblestone);
                             }
 
                             continue;
@@ -621,7 +612,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                         {
                             if (j3 == -5 || j3 == 4)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                 continue;
                             }
 
@@ -629,16 +620,16 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                             {
                                 if (j3 == (k2 + 1) % 7 - 3)
                                 {
-                                    world.setBlockState(new BlockPos(k4, i5, j5), Blocks.stone_stairs.getDefaultState());
+                                    world.setBlock(k4, i5, j5, Blocks.stone_stairs);
 
                                     if (k2 == 5)
                                     {
-                                        world.setBlockState(new BlockPos(k4 - 7, i5, j5), Blocks.double_stone_slab.getDefaultState());
+                                        world.setBlock(k4 - 7, i5, j5, Blocks.double_stone_slab);
                                     }
 
                                     if (k2 == 6 && topFloor == 1)
                                     {
-                                        world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                        world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                     }
 
                                     continue;
@@ -646,7 +637,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
                                 if (j3 < 4 && j3 > -5)
                                 {
-                                    world.setBlockToAir(new BlockPos(k4, i5, j5));
+                                    world.setBlockToAir(k4, i5, j5);
                                 }
 
                                 continue;
@@ -661,16 +652,16 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                             {
                                 if (k2 == 5 && (j3 == 3 || j3 == -4))
                                 {
-                                    world.setBlockState(new BlockPos(k4, i5, j5), Blocks.double_stone_slab.getDefaultState());
+                                    world.setBlock(k4, i5, j5, Blocks.double_stone_slab);
                                 }
                                 else
                                 {
-                                    world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                    world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                 }
                             }
                             else
                             {
-                                world.setBlockToAir(new BlockPos(k4, i5, j5));
+                                world.setBlockToAir(k4, i5, j5);
                             }
 
                             continue;
@@ -680,7 +671,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                         {
                             if (j3 == -6 || j3 == 5)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                 continue;
                             }
 
@@ -691,13 +682,13 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
                             if (k2 == 5)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), Blocks.double_stone_slab.getDefaultState());
+                                world.setBlock(k4, i5, j5, Blocks.double_stone_slab);
                                 continue;
                             }
 
-                            if (world.getBlockState(new BlockPos(k4, i5, j5)).getBlock() != Blocks.chest)
+                            if (world.getBlock(k4, i5, j5) != Blocks.chest)
                             {
-                                world.setBlockToAir(new BlockPos(k4, i5, j5));
+                                world.setBlockToAir(k4, i5, j5);
                             }
 
                             continue;
@@ -709,13 +700,13 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                             {
                                 if (k2 < 0 || k2 > 3 || j3 != -7 && j3 != 6 || l3 != -1 && l3 != 0)
                                 {
-                                    world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                    world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                     continue;
                                 }
 
                                 if (j3 == -7 && flag || j3 == 6 && !flag)
                                 {
-                                    world.setBlockState(new BlockPos(k4, i5, j5), Blocks.glass.getDefaultState());
+                                    world.setBlock(k4, i5, j5, Blocks.glass);
                                 }
 
                                 continue;
@@ -728,11 +719,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
                             if (k2 == 5)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), Blocks.double_stone_slab.getDefaultState());
+                                world.setBlock(k4, i5, j5, Blocks.double_stone_slab);
                             }
                             else
                             {
-                                world.setBlockToAir(new BlockPos(k4, i5, j5));
+                                world.setBlockToAir(k4, i5, j5);
                             }
 
                             continue;
@@ -742,7 +733,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                         {
                             if (j3 == -5 || j3 == 4)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                 continue;
                             }
 
@@ -753,11 +744,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
                             if (k2 == 5)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), Blocks.double_stone_slab.getDefaultState());
+                                world.setBlock(k4, i5, j5, Blocks.double_stone_slab);
                             }
                             else
                             {
-                                world.setBlockToAir(new BlockPos(k4, i5, j5));
+                                world.setBlockToAir(k4, i5, j5);
                             }
 
                             continue;
@@ -767,7 +758,7 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                         {
                             if (j3 == -4 || j3 == -3 || j3 == 2 || j3 == 3)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                world.setBlock(k4, i5, j5, Blocks.cobblestone);
                                 continue;
                             }
 
@@ -778,11 +769,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
                             if (k2 == 5)
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), Blocks.double_stone_slab.getDefaultState());
+                                world.setBlock(k4, i5, j5, Blocks.double_stone_slab);
                             }
                             else
                             {
-                                world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                                world.setBlock(k4, i5, j5, Blocks.cobblestone);
                             }
 
                             continue;
@@ -795,11 +786,11 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
                         if (k2 < 0 || k2 > 3 || j3 != -1 && j3 != 0)
                         {
-                            world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                            world.setBlock(k4, i5, j5, Blocks.cobblestone);
                         }
                         else
                         {
-                            world.setBlockState(new BlockPos(k4, i5, j5), cobbler(i2, random));
+                            world.setBlock(k4, i5, j5, Blocks.cobblestone);
                         }
                     }
                 }
@@ -807,8 +798,8 @@ public class CREEPSWorldGenCastle extends WorldGenerator
 
             if (floor == 2)
             {
-                world.setBlockState(new BlockPos(l + 3, l1, j1 - 5), cobbler(i2, random));
-                world.setBlockState(new BlockPos(l + 3, l1 - 1, j1 - 5), cobbler(i2, random));
+                world.setBlock(l + 3, l1, j1 - 5, Blocks.cobblestone);
+                world.setBlock(l + 3, l1 - 1, j1 - 5, Blocks.cobblestone);
             }
 
             if (topFloor == 1)
@@ -821,20 +812,20 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 if (rand.nextInt(5) == 0)
                 {
-                    world.setBlockState(new BlockPos(l + 2, l1 + 6, j1 + 2), Blocks.mob_spawner.getDefaultState());
-                    TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getTileEntity(new BlockPos(l + 2, l1 + 6, j1 + 2));
-                    tileentitymobspawner.getSpawnerBaseLogic().setEntityName(populateSpawner(random));
+                    world.setBlock(l + 2, l1 + 6, j1 + 2, Blocks.mob_spawner);
+                    TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getTileEntity(l + 2, l1 + 6, j1 + 2);
+                    tileentitymobspawner.func_145881_a().setEntityName(populateSpawner(random));
                 }
 
-                world.setBlockState(new BlockPos(l - 3, l1 + 6, j1 + 2), Blocks.mob_spawner.getDefaultState());
-                TileEntityMobSpawner tileentitymobspawner1 = (TileEntityMobSpawner)world.getTileEntity(new BlockPos(l - 3, l1 + 6, j1 + 2));
-                tileentitymobspawner1.getSpawnerBaseLogic().setEntityName(populateSpawner(random));
+                world.setBlock(l - 3, l1 + 6, j1 + 2, Blocks.mob_spawner);
+                TileEntityMobSpawner tileentitymobspawner1 = (TileEntityMobSpawner)world.getTileEntity(l - 3, l1 + 6, j1 + 2);
+                tileentitymobspawner1.func_145881_a().setEntityName(populateSpawner(random));
             }
 
             if (topFloor != 1)
             {
-                world.setBlockState(new BlockPos(l, l1 + 6, j1 - 3), Blocks.double_stone_slab.getDefaultState());
-                world.setBlockState(new BlockPos(l - 1, l1 + 6, j1 - 3), Blocks.double_stone_slab.getDefaultState());
+                world.setBlock(l, l1 + 6, j1 - 3, Blocks.double_stone_slab);
+                world.setBlock(l - 1, l1 + 6, j1 - 3, Blocks.double_stone_slab);
             }
 
             if (l1 + 56 >= 120 && floor == 1)
@@ -846,8 +837,8 @@ public class CREEPSWorldGenCastle extends WorldGenerator
             {
                 for (int l2 = 0; l2 < 2; l2++)
                 {
-                    world.setBlockState(new BlockPos(l - l2, l1 + 7, j1 - 3), Blocks.chest.getDefaultState());
-                    TileEntityChest tileentitychest = (TileEntityChest)world.getTileEntity(new BlockPos(l - l2, l1 + 7, j1 - 3));
+                    world.setBlock(l - l2, l1 + 7, j1 - 3, Blocks.chest);
+                    TileEntityChest tileentitychest = (TileEntityChest)world.getTileEntity(l - l2, l1 + 7, j1 - 3);
 
                     for (int i4 = 0; i4 < 1 + l2 + i2; i4++)
                     {
@@ -867,10 +858,10 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                 }
             }
 
-            world.setBlockState(new BlockPos(l + 3, l1, j1 - 6), Blocks.torch.getDefaultState());
-            world.setBlockState(new BlockPos(l - 4, l1, j1 - 6), Blocks.torch.getDefaultState());
-            world.setBlockState(new BlockPos(l + 1, l1, j1 - 4), Blocks.torch.getDefaultState());
-            world.setBlockState(new BlockPos(l - 2, l1, j1 - 4), Blocks.torch.getDefaultState());
+            world.setBlock(l + 3, l1, j1 - 6, Blocks.torch);
+            world.setBlock(l - 4, l1, j1 - 6, Blocks.torch);
+            world.setBlock(l + 1, l1, j1 - 4, Blocks.torch);
+            world.setBlock(l - 2, l1, j1 - 4, Blocks.torch);
 
             for (int i3 = 0; i3 < (floor * 4 + i2) - 8 && topFloor != 1; i3++)
             {
@@ -886,9 +877,9 @@ public class CREEPSWorldGenCastle extends WorldGenerator
                 k3 += l;
                 l4 += j1;
 
-                if (world.getBlockState(new BlockPos(k3, j4, l4)).getBlock() == Blocks.double_stone_slab.getDefaultState() && world.getBlockState(new BlockPos(k3, j4 + 1, l4)).getBlock() != Blocks.mob_spawner)
+                if (world.getBlock(k3, j4, l4) == Blocks.double_stone_slab && world.getBlock(k3, j4 + 1, l4) != Blocks.mob_spawner)
                 {
-                    world.setBlockToAir(new BlockPos(k3, j4, l4));
+                    world.setBlockToAir(k3, j4, l4);
                 }
             }
 
@@ -1157,32 +1148,6 @@ public class CREEPSWorldGenCastle extends WorldGenerator
         }
     }
 
-    private IBlockState cobbler(int i, Random random)
-    {
-        if (i == 0)
-        {
-            return Blocks.cobblestone.getDefaultState();
-        }
-
-        if (i == 1)
-        {
-            if (random.nextInt(3) == 0)
-            {
-                return Blocks.cobblestone.getDefaultState();
-            }
-            else
-            {
-                return Blocks.mossy_cobblestone.getDefaultState();
-            }
-        }
-        else
-        {
-            return Blocks.cobblestone.getDefaultState();
-        }
-    }
-
-	public boolean generate(World worldIn, Random p_180709_2_, BlockPos bp)
-	{
-		return generate(worldIn, p_180709_2_, bp.getX(), bp.getY(), bp.getZ());
-	}
+    
 }
+

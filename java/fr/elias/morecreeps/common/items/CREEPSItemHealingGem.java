@@ -2,10 +2,10 @@ package fr.elias.morecreeps.common.items;
 
 import java.util.Random;
 
+import fr.elias.morecreeps.common.port.EnumParticleTypes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 

@@ -62,7 +62,7 @@ public class CREEPSItemGuineaPigRadio extends Item
             {
                 pickup = true;
                 world.playSoundAtEntity(entityplayer, "morecreeps:ggpigradio", 1.0F, 1.0F);
-                List list = world.getEntitiesWithinAABB(fr.elias.morecreeps.common.entity.CREEPSEntityGuineaPig.class, new AxisAlignedBB(entityplayer.posX, entityplayer.posY, entityplayer.posZ, entityplayer.posX + 1.0D, entityplayer.posY + 1.0D, entityplayer.posZ + 1.0D).expand(150D, 150D, 150D));
+                List list = world.getEntitiesWithinAABB(fr.elias.morecreeps.common.entity.CREEPSEntityGuineaPig.class, AxisAlignedBB.getBoundingBox(entityplayer.posX, entityplayer.posY, entityplayer.posZ, entityplayer.posX + 1.0D, entityplayer.posY + 1.0D, entityplayer.posZ + 1.0D).expand(150D, 150D, 150D));
 
                 for (int j = 0; j < list.size(); j++)
                 {

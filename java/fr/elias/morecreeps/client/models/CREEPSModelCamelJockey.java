@@ -29,7 +29,7 @@ public class CREEPSModelCamelJockey extends ModelBase
     public boolean heldItemRight;
     public boolean isSneak;
     public ModelRenderer crop;
-    public float swingProgress = FMLClientHandler.instance().getClient().thePlayer.swingProgress;
+    //public float swingProgress = FMLClientHandler.instance().getClient().thePlayer.swingProgress;
 
     public CREEPSModelCamelJockey()
     {
@@ -135,7 +135,7 @@ public class CREEPSModelCamelJockey extends ModelBase
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
 
-        if (swingProgress > -9990F)
+        /*if (swingProgress > -9990F)
         {
             float f6 = swingProgress;
             bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt_float(f6) * (float)Math.PI * 2.0F) * 0.2F;
@@ -155,7 +155,7 @@ public class CREEPSModelCamelJockey extends ModelBase
             crop.rotateAngleX = bipedRightArm.rotateAngleX -= (double)f7 * 1.2D + (double)f8;
             crop.rotateAngleY = bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0F;
             crop.rotateAngleZ = bipedRightArm.rotateAngleZ = MathHelper.sin(swingProgress * (float)Math.PI) * -0.4F;
-        }
+        }*/
 
         if (isSneak)
         {

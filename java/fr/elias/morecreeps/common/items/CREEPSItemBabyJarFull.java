@@ -1,17 +1,16 @@
 package fr.elias.morecreeps.common.items;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.entity.CREEPSEntitySchlump;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.entity.CREEPSEntitySchlump;
 
 public class CREEPSItemBabyJarFull extends Item
 {
@@ -52,7 +51,7 @@ public class CREEPSItemBabyJarFull extends Item
             double d2 = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double)f;
             double d3 = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double)f + 1.6200000000000001D) - entityplayer.getYOffset();
             double d4 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double)f;
-            Vec3 vec3d = new Vec3(d2, d3, d4);
+            Vec3 vec3d = Vec3.createVectorHelper(d2, d3, d4);
             float f3 = MathHelper.cos(-f2 * 0.01745329F - (float)Math.PI);
             float f4 = MathHelper.sin(-f2 * 0.01745329F - (float)Math.PI);
             float f5 = -MathHelper.cos(-f1 * 0.01745329F);
@@ -71,10 +70,10 @@ public class CREEPSItemBabyJarFull extends Item
 
             if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
-                int k = movingobjectposition.getBlockPos().getX();
-                int l = movingobjectposition.getBlockPos().getY() + 1;
-                int i1 = movingobjectposition.getBlockPos().getZ();
-                Block j1 = world.getBlockState(new BlockPos(k, l, i1)).getBlock();
+                int k = movingobjectposition.blockX;
+                int l = movingobjectposition.blockY + 1;
+                int i1 = movingobjectposition.blockZ;
+                Block j1 = world.getBlock(k, l, i1);
                 CREEPSEntitySchlump creepsentityschlump = new CREEPSEntitySchlump(world);
                 creepsentityschlump.setLocationAndAngles(k, l, i1, entityplayer.rotationYaw, 0.0F);
                 world.spawnEntityInWorld(creepsentityschlump);

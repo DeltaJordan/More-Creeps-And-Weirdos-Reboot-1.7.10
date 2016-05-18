@@ -30,6 +30,9 @@ public class CREEPSEntityRocket extends Entity
     protected int hitZ;
     //Don't know how to fix; not in 1.7.10
     //protected IBlockState blockHit;
+    //Will this work?
+    //world.checkCollision(....);
+    
 
     /** Light value one block more in z axis */
     protected boolean aoLightValueZPos;
@@ -205,9 +208,9 @@ public class CREEPSEntityRocket extends Entity
 
         if (aoLightValueZPos)
         {
-            Block i = worldObj.getBlock(hitX, hitY, hitZ);
 
-            /*if (i != blockHit)
+            //TODO Check if works
+            if (worldObj.checkBlockCollision(boundingBox))
             {
                 aoLightValueZPos = false;
                 motionX *= rand.nextFloat() * 0.2F;
@@ -215,7 +218,7 @@ public class CREEPSEntityRocket extends Entity
                 motionZ *= rand.nextFloat() * 0.2F;
                 aoLightValueScratchXYZNNP = 0;
                 aoLightValueScratchXYNN = 0;
-            }*/
+            }
            
                 aoLightValueScratchXYZNNP++;
 

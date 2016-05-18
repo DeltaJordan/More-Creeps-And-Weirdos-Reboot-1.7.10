@@ -2,8 +2,9 @@ package fr.elias.morecreeps.common.world;
 
 import java.util.Random;
 
+import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
+import fr.elias.morecreeps.common.entity.CREEPSEntityPyramidGuardian;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -11,12 +12,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.MoreCreepsAndWeirdos;
-import fr.elias.morecreeps.common.entity.CREEPSEntityPyramidGuardian;
 
 public class CREEPSWorldGenPyramid extends WorldGenerator
 {
@@ -38,19 +35,6 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
 
     public CREEPSWorldGenPyramid()
     {
-    }
-
-    public boolean blockExists(World parWorld, int x, int y, int z) 
-    {
-    	IBlockState state = parWorld.getBlockState(new BlockPos(x, y, z));
-    	if (state != null)
-    	{
-        	return true;
-    	}
-    	else
-    	{
-        	return false;
-    	}
     }
     
     public boolean generate(World world, Random random, int i, int j, int k)
@@ -80,7 +64,7 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
             {
                 for (int j6 = -2 + i1; j6 < (columns - i1) + 2; j6 += 2)
                 {
-                    if (world.getBlockState(new BlockPos(i + j3, j + i1, k + j6)) != Blocks.air.getDefaultState())
+                    if (world.getBlock(i + j3, j + i1, k + j6) != Blocks.air)
                     {
                         l++;
                     }
@@ -99,12 +83,12 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
         chunky = false;
         sandy = false;
 
-        if (world.getBlockState(new BlockPos(i + random.nextInt(16), j - 1, k + random.nextInt(16))).getBlock() == Blocks.sand)
+        if (world.getBlock(i + random.nextInt(16), j - 1, k + random.nextInt(16)) == Blocks.sand)
         {
             sandy = true;
         }
 
-        if (blockExists(world, i, j, k) && blockExists(world, i + 35, j, k) && blockExists(world, i, j, k + 35) && blockExists(world, i + 35, j, k + 35))
+        if (world.blockExists(i, j, k) && world.blockExists(i + 35, j, k) && world.blockExists(i, j, k + 35) && world.blockExists(i + 35, j, k + 35))
         {
             chunky = true;
         }
@@ -127,7 +111,7 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
                 {
                     for (int k6 = -2 + k1; k6 < (columns - k1) + 2; k6++)
                     {
-                        world.setBlockState(new BlockPos(i + l3, j + k1, k + k6), Blocks.sandstone.getDefaultState());
+                        world.setBlock(i + l3, j + k1, k + k6, Blocks.sandstone);
                     }
                 }
             }
@@ -137,9 +121,9 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
                 for (int i4 = 0; i4 < columns; i4++)
                 {
                 	//TODO fix this
-                    //world.setBlockState(new BlockPos(i + l1, j, k + i4), maze[l1][i4]);
-                    //world.setBlockState(new BlockPos(i + l1, j - 1, k + i4), maze[l1][i4]);
-                    world.setBlockState(new BlockPos(i + l1, j - 2, k + i4), Blocks.bedrock.getDefaultState());
+                    world.setBlock(i + l1, j, k + i4, Block.getBlockById(maze[l1][i4]));
+                    world.setBlock(i + l1, j - 1, k + i4, Block.getBlockById(maze[l1][i4]));
+                    world.setBlock(i + l1, j - 2, k + i4, Blocks.bedrock);
                 }
             }
 
@@ -150,7 +134,7 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
 
                 if (maze[j4][l6] == 7)
                 {
-                    world.setBlockState(new BlockPos(i + j4, j, k + l6), Blocks.glass.getDefaultState());
+                    world.setBlock(i + j4, j, k + l6, Blocks.glass);
                 }
             }
 
@@ -161,8 +145,8 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
 
                 if (maze[k4][i7] == 7)
                 {
-                    world.setBlockState(new BlockPos(i + k4, j - 1, k + i7), Blocks.sandstone.getDefaultState());
-                    world.setBlockState(new BlockPos(i + k4, j, k + i7), Blocks.sandstone.getDefaultState());
+                    world.setBlock(i + k4, j - 1, k + i7, Blocks.sandstone);
+                    world.setBlock(i + k4, j, k + i7, Blocks.sandstone);
                 }
             }
 
@@ -176,11 +160,11 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
                     continue;
                 }
 
-                world.setBlockState(new BlockPos(i + l4, j - 1, k + j7), Block.getBlockById(30).getDefaultState());
+                world.setBlock(i + l4, j - 1, k + j7, Block.getBlockById(30));
 
                 if (rand.nextInt(4) == 0)
                 {
-                    world.setBlockState(new BlockPos(i + l4, j, k + j7), Blocks.web.getDefaultState());
+                    world.setBlock(i + l4, j, k + j7, Blocks.web);
                 }
             }
 
@@ -191,7 +175,7 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
 
                 if (maze[i5][k7] == 7)
                 {
-                    world.setBlockState(new BlockPos(i + i5, j, k + k7), Blocks.torch.getDefaultState());
+                    world.setBlock(i + i5, j, k + k7, Blocks.torch);
                 }
             }
 
@@ -212,53 +196,53 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
                 if (maze[j5][l7] == wallCode)
                 {
                     i3++;
-                    world.setBlockToAir(new BlockPos(i + j5, j - 1, k + l7));
-                    world.setBlockToAir(new BlockPos(i + j5, j, k + l7));
-                    world.setBlockState(new BlockPos(i + j5, j - 1, k + l7), Blocks.mob_spawner.getDefaultState());
+                    world.setBlockToAir(i + j5, j - 1, k + l7);
+                    world.setBlockToAir(i + j5, j, k + l7);
+                    world.setBlock(i + j5, j - 1, k + l7, Blocks.mob_spawner);
                     TileEntityMobSpawner tileentitymobspawner = new TileEntityMobSpawner();
-                    world.setTileEntity(new BlockPos(i + j5, j - 1, k + l7), tileentitymobspawner);
+                    world.setTileEntity(i + j5, j - 1, k + l7, tileentitymobspawner);
                     int i8 = rand.nextInt(5);
 
                     if (i8 == 0)
                     {
-                        tileentitymobspawner.getSpawnerBaseLogic().setEntityName("BlackSoul");
+                        tileentitymobspawner.func_145881_a().setEntityName("BlackSoul");
                     }
 
                     if (i8 == 1)
                     {
-                        tileentitymobspawner.getSpawnerBaseLogic().setEntityName("BabyMummy");
+                        tileentitymobspawner.func_145881_a().setEntityName("BabyMummy");
                     }
 
                     if (i8 > 1)
                     {
-                        tileentitymobspawner.getSpawnerBaseLogic().setEntityName("Mummy");
+                        tileentitymobspawner.func_145881_a().setEntityName("Mummy");
                     }
                 }
             }
             while (true);
 
-            world.setBlockToAir(new BlockPos(i + 1, j - 1, k));
-            world.setBlockToAir(new BlockPos(i + 1, j, k));
+            world.setBlockToAir(i + 1, j - 1, k);
+            world.setBlockToAir(i + 1, j, k);
 
             for (int k5 = 0; k5 < 5; k5++)
             {
-                world.setBlockToAir(new BlockPos(i + 1, j - 1, k - k5));
-                world.setBlockToAir(new BlockPos(i + 1, j, k - k5));
-                world.setBlockState(new BlockPos(i + 1, j, k - k5), Blocks.torch.getDefaultState());
+                world.setBlockToAir(i + 1, j - 1, k - k5);
+                world.setBlockToAir(i + 1, j, k - k5);
+                world.setBlock(i + 1, j, k - k5, Blocks.torch);
             }
 
-            world.setBlockState(new BlockPos(i - 1, j, k - 5), Blocks.torch.getDefaultState());
-            world.setBlockState(new BlockPos(i + 1, j, k - 5), Blocks.torch.getDefaultState());
-            world.setBlockState(new BlockPos(i, j, k - 5), Blocks.torch.getDefaultState());
+            world.setBlock(i - 1, j, k - 5, Blocks.torch);
+            world.setBlock(i + 1, j, k - 5, Blocks.torch);
+            world.setBlock(i, j, k - 5, Blocks.torch);
 
             for (int l5 = 1; l5 < 25; l5++)
             {
-                world.setBlockToAir(new BlockPos(i - 1, j + l5, k - 5));
-                world.setBlockToAir(new BlockPos(i + 1, j + l5, k - 5));
-                world.setBlockToAir(new BlockPos(i, j + l5, k - 5));
+                world.setBlockToAir(i - 1, j + l5, k - 5);
+                world.setBlockToAir(i + 1, j + l5, k - 5);
+                world.setBlockToAir(i, j + l5, k - 5);
             }
 
-            world.setBlockState(new BlockPos(i, j + 26, k - 5), Blocks.torch.getDefaultState());
+            world.setBlock(i, j + 26, k - 5, Blocks.torch);
             Item i6 = Items.bone;
             float f = 0.7F;
             double d = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
@@ -266,9 +250,9 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
             double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(world, ((double)i + d) - 2D, (double)j + d1, ((double)k + d2) - 2D, new ItemStack(i6, 5, 0));
             world.spawnEntityInWorld(entityitem);
-            world.setBlockState(new BlockPos((i + rows) - 2, j - 1, (k + columns) - 2), Block.getBlockById(54).getDefaultState());
+            world.setBlock((i + rows) - 2, j - 1, (k + columns) - 2, Block.getBlockById(54));
             TileEntityChest tileentitychest = new TileEntityChest();
-            world.setTileEntity(new BlockPos((i + rows) - 2, j - 1, (k + columns) - 2), tileentitychest);
+            world.setTileEntity((i + rows) - 2, j - 1, (k + columns) - 2, tileentitychest);
 
             for (int j8 = 1; j8 < tileentitychest.getSizeInventory(); j8++)
             {
@@ -426,7 +410,7 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
             {
                 for (int i9 = 0; i9 < columns; i9++)
                 {
-                    world.setBlockState(new BlockPos(i + l8, j + 1, k + i9), Block.getBlockById(7).getDefaultState());
+                    world.setBlock(i + l8, j + 1, k + i9, Block.getBlockById(7));
                 }
             }
 
@@ -553,10 +537,4 @@ public class CREEPSWorldGenPyramid extends WorldGenerator
             fill(i, j - 1, k, l);
         }
     }
-
-	@Override
-	public boolean generate(World worldIn, Random p_180709_2_, BlockPos bp) 
-	{
-		return generate(worldIn, p_180709_2_, bp.getX(), bp.getY(), bp.getZ());
-	}
 }
